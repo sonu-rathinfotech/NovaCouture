@@ -1,6 +1,8 @@
 import { ButtonLink } from '@/components/ui/Button'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 export function NotFound() {
+  usePageTitle('Page not found')
   return (
     <section className="container-lux py-32 text-center">
       <p className="eyebrow mb-4">404</p>

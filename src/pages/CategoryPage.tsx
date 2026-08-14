@@ -9,6 +9,7 @@ import { artKindFor } from '@/components/catalogue/art'
 import { NotFound } from './NotFound'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
 
 /**
@@ -28,6 +29,7 @@ export function CategoryPage() {
     [categorySlug],
   )
   const { data: allCategories } = useAsync(() => catalogue.listCategories(), [])
+  usePageTitle(category?.name ? `${category.name} — Collection` : undefined)
   const { data: products, loading } = useAsync(
     () => catalogue.listProducts({ categorySlug, tier }),
     [categorySlug, tier],
