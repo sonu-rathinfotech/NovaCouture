@@ -68,7 +68,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-wrap justify-between gap-3 border-t border-charcoal-700 pt-8 text-[0.7rem] font-light tracking-[0.1em] text-charcoal-400">
+        <div className="flex flex-wrap justify-between gap-3 border-t border-champagne-700 pt-8 text-[0.7rem] font-light tracking-[0.1em] text-charcoal-400">
           <span>© {new Date().getFullYear()} VK Jewellers</span>
           <span>Display only — no online sale</span>
         </div>

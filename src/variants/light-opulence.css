@@ -1,0 +1,86 @@
+/* ---------------------------------------------------------------------------
+   LIGHT OPULENCE — design variant (branch ui/light-opulence)
+   ---------------------------------------------------------------------------
+   Direction: a light base, but richer — larger Cormorant display, deeper
+   golds, gold hairlines and rules, more editorial spacing. Couture rather
+   than gallery-restraint.
+
+   Scoped under `.ui-opulence` on the public shell (SiteLayout) and the auth
+   screens (AuthLayout). The admin panel renders outside the scope and keeps
+   the original design.
+   ------------------------------------------------------------------------- */
+
+.ui-opulence {
+  /* --- surfaces (warm ivory, a step richer than the base) --- */
+  --color-ivory-50: #fefcf8;
+  --color-ivory-100: #fbf7f0; /* page background */
+  --color-ivory-200: #f4eddf; /* card / image frame ground */
+  --color-ivory-300: #eae0cc; /* skeleton, hairlines */
+  --color-ivory-400: #dccfb2;
+  --color-ivory-500: #c9b892;
+
+  /* --- text (warm taupe ink instead of neutral gray) --- */
+  --color-charcoal-50: #f7f5f0;
+  --color-charcoal-100: #ebe6dc;
+  --color-charcoal-200: #d6cfc1;
+  --color-charcoal-300: #b0a794;
+  --color-charcoal-400: #7c7263; /* muted */
+  --color-charcoal-500: #57503f; /* body */
+  --color-charcoal-600: #453e31;
+  --color-charcoal-700: #332d23;
+  --color-charcoal-800: #242019; /* headings */
+  --color-charcoal-900: #171310;
+
+  /* --- gold (deep, rich champagne) --- */
+  --color-champagne-50: #fbf6ec;
+  --color-champagne-100: #f4e9d1;
+  --color-champagne-200: #e9d6ab;
+  --color-champagne-300: #dabf7d;
+  --color-champagne-400: #cba75c; /* gold-light decorative */
+  --color-champagne-500: #b68d3f;
+  --color-champagne-600: #9c7430;
+  --color-champagne-700: #7f5d27;
+  --color-champagne-800: #664a1f; /* eyebrows, links */
+  --color-champagne-900: #4b3718;
+
+  /* --- semantic aliases --- */
+  --color-ink: var(--color-charcoal-800);
+  --color-ink-soft: var(--color-charcoal-400);
+  --color-ivory: var(--color-ivory-100);
+  --color-sand: var(--color-ivory-300);
+  --color-line: var(--color-ivory-400);
+  --color-gold: var(--color-champagne-800);
+  --color-gold-light: var(--color-champagne-400);
+  --color-noir: var(--color-charcoal-900);
+
+  --color-success: #5b7a5a;
+  --color-danger: #9e5b5b;
+  --color-warning: #b8956a;
+
+  /* --- type: same Cormorant + Jost pairing, larger and heavier --- */
+  --text-display: clamp(3rem, 7vw, 6.5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-display-sm: clamp(2.25rem, 5vw, 4.25rem);
+  --text-display-sm--line-height: 1.08;
+  --text-display-sm--letter-spacing: -0.01em;
+
+  --text-hero: clamp(1.875rem, 3.75vw, 3rem);
+  --text-hero--line-height: 1.12;
+}
+
+/* The shell is inside <body>, so the body ground needs the same warm ivory. */
+body:has(.ui-opulence) {
+  background-color: var(--color-ivory-100);
+  color: var(--color-charcoal-800);
+}
+
+/* Headings move from the light 300 to a 500 presence — the editorial weight
+   that separates opulence from restraint. */
+.ui-opulence h1,
+.ui-opulence h2,
+.ui-opulence h3,
+.ui-opulence h4 {
+  font-weight: 500;
+}

@@ -20,7 +20,12 @@ export function PageHeader({
 
   return (
     <div className={`mb-16 ${centred ? 'text-center' : ''}`}>
-      {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
+      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+      {/* Gold rule beneath the eyebrow — the opulence signature. */}
+      <span
+        aria-hidden="true"
+        className={`mb-6 block h-px w-12 bg-champagne-400 ${centred ? 'mx-auto' : ''}`}
+      />
       <h1 className="text-balance font-serif text-display-sm text-charcoal-800">{title}</h1>
       {note && (
         <p
@@ -47,7 +52,8 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-16 text-center">
-      <p className="eyebrow mb-4">{eyebrow}</p>
+      <p className="eyebrow mb-3">{eyebrow}</p>
+      <span aria-hidden="true" className="mx-auto mb-6 block h-px w-12 bg-champagne-400" />
       <h2 className="font-serif text-display-sm text-charcoal-800">{title}</h2>
       {note && (
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed font-light text-charcoal-400">

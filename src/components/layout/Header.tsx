@@ -65,9 +65,11 @@ export function Header() {
   }
 
   const nav = categories ?? []
+  // Light opulence: over the hero the links stay ivory; solid state warms to
+  // taupe with a gold hover.
   const linkTone = transparent
     ? 'text-ivory-100 hover:text-champagne-200'
-    : 'text-charcoal-700 hover:text-charcoal-900'
+    : 'text-charcoal-700 hover:text-champagne-800'
 
   return (
     <>
@@ -75,7 +77,7 @@ export function Header() {
         className={`fixed inset-x-0 top-0 z-40 transition-all duration-700 ease-lux ${
           transparent
             ? 'bg-transparent'
-            : 'border-b border-ivory-300 bg-ivory-100/95 backdrop-blur-md'
+            : 'border-b border-champagne-200 bg-ivory-100/95 backdrop-blur-md'
         }`}
       >
         <div className="container-lux">
@@ -83,7 +85,7 @@ export function Header() {
             <Link to="/" className="flex items-baseline gap-2" aria-label="VK Jewellers, home">
               <span
                 className={`font-serif text-2xl tracking-wide transition-colors duration-500 ${
-                  transparent ? 'text-ivory-100' : 'text-charcoal-900'
+                  transparent ? 'text-ivory-100' : 'text-champagne-800'
                 }`}
               >
                 VK

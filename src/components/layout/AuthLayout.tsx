@@ -25,7 +25,7 @@ export function AuthLayout({
   footer?: ReactNode
 }) {
   return (
-    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
+    <div className="ui-opulence grid min-h-screen grid-cols-1 lg:grid-cols-2">
       <div className="relative hidden lg:block">
         <img
           src={HERO_PHOTO}
