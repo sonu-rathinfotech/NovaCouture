@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { normaliseMobile, formatMobile } from '@/lib/mobile'
 import { auth, authMode } from '@/auth'
 import { useSession } from '@/hooks/useSession'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 /**
  * Sign-in.
@@ -17,6 +18,7 @@ import { useSession } from '@/hooks/useSession'
  * Neither branch knows anything about how the credentials are checked.
  */
 export function SignIn() {
+  usePageTitle('Sign in')
   return auth.method === 'credentials' ? <CredentialSignIn /> : <OtpSignIn />
 }
 

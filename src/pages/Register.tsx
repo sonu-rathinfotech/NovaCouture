@@ -8,10 +8,12 @@ import { REGISTRATION_FIELDS } from '@/data/registrationFields'
 import { normaliseMobile } from '@/lib/mobile'
 import { auth, authMode } from '@/auth'
 import { useSession } from '@/hooks/useSession'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 type Values = Record<string, string>
 
 export function Register() {
+  usePageTitle('Request membership')
   const navigate = useNavigate()
   const { refresh } = useSession()
 

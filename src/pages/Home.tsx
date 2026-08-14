@@ -6,9 +6,11 @@ import { CategoryCard } from '@/components/catalogue/CategoryCard'
 import { HERO_PHOTO, samplePhoto, USING_SAMPLE_PHOTOS } from '@/components/catalogue/samplePhotos'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
 
 export function Home() {
+  usePageTitle()
   const { tier } = useSession()
   const { data: categories } = useAsync(() => catalogue.listCategories(), [])
   const { data: products, loading } = useAsync(
