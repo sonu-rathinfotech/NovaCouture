@@ -85,17 +85,25 @@
   --text-hero--line-height: 1.15;
 }
 
-/* The shell is inside <body>, so the body ground needs the same cream. */
+/* The shell is inside <body>, so the body ground needs the same cream.
+   Literal values, not var(): the overridden tokens live on the scope div,
+   and custom properties inherit down, so `var()` here would resolve against
+   :root's light ramp instead. */
 body:has(.ui-heritage) {
-  background-color: var(--color-ivory-100);
-  color: var(--color-charcoal-800);
+  background-color: #faf4e7;
+  color: #262015;
 }
 
-/* Marcellus only ships at 400 — headings should not inherit the 300 body
-   weight and let the browser synthesise a thin cut. */
-.ui-heritage h1,
-.ui-heritage h2,
-.ui-heritage h3,
-.ui-heritage h4 {
+/* Marcellus only ships at 400 — everything serif (headings, wordmarks,
+   product names) must not inherit the 300 body weight and let the browser
+   synthesise a thin cut. */
+.ui-heritage .font-serif {
   font-weight: 400;
+}
+
+/* Eyebrows: wider tracking, in deep gold — the house label of a heritage
+   atelier. */
+.ui-heritage .eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
 }

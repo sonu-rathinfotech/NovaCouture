@@ -31,7 +31,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-charcoal-900 pt-24 pb-10 text-charcoal-300">
+    <footer className="border-t-2 border-t-[var(--color-velvet)] bg-charcoal-900 pt-24 pb-10 text-charcoal-300">
       <div className="container-lux">
         <div className="grid grid-cols-1 gap-12 pb-16 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>

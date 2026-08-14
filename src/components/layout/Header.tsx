@@ -79,6 +79,14 @@ export function Header() {
             : 'border-b border-champagne-200 bg-ivory-100/95 backdrop-blur-md'
         }`}
       >
+        {/* Heritage double rule: a hairline of gold, then a maroon velvet
+            thread beneath it, once the bar is solid. */}
+        {!transparent && (
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-full h-[2px] bg-[var(--color-velvet)]"
+          />
+        )}
         <div className="container-lux">
           <div className="flex h-20 items-center justify-between">
             <Link to="/" className="flex items-baseline gap-2" aria-label="VK Jewellers, home">

@@ -62,7 +62,7 @@ export function Gallery({
           type="button"
           onClick={() => setLightbox(true)}
           aria-label="Open full-screen view"
-          className="relative aspect-4/5 flex-1 cursor-zoom-in overflow-hidden rounded-[2px] bg-sand"
+          className="relative aspect-4/5 flex-1 cursor-zoom-in overflow-hidden rounded-t-full bg-sand"
         >
           <GalleryImage
             image={images[active]}

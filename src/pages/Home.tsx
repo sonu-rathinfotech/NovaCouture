@@ -37,6 +37,12 @@ export function Home() {
             aria-hidden="true"
             className="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 via-charcoal-900/20 to-charcoal-900/30"
           />
+          {/* A hairline gold frame set in from the edges — the picture is
+              hung, not merely shown. */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-5 border border-champagne-400/50 lg:inset-8"
+          />
         </div>
 
         <div className="relative container-lux pb-24 lg:pb-32">
@@ -131,7 +137,7 @@ export function Home() {
       <section className="bg-ivory-200 py-24 lg:py-32">
         <div className="container-lux">
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-24">
-            <div className="aspect-4/5 overflow-hidden bg-ivory-300">
+            <div className="aspect-4/5 overflow-hidden rounded-t-full bg-ivory-300">
               <img
                 src={samplePhoto('necklace', 1)}
                 alt=""

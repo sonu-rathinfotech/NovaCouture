@@ -41,7 +41,9 @@ export function ProductCard({
         onClick={() => onOpen?.(product)}
         className="group block cursor-pointer"
       >
-        <div className="relative aspect-4/5 overflow-hidden bg-ivory-200">
+        {/* Jharokha arch: the heritage signature of this branch — every
+            piece is shown through an arched frame, like temple architecture. */}
+        <div className="relative aspect-4/5 overflow-hidden rounded-t-full bg-ivory-200">
           {first && (
             <div className="absolute inset-0 transition-[opacity,transform] duration-[1.4s] ease-lux group-hover:scale-[1.04] group-hover:opacity-0">
               <GalleryImage image={first} kind={kind} index={offset} eager={eager} />

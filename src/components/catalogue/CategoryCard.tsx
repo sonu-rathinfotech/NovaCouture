@@ -22,7 +22,7 @@ export function CategoryCard({
   return (
     <Link
       to={`/c/${category.slug}`}
-      className={`group relative block w-full overflow-hidden bg-ivory-200 animate-fade-in ${
+      className={`group relative block w-full overflow-hidden rounded-t-full bg-ivory-200 animate-fade-in ${
         large ? 'aspect-16/10 lg:aspect-16/9' : 'aspect-4/5'
       }`}
       style={{ animationDelay: `${index * 100}ms` }}
