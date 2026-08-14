@@ -1,0 +1,110 @@
+/* Self-hosted display font for this variant (keeps the no-CDN rule from
+   DESIGN.md §3). Latin subsets only. */
+@import '@fontsource/playfair-display/latin-400.css';
+@import '@fontsource/playfair-display/latin-500.css';
+@import '@fontsource/playfair-display/latin-600.css';
+
+/* ---------------------------------------------------------------------------
+   DARK LUXURY — design variant (branch ui/dark-luxury)
+   ---------------------------------------------------------------------------
+   Direction: deep noir + gold. Bvlgari / Graff / Harry Winston.
+
+   Everything here is scoped under `.ui-dark`, which is applied on the public
+   site shell (SiteLayout) and the auth screens (AuthLayout). The admin panel
+   renders outside that scope, so it keeps the original light design.
+
+   Tailwind v4 utilities resolve to `var(--color-*)` at runtime, so overriding
+   the tokens here restyles every component without touching its classes.
+   ------------------------------------------------------------------------- */
+
+.ui-dark {
+  /* --- surfaces (ivory ramp becomes the dark "stone" ramp) --- */
+  --color-ivory-50: #0e0c0a; /* deepest section ground */
+  --color-ivory-100: #12100d; /* page background */
+  --color-ivory-200: #1b1814; /* card / image frame ground */
+  --color-ivory-300: #2a251e; /* skeleton, hairlines, gallery mat */
+  --color-ivory-400: #38322a; /* stronger hairlines */
+  --color-ivory-500: #453c31;
+
+  /* --- text (charcoal ramp is inverted: 50 darkest → 900 brightest) --- */
+  --color-charcoal-50: #0c0a08; /* footer, deep overlays */
+  --color-charcoal-100: #1b1814;
+  --color-charcoal-200: #2e2820; /* field underlines */
+  --color-charcoal-300: #3a332a; /* placeholders, low-emphasis */
+  --color-charcoal-400: #7a6d5b; /* muted captions */
+  --color-charcoal-500: #8f8270; /* body copy */
+  --color-charcoal-600: #a99c86;
+  --color-charcoal-700: #c0b49c; /* nav links */
+  --color-charcoal-800: #e6decc; /* headings, input text */
+  --color-charcoal-900: #f8f2e6; /* brightest text on photography */
+
+  /* --- gold (champagne ramp, brightened for dark grounds) --- */
+  --color-champagne-50: #241c0f;
+  --color-champagne-100: #2f2513;
+  --color-champagne-200: #403217; /* selection ground */
+  --color-champagne-300: #5a471f;
+  --color-champagne-400: #7c6530; /* gold-light decorative */
+  --color-champagne-500: #a5823c; /* primary gold */
+  --color-champagne-600: #c29a44;
+  --color-champagne-700: #d4ac4f;
+  --color-champagne-800: #e0bc63; /* eyebrows, links */
+  --color-champagne-900: #efd391;
+
+  /* --- semantic aliases (re-resolved against the overridden ramps) --- */
+  --color-ink: var(--color-charcoal-800);
+  --color-ink-soft: var(--color-charcoal-500);
+  --color-ivory: var(--color-ivory-100);
+  --color-sand: var(--color-ivory-300);
+  --color-line: var(--color-ivory-300);
+  --color-gold: var(--color-champagne-800);
+  --color-gold-light: #b8933f; /* decorative gold, visible on dark */
+  --color-noir: #0a0907; /* fixed, decoupled from the charcoal ramp */
+
+  --color-success: #7a9a6f;
+  --color-danger: #b06a5f;
+  --color-warning: #c2a24b;
+
+  /* --- type: Playfair Display replaces Cormorant for the fashion-luxury cut */
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+
+  --text-display: clamp(2.75rem, 6.5vw, 6rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-display-sm: clamp(2.1rem, 4.5vw, 3.75rem);
+  --text-display-sm--line-height: 1.1;
+  --text-display-sm--letter-spacing: -0.01em;
+
+  --text-hero: clamp(1.75rem, 3.5vw, 2.75rem);
+  --text-hero--line-height: 1.15;
+
+  /* --- depth: shadows become meaningful again on a dark ground --- */
+  --shadow-soft: 0 2px 20px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 4px 30px rgba(0, 0, 0, 0.45);
+  --shadow-elevated: 0 12px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* The shell is inside <body>, so the body ground itself needs the dark tone
+   or the page shows a light rim on overscroll. */
+body:has(.ui-dark) {
+  background-color: var(--color-ivory-100);
+  color: var(--color-charcoal-800);
+}
+
+/* Scrollbars belong to the viewport, not to the shell — restyle them for the
+   dark ground explicitly. */
+body:has(.ui-dark)::-webkit-scrollbar-track {
+  background: var(--color-ivory-100);
+}
+body:has(.ui-dark)::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal-200);
+}
+body:has(.ui-dark)::-webkit-scrollbar-thumb:hover {
+  background: var(--color-champagne-600);
+}
+
+/* The solid (scrolled) header gets a gold-tinted hairline instead of the
+   generic surface line. */
+.ui-dark header.border-b {
+  border-bottom-color: rgba(194, 154, 68, 0.28);
+}

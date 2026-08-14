@@ -16,7 +16,7 @@ function ScrollToTop() {
 
 export function SiteLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="ui-dark flex min-h-screen flex-col">
       <ScrollToTop />
       <a
         href="#main"

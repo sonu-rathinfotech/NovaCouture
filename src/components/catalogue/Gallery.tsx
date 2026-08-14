@@ -147,7 +147,7 @@ function Lightbox({
       aria-label={`${productName}, image ${active + 1} of ${count}`}
       className="fixed inset-0 z-50 flex flex-col bg-noir/97"
     >
-      <div className="flex items-center justify-between px-6 py-5 text-ivory/70">
+      <div className="flex items-center justify-between px-6 py-5 text-charcoal-500">
         <span className="text-xs tracking-[0.16em] tabular-nums">
           {String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
         </span>
@@ -156,7 +156,7 @@ function Lightbox({
           type="button"
           onClick={onClose}
           aria-label="Close full-screen view"
-          className="cursor-pointer transition-colors duration-200 hover:text-ivory"
+          className="cursor-pointer transition-colors duration-200 hover:text-charcoal-900"
         >
           <X size={22} strokeWidth={1.25} />
         </button>
@@ -199,7 +199,7 @@ function NavButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="grid size-11 shrink-0 cursor-pointer place-items-center text-ivory/60 transition-colors duration-200 hover:text-ivory"
+      className="grid size-11 shrink-0 cursor-pointer place-items-center text-charcoal-500 transition-colors duration-200 hover:text-charcoal-900"
     >
       {children}
     </button>

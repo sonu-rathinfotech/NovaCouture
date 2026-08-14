@@ -80,7 +80,7 @@ export function Modal({
       <div
         aria-hidden="true"
         onClick={onClose}
-        className="absolute inset-0 bg-charcoal-900/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-noir/60 backdrop-blur-sm"
       />
 
       <div

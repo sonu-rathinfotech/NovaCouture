@@ -35,17 +35,17 @@ export function Home() {
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 via-charcoal-900/20 to-charcoal-900/30"
+            className="absolute inset-0 bg-gradient-to-t from-noir/85 via-noir/20 to-noir/40"
           />
         </div>
 
         <div className="relative container-lux pb-24 lg:pb-32">
           <div className="max-w-2xl animate-fade-in">
-            <p className="eyebrow mb-6 text-ivory-200/80">VK Jewellers — Private Catalogue</p>
-            <h1 className="text-balance font-serif text-display text-ivory-100">
+            <p className="eyebrow mb-6 text-charcoal-900/70">VK Jewellers — Private Catalogue</p>
+            <h1 className="text-balance font-serif text-display text-charcoal-900">
               Pieces made to be inherited.
             </h1>
-            <p className="mt-8 max-w-md text-lg leading-relaxed font-light text-ivory-200/80">
+            <p className="mt-8 max-w-md text-lg leading-relaxed font-light text-charcoal-900/70">
               A private catalogue of fine gold and stone work, shown by registered access.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -66,7 +66,7 @@ export function Home() {
           className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-ivory-200/50 lg:flex"
         >
           <span className="text-[0.6rem] tracking-[0.3em] uppercase">Scroll</span>
-          <span className="block h-12 w-px bg-ivory-200/30" />
+          <span className="block h-12 w-px bg-charcoal-900/30" />
         </div>
       </section>
 
@@ -179,7 +179,7 @@ export function Home() {
 
       {/* Premium invitation */}
       {tier !== 'premium' && (
-        <section className="relative overflow-hidden bg-charcoal-900 py-24 lg:py-32">
+        <section className="relative overflow-hidden bg-noir py-24 lg:py-32">
           <img
             src={samplePhoto('ring', 2)}
             alt=""
@@ -188,13 +188,13 @@ export function Home() {
             className="absolute inset-0 h-full w-full object-cover opacity-25"
           />
           <div className="relative container-lux text-center">
-            <Crown size={28} strokeWidth={1} className="mx-auto mb-6 text-champagne-400" />
-            <h2 className="text-balance font-serif text-display-sm text-ivory-100">
+            <Crown size={28} strokeWidth={1} className="mx-auto mb-6 text-champagne-600" />
+            <h2 className="text-balance font-serif text-display-sm text-charcoal-900">
               {tier === 'guest'
                 ? 'The full archive is reserved for clients'
                 : 'Selected pieces are shown to premium clients'}
             </h2>
-            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed font-light text-ivory-200/70">
+            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed font-light text-charcoal-900/70">
               {tier === 'guest'
                 ? 'Sign in with your registered number to view the wider catalogue.'
                 : 'Premium access is arranged by VK Jewellers. Speak to us to have it added to your account.'}

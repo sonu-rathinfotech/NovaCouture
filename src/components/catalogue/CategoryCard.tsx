@@ -36,25 +36,25 @@ export function CategoryCard({
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-charcoal-900/70 via-charcoal-900/15 to-transparent"
+        className="absolute inset-0 bg-gradient-to-t from-noir/75 via-noir/15 to-transparent"
       />
 
       <div className="absolute inset-x-0 bottom-0 p-8 text-left lg:p-10">
         {sub && (
-          <p className="mb-2 text-[0.65rem] tracking-[0.25em] text-ivory-200/80 uppercase opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+          <p className="mb-2 text-[0.65rem] tracking-[0.25em] text-charcoal-900/85 uppercase opacity-0 transition-opacity duration-500 group-hover:opacity-100">
             {sub}
           </p>
         )}
         <h3
-          className={`font-serif text-ivory-100 ${large ? 'text-4xl lg:text-5xl' : 'text-3xl'}`}
+          className={`font-serif text-charcoal-900 ${large ? 'text-4xl lg:text-5xl' : 'text-3xl'}`}
         >
           {category.name}
         </h3>
-        <span className="mt-4 inline-flex items-center gap-2 text-[0.7rem] tracking-[0.2em] text-ivory-200/0 uppercase transition-all duration-500 group-hover:gap-3 group-hover:text-ivory-200/90">
+        <span className="mt-4 inline-flex items-center gap-2 text-[0.7rem] tracking-[0.2em] text-charcoal-900/0 uppercase transition-all duration-500 group-hover:gap-3 group-hover:text-charcoal-900/90">
           Explore
           <span
             aria-hidden="true"
-            className="block h-px w-0 bg-ivory-200/80 transition-all duration-500 group-hover:w-8"
+            className="block h-px w-0 bg-charcoal-900/85 transition-all duration-500 group-hover:w-8"
           />
         </span>
       </div>

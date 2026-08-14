@@ -48,7 +48,7 @@ export function CategoryPage() {
           two full-bleed images in a row, one inside the other, reads as
           repetition rather than depth. */}
       {!parent && (
-        <section className="relative h-[38vh] min-h-[280px] overflow-hidden bg-charcoal-800">
+        <section className="relative h-[38vh] min-h-[280px] overflow-hidden bg-noir">
           <img
             src={samplePhoto(artKindFor(categorySlug), 0)}
             alt=""
@@ -57,16 +57,16 @@ export function CategoryPage() {
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-r from-charcoal-900/85 via-charcoal-900/45 to-charcoal-900/10"
+            className="absolute inset-0 bg-gradient-to-r from-noir/85 via-noir/45 to-noir/10"
           />
           <div className="relative flex h-full items-end">
             <div className="container-lux pb-12">
-              <p className="eyebrow mb-3 text-ivory-200/80">
+              <p className="eyebrow mb-3 text-charcoal-900/70">
                 {children.length > 0
                   ? children.map((c) => c.name).join(' · ')
                   : 'From the catalogue'}
               </p>
-              <h1 className="font-serif text-display-sm text-ivory-100">{category?.name}</h1>
+              <h1 className="font-serif text-display-sm text-charcoal-900">{category?.name}</h1>
             </div>
           </div>
         </section>

@@ -65,8 +65,10 @@ export function Header() {
   }
 
   const nav = categories ?? []
+  // Dark luxury: over the hero, text is the brightest charcoal (near-ivory)
+  // with a bright-gold hover; solid state keeps the inverted light ramp.
   const linkTone = transparent
-    ? 'text-ivory-100 hover:text-champagne-200'
+    ? 'text-charcoal-900 hover:text-champagne-400'
     : 'text-charcoal-700 hover:text-charcoal-900'
 
   return (
@@ -83,14 +85,14 @@ export function Header() {
             <Link to="/" className="flex items-baseline gap-2" aria-label="VK Jewellers, home">
               <span
                 className={`font-serif text-2xl tracking-wide transition-colors duration-500 ${
-                  transparent ? 'text-ivory-100' : 'text-charcoal-900'
+                  transparent ? 'text-charcoal-900' : 'text-charcoal-900'
                 }`}
               >
                 VK
               </span>
               <span
                 className={`font-sans text-[0.6rem] tracking-[0.3em] uppercase transition-colors duration-500 ${
-                  transparent ? 'text-ivory-200/80' : 'text-charcoal-400'
+                  transparent ? 'text-charcoal-900/70' : 'text-charcoal-400'
                 }`}
               >
                 Jewellers
@@ -180,7 +182,7 @@ export function Header() {
                 <>
                   <span
                     className={`hidden items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase md:flex ${
-                      transparent ? 'text-ivory-100' : 'text-charcoal-700'
+                      transparent ? 'text-charcoal-900' : 'text-charcoal-700'
                     }`}
                   >
                     {tier === 'premium' && (
@@ -198,7 +200,7 @@ export function Header() {
                     onClick={onSignOut}
                     className={`hidden cursor-pointer text-[0.65rem] font-light tracking-[0.15em] uppercase transition-colors duration-300 md:block ${
                       transparent
-                        ? 'text-ivory-200/70 hover:text-ivory-100'
+                        ? 'text-charcoal-900/60 hover:text-charcoal-900'
                         : 'text-charcoal-300 hover:text-charcoal-600'
                     }`}
                   >
@@ -214,7 +216,7 @@ export function Header() {
                 aria-label="Open menu"
                 aria-expanded={mobileOpen}
                 className={`-mr-2 grid size-11 cursor-pointer place-items-center transition-colors lg:hidden ${
-                  transparent ? 'text-ivory-100' : 'text-charcoal-800'
+                  transparent ? 'text-charcoal-900' : 'text-charcoal-800'
                 }`}
               >
                 <Menu size={22} strokeWidth={1.5} />
@@ -229,7 +231,7 @@ export function Header() {
           <div
             aria-hidden="true"
             onClick={() => setMobileOpen(false)}
-            className="absolute inset-0 bg-charcoal-900/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-noir/50 backdrop-blur-sm"
           />
           <div
             role="dialog"
