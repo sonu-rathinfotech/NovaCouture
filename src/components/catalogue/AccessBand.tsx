@@ -14,15 +14,17 @@ export function AccessBand({ tier }: { tier: Tier }) {
   const isGuest = tier === 'guest'
 
   return (
-    <aside className="mt-24 border border-champagne-200 bg-ivory-50 px-6 py-16 text-center">
-      <Crown size={26} strokeWidth={1} className="mx-auto mb-6 text-champagne-500" />
-      <p className="eyebrow mb-4">{isGuest ? 'Registered access' : 'Premium access'}</p>
-      <h2 className="text-balance font-serif text-3xl text-charcoal-800">
+    <aside className="mt-24 border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-6 py-16 text-center">
+      <Crown size={26} strokeWidth={1} className="mx-auto mb-6 text-[var(--color-accent)]" />
+      <p className="eyebrow mb-4 text-[var(--color-accent)]">
+        {isGuest ? 'Registered access' : 'Premium access'}
+      </p>
+      <h2 className="text-balance font-display text-[var(--text-h3)] text-[var(--color-fg)]">
         {isGuest
           ? 'The full archive is reserved for clients'
           : 'Selected pieces are shown to premium clients'}
       </h2>
-      <p className="mx-auto mt-5 mb-9 max-w-lg text-base leading-relaxed font-light text-charcoal-400">
+      <p className="mx-auto mt-5 mb-9 max-w-lg text-base leading-relaxed font-light text-[var(--color-fg-muted)]">
         {isGuest
           ? 'Sign in with your registered number to view the wider catalogue.'
           : 'Premium access is arranged by VK Jewellers. Speak to us to have it added to your account.'}

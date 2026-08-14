@@ -15,40 +15,42 @@ export function StaticPage({ slug }: { slug: StaticPageSlug }) {
   usePageTitle(page.title)
 
   return (
-    <article className="container-lux max-w-[760px] py-20 lg:py-28">
+    <article className="container max-w-[760px] py-16 lg:py-24">
       <header className="mb-12 text-center">
-        <span className="eyebrow">{isLegal ? 'Legal' : 'Information'}</span>
-        <h1 className="mt-4 font-serif text-display-sm text-charcoal-800">{page.title}</h1>
+        <span className="eyebrow text-[var(--color-accent)]">{isLegal ? 'Legal' : 'Information'}</span>
+        <h1 className="mt-4 font-display text-[var(--text-h1)] text-[var(--color-fg)]">{page.title}</h1>
         {page.updated && (
-          <p className="mt-3 text-[0.8125rem] font-light text-charcoal-400">
+          <p className="mt-3 text-sm font-light text-[var(--color-fg-muted)]">
             Last updated <Text value={page.updated} />
           </p>
         )}
         {page.intro && (
-          <p className="mx-auto mt-5 max-w-[58ch] text-base leading-relaxed font-light text-charcoal-400">
+          <p className="mx-auto mt-5 max-w-[58ch] text-[var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)]">
             <Text value={page.intro} />
           </p>
         )}
       </header>
 
       {!page.approved && isLegal && (
-        <p
+        <div
           role="note"
-          className="mb-12 border border-line border-l-2 border-l-danger bg-ivory-50 px-5 py-4 text-[0.8125rem] leading-relaxed font-light text-charcoal-500"
+          className="mb-12 p-5 bg-[var(--color-warning-bg)] border border-[var(--color-warning)] border-l-4 rounded-lg"
         >
-          <strong className="text-ink">Draft — not yet approved.</strong> This text describes what
-          the platform actually does, but it has not been reviewed by anyone qualified to approve
-          it as a legal document. It must not be published in this state.
-        </p>
+          <p className="text-sm leading-relaxed font-light text-[var(--color-warning)]">
+            <strong className="text-[var(--color-fg)]">Draft — not yet approved.</strong> This text describes what
+            the platform actually does, but it has not been reviewed by anyone qualified to approve
+            it as a legal document. It must not be published in this state.
+          </p>
+        </div>
       )}
 
       {page.sections.map((section, i) => (
         <section key={i} className="mb-10">
           {section.heading && (
-            <h2 className="mb-4 font-serif text-2xl text-charcoal-800">{section.heading}</h2>
+            <h2 className="mb-4 font-display text-[var(--text-h3)] text-[var(--color-fg)]">{section.heading}</h2>
           )}
           {section.paragraphs.map((paragraph, j) => (
-            <p key={j} className="mb-4 text-base leading-[1.8] font-light text-charcoal-500">
+            <p key={j} className="mb-4 text-[var(--text-body)] leading-relaxed font-light text-[var(--color-fg-muted)]">
               <Text value={paragraph} />
             </p>
           ))}
@@ -57,11 +59,9 @@ export function StaticPage({ slug }: { slug: StaticPageSlug }) {
               {section.list.map((item, j) => (
                 <li
                   key={j}
-                  className="flex gap-3 text-base leading-[1.8] font-light text-charcoal-500"
+                  className="flex gap-3 text-[var(--text-body)] leading-relaxed font-light text-[var(--color-fg-muted)]"
                 >
-                  <span aria-hidden="true" className="text-champagne-500">
-                    ·
-                  </span>
+                  <span aria-hidden="true" className="text-[var(--color-accent)] flex-shrink-0">·</span>
                   <span>
                     <Text value={item} />
                   </span>
@@ -83,7 +83,7 @@ function Text({ value }: { value: string }) {
         part.placeholder ? (
           <mark
             key={i}
-            className="bg-champagne-50 px-1.5 py-0.5 text-charcoal-500 italic"
+            className="bg-[var(--color-accent-light)] px-1.5 py-0.5 text-[var(--color-accent)] italic rounded-sm"
             title="Not supplied yet"
           >
             {part.text}

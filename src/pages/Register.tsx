@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Field, Checkbox, FormMessage } from '@/components/ui/Field'
+import { Field, Checkbox, FormMessage } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { REGISTRATION_FIELDS } from '@/data/registrationFields'
 import { normaliseMobile } from '@/lib/mobile'
@@ -90,11 +90,11 @@ export function Register() {
       title="Create an account"
       intro="Registered clients see a wider selection of the catalogue."
       footer={
-        <p className="text-sm font-light text-charcoal-400">
+        <p className="text-sm font-light text-[var(--color-fg-muted)]">
           Already registered?{' '}
           <Link
             to="/sign-in"
-            className="text-charcoal-800 underline underline-offset-4 transition-colors hover:text-champagne-800"
+            className="text-[var(--color-accent)] underline underline-offset-4 transition-colors hover:text-[var(--color-accent-hover)]"
           >
             Sign in
           </Link>
@@ -134,7 +134,7 @@ export function Register() {
           label={
             <>
               I agree to the{' '}
-              <Link to="/privacy" className="text-charcoal-800 underline underline-offset-4">
+              <Link to="/privacy" className="text-[var(--color-accent)] underline underline-offset-4">
                 Privacy Policy
               </Link>{' '}
               and consent to VK Jewellers storing these details.

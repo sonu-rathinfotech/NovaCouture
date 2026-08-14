@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Field, TextArea, FormMessage } from '@/components/ui/Field'
+import { Field, Textarea, FormMessage } from '@/components/ui/Field'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { normaliseMobile } from '@/lib/mobile'
@@ -65,17 +65,17 @@ export function EnquiryForm({ product }: { product: ProductWithImages }) {
         Enquire about this piece
       </Button>
       {!configured && (
-        <p className="mt-5 text-sm leading-relaxed font-light text-charcoal-400">
+        <p className="mt-5 text-sm leading-relaxed font-light text-[var(--color-fg-muted)]">
           Enquiries are not live yet — VK Jewellers has not supplied the address the enquiry
           should be sent to.
         </p>
       )}
 
       <Modal
-        open={open}
+        isOpen={open}
         onClose={() => setOpen(false)}
         title="Enquire"
-        subtitle={product.name}
+        description={product.name}
       >
         <form onSubmit={onSubmit} noValidate>
 
@@ -111,14 +111,14 @@ export function EnquiryForm({ product }: { product: ProductWithImages }) {
         onChange={(e) => setMobile(e.target.value)}
       />
 
-          <TextArea
+          <Textarea
             label="Message"
             rows={4}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
 
-          <p className="mb-6 text-sm leading-relaxed font-light text-charcoal-400">
+          <p className="mb-6 text-sm leading-relaxed font-light text-[var(--color-fg-muted)]">
             Sending opens a pre-filled email to VK Jewellers from your own mail application.
           </p>
 

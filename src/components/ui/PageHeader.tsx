@@ -1,65 +1,88 @@
-/**
- * Section and page headings.
- *
- * One component so every page opens the same way: eyebrow, serif title, and an
- * optional line beneath. Consistency here is most of what makes a set of pages
- * feel like one site.
- */
-export function PageHeader({
-  eyebrow,
-  title,
-  note,
-  align = 'center',
-}: {
-  eyebrow?: string
-  title: string
-  note?: string
-  align?: 'center' | 'left'
-}) {
-  const centred = align === 'center'
+import { type ReactNode } from 'react'
+import { ButtonLink } from './Button'
 
+interface EmptyStateProps {
+  title: string
+  message?: string
+  icon?: ReactNode
+  action?: {
+    label: string
+    href: string
+    variant?: 'primary' | 'secondary' | 'ghost'
+  }
+  className?: string
+}
+
+export function EmptyState({ title, message, icon, action, className = '' }: EmptyStateProps) {
   return (
-    <div className={`mb-16 ${centred ? 'text-center' : ''}`}>
-      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
-      {/* Gold rule beneath the eyebrow — the opulence signature. */}
-      <span
-        aria-hidden="true"
-        className={`mb-6 block h-px w-12 bg-champagne-400 ${centred ? 'mx-auto' : ''}`}
-      />
-      <h1 className="text-balance font-serif text-display-sm text-charcoal-800">{title}</h1>
-      {note && (
-        <p
-          className={`mt-4 text-base leading-relaxed font-light text-charcoal-400 ${
-            centred ? 'mx-auto max-w-xl' : 'max-w-xl'
-          }`}
+    <div className={['flex flex-col items-center justify-center text-center py-16 px-4', className].join(' ')}>
+      <div className="mb-6 p-4 bg-[var(--color-bg-muted)] rounded-full">
+        {icon || (
+          <svg className="h-10 w-10 text-[var(--color-fg-subtle)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+          </svg>
+        )}
+      </div>
+      <h3 className="text-lg font-semibold text-[var(--color-fg)] mb-2">{title}</h3>
+      {message && (
+        <p className="text-[var(--color-fg-muted)] max-w-md mb-6">{message}</p>
+      )}
+      {action && (
+        <ButtonLink
+          to={action.href}
+          variant={action.variant || 'primary'}
+          size="md"
         >
-          {note}
-        </p>
+          {action.label}
+        </ButtonLink>
       )}
     </div>
   )
 }
 
-/** Same treatment, used for a section inside a page rather than its title. */
-export function SectionHead({
-  eyebrow,
-  title,
-  note,
-}: {
-  eyebrow: string
+/** Page header component */
+interface PageHeaderProps {
   title: string
+  subtitle?: string
+  /** Alias for subtitle — keeps editorial page copy consistent. */
   note?: string
-}) {
+  eyebrow?: string
+  action?: ReactNode
+  align?: 'left' | 'center'
+  className?: string
+}
+
+export function PageHeader({
+  title,
+  subtitle,
+  note,
+  eyebrow,
+  action,
+  align = 'left',
+  className = '',
+}: PageHeaderProps) {
+  const centered = align === 'center'
+  const description = note ?? subtitle
+
   return (
-    <div className="mb-16 text-center">
-      <p className="eyebrow mb-3">{eyebrow}</p>
-      <span aria-hidden="true" className="mx-auto mb-6 block h-px w-12 bg-champagne-400" />
-      <h2 className="font-serif text-display-sm text-charcoal-800">{title}</h2>
-      {note && (
-        <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed font-light text-charcoal-400">
-          {note}
+    <header className={['mb-8 lg:mb-12', centered ? 'text-center' : 'text-left', className].join(' ')}>
+      {eyebrow && (
+        <p className="eyebrow mb-3 text-[var(--color-accent)]">{eyebrow}</p>
+      )}
+      <h1 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight mb-3">
+        {title}
+      </h1>
+      {description && (
+        <p
+          className={[
+            'text-[var(--text-body-lg)] text-[var(--color-fg-muted)] max-w-2xl mb-4',
+            centered ? 'mx-auto' : '',
+          ].join(' ')}
+        >
+          {description}
         </p>
       )}
-    </div>
+      {action && <div className="mt-4">{action}</div>}
+    </header>
   )
 }

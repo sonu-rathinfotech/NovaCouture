@@ -44,12 +44,12 @@ export function CollectionPage() {
   return (
     <section className="mx-auto max-w-[1360px] px-6 py-20 lg:px-14">
       <div className="mb-14 text-center">
-        <span className="eyebrow">A private selection</span>
-        <h1 className="mt-3.5 font-serif text-4xl font-light md:text-[2.6rem]">
+        <span className="eyebrow text-[var(--color-accent)]">A private selection</span>
+        <h1 className="mt-3.5 font-display text-4xl font-light md:text-[2.6rem] text-[var(--color-fg)]">
           {collection.title}
         </h1>
         {collection.welcomeMessage && (
-          <p className="mx-auto mt-5 max-w-[52ch] text-[0.9375rem] leading-relaxed text-ink-soft">
+          <p className="mx-auto mt-5 max-w-[52ch] text-[0.9375rem] leading-relaxed text-[var(--color-fg-muted)]">
             {collection.welcomeMessage}
           </p>
         )}
@@ -77,9 +77,11 @@ export function CollectionPage() {
 function CollectionDenied() {
   return (
     <section className="mx-auto max-w-[560px] px-6 py-32 text-center">
-      <span className="eyebrow">Private link</span>
-      <h1 className="mt-3.5 font-serif text-3xl font-light">This collection is not available</h1>
-      <p className="mx-auto mt-5 max-w-[46ch] text-[0.9375rem] leading-relaxed text-ink-soft">
+      <span className="eyebrow text-[var(--color-accent)]">Private link</span>
+      <h1 className="mt-3.5 font-display text-3xl font-light text-[var(--color-fg)]">
+        This collection is not available
+      </h1>
+      <p className="mx-auto mt-5 max-w-[46ch] text-[0.9375rem] leading-relaxed text-[var(--color-fg-muted)]">
         Curated collections are shown to premium clients of VK Jewellers. If this link was sent
         to you, sign in with the number it was sent to.
       </p>

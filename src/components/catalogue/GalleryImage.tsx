@@ -66,7 +66,7 @@ export function GalleryImage({
   if (!src) {
     return (
       <div
-        className={`h-full w-full bg-sand ${failed ? '' : 'animate-pulse'}`}
+        className={`h-full w-full bg-[var(--color-bg-muted)] ${failed ? '' : 'animate-pulse'}`}
         role="img"
         aria-label={failed ? '' : image.alt}
         aria-hidden={failed || undefined}
@@ -91,7 +91,7 @@ export function GalleryImage({
           uploads arrive already watermarked from the server — never overlaid
           in CSS, which comes off with one devtools click (DESIGN.md §8). */}
       {placeholder && (
-        <span className="pointer-events-none absolute right-3 bottom-2.5 font-serif text-[0.6875rem] tracking-[0.2em] text-white/70 mix-blend-difference select-none">
+        <span className="pointer-events-none absolute right-3 bottom-2.5 font-display text-[0.6875rem] tracking-[0.2em] text-white/70 mix-blend-difference select-none">
           VK
         </span>
       )}

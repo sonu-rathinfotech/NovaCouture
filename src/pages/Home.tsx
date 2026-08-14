@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom'
-import { ArrowRight, Crown } from 'lucide-react'
-import { ButtonLink } from '@/components/ui/Button'
+import { ArrowRight, Crown, ShieldCheck, Truck, RotateCcw, Headphones } from 'lucide-react'
+import { ButtonLink } from '@/components/ui'
 import { ProductGrid, ProductGridSkeleton } from '@/components/catalogue/ProductGrid'
 import { CategoryCard } from '@/components/catalogue/CategoryCard'
 import { HERO_PHOTO, samplePhoto, USING_SAMPLE_PHOTOS } from '@/components/catalogue/samplePhotos'
@@ -23,97 +22,128 @@ export function Home() {
   const secondary = cats.slice(3)
 
   return (
-    <div>
-      {/* Editorial hero: a split composition — oversized Bodoni type on the
-          left, the photograph full-height on the right, like a magazine cover
-          opened flat. The header is a solid ivory bar, so the hero begins
-          beneath it cleanly. */}
-      <section className="border-b border-ivory-300">
-        <div className="container-lux grid min-h-[92vh] grid-cols-1 items-center gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-24">
-          <div className="max-w-xl animate-fade-in">
-            <p className="mb-8 flex items-center gap-4 text-[0.65rem] font-medium tracking-[0.32em] text-charcoal-400 uppercase">
-              <span aria-hidden="true" className="block h-px w-10 bg-champagne-500" />
+    <div className="bg-[var(--color-bg)]">
+      {/* Hero Section - Tiffany/Aurate editorial style. The negative margin
+          pulls the photograph up under the sticky header so the hero reads
+          full-bleed edge to edge. */}
+      <section className="relative -mt-18 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img
+            src={HERO_PHOTO}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-fg)]/80 via-[var(--color-fg)]/40 to-transparent" />
+        </div>
+        
+        <div className="relative z-10 container min-h-[90vh] flex items-center lg:min-h-[100vh]">
+          <div className="max-w-3xl animate-fade-in-up">
+            <p className="eyebrow mb-6 text-[var(--trust-gold)] tracking-widest">
               № 01 — Private Catalogue
             </p>
-            <h1 className="text-balance font-serif text-display text-charcoal-900">
+            <h1 className="font-display text-[var(--text-display-lg)] font-medium text-white leading-tight tracking-tight text-balance">
               Pieces made to be inherited.
             </h1>
-            <p className="mt-8 max-w-md text-lg leading-relaxed font-light text-charcoal-400">
+            <p className="mt-8 text-[var(--text-body-lg)] leading-relaxed text-[var(--base-200)] max-w-xl">
               A private catalogue of fine gold and stone work, shown by registered access.
+              Each piece carries a legacy of craftsmanship.
             </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <ButtonLink to={cats[0] ? `/c/${cats[0].slug}` : '/'} variant="primary" size="lg">
-                Explore the collection
+            <div className="mt-12 flex flex-col gap-4 sm:flex-row">
+              <ButtonLink
+                to={cats[0] ? `/c/${cats[0].slug}` : '/'}
+                variant="primary"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
+                Explore the Collection
               </ButtonLink>
               {tier === 'guest' && (
-                <ButtonLink to="/sign-in" variant="outline" size="lg">
-                  Client sign in
+                <ButtonLink to="/sign-in" variant="secondary" size="lg" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10">
+                  Client Sign In
                 </ButtonLink>
               )}
             </div>
           </div>
+        </div>
 
-          <div className="relative aspect-4/5 w-full overflow-hidden bg-ivory-200 lg:aspect-auto lg:h-[68vh]">
-            <img
-              src={HERO_PHOTO}
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-cover"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-charcoal-900/20 to-transparent"
-            />
-            <p className="absolute right-5 bottom-4 text-[0.6rem] tracking-[0.25em] text-charcoal-500 uppercase">
-              VK Jewellers — Plate № 01
-            </p>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">
+          <svg className="h-6 w-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </div>
+      </section>
+
+      {/* Sample photos notice */}
+      {USING_SAMPLE_PHOTOS && (
+        <div className="border-b border-[var(--color-border)] bg-[var(--color-bg-muted)]/50 px-6 py-3">
+          <p className="container text-center text-sm tracking-[0.1em] uppercase text-[var(--color-fg-muted)]">
+            Photography shown is for design purposes only — not VK Jewellers pieces
+          </p>
+        </div>
+      )}
+
+      {/* Trust Badges - Tanishq/Blue Nile style */}
+      <section className="py-12 bg-[var(--color-bg-elevated)] border-y border-[var(--color-border)]">
+        <div className="container">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-5 items-center">
+            {[
+              { icon: ShieldCheck, label: 'BIS Hallmarked', desc: 'Govt. certified' },
+              { icon: Crown, label: 'Lifetime Warranty', desc: 'On craftsmanship' },
+              { icon: Truck, label: 'Insured Shipping', desc: 'Free & secure' },
+              { icon: RotateCcw, label: 'Easy Returns', desc: '30-day policy' },
+              { icon: Headphones, label: 'Personal Concierge', desc: 'Dedicated support' },
+            ].map((badge, i) => (
+              <div
+                key={badge.label}
+                className="flex items-center gap-3 p-4 hover:bg-[var(--color-bg-muted)] rounded-xl transition-colors animate-fade-in-up"
+                style={{ animationDelay: `${i * 80}ms` }}
+              >
+                <div className="p-2 rounded-lg bg-[var(--color-accent-light)]">
+                  <badge.icon className="h-5 w-5 text-[var(--color-accent)]" aria-hidden="true" />
+                </div>
+                <div>
+                  <p className="font-medium text-sm text-[var(--color-fg)]">{badge.label}</p>
+                  <p className="text-[var(--color-fg-muted)] text-xs">{badge.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {USING_SAMPLE_PHOTOS && (
-        <p className="border-b border-ivory-300 bg-ivory-200/60 px-6 py-2.5 text-center text-[0.65rem] tracking-[0.2em] text-charcoal-400 uppercase">
-          Photography shown is for design purposes only — not VK Jewellers pieces
-        </p>
-      )}
-
-      {/* Collections */}
-      <section className="py-24 lg:py-32">
-        <div className="container-lux">
-          <div className="mb-16 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      {/* Collections - Tanishq/Kalyan style with editorial numbering */}
+      <section className="py-20 lg:py-32 bg-[var(--color-bg)]">
+        <div className="container">
+          <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
-              <p className="eyebrow mb-3">№ 02 — Collections</p>
-              <span aria-hidden="true" className="mb-5 block h-px w-12 bg-champagne-400" />
-              <h2 className="font-serif text-display-sm text-charcoal-800">Curated by category</h2>
+              <p className="eyebrow mb-3 text-[var(--color-accent)]">№ 02 — Collections</p>
+              <h2 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight">Curated by category</h2>
             </div>
             {cats[0] && (
-              <Link
+              <ButtonLink
                 to={`/c/${cats[0].slug}`}
-                className="group inline-flex items-center gap-2 text-xs tracking-[0.2em] text-charcoal-600 uppercase transition-colors hover:text-charcoal-900"
+                variant="ghost"
+                size="md"
+                className="text-[var(--color-fg)] hover:text-[var(--color-accent)]"
               >
                 Browse the catalogue
-                <ArrowRight
-                  size={16}
-                  strokeWidth={1.5}
-                  className="transition-transform group-hover:translate-x-1"
-                />
-              </Link>
+                <ArrowRight size={16} strokeWidth={2} className="ml-2" />
+              </ButtonLink>
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {/* Featured Categories (3) */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-12">
             {featured.map((c, i) => (
-              <CategoryCard
-                key={c.id}
-                category={c}
-                large={i === 0}
-                index={i}
-              />
+              <CategoryCard key={c.id} category={c} large={i === 0} index={i} />
             ))}
           </div>
 
+          {/* Secondary Categories */}
           {secondary.length > 0 && (
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {secondary.map((c, i) => (
                 <CategoryCard key={c.id} category={c} index={i + 3} />
               ))}
@@ -122,13 +152,11 @@ export function Home() {
         </div>
       </section>
 
-      {/* Editorial. The copy here is deliberately factual: VK has not supplied
-          a house history, and inventing one for a real business is not ours to
-          do. The words below are true of the platform as built. */}
-      <section className="bg-ivory-200 py-24 lg:py-32">
-        <div className="container-lux">
-          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-24">
-            <div className="aspect-4/5 overflow-hidden bg-ivory-300">
+      {/* Editorial Story - Tiffany/Kalyan heritage storytelling */}
+      <section className="py-20 lg:py-32 bg-[var(--color-bg-muted)]" data-theme="warm">
+        <div className="container">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <div className="aspect-[4/5] overflow-hidden rounded-2xl">
               <img
                 src={samplePhoto('necklace', 1)}
                 alt=""
@@ -138,12 +166,11 @@ export function Home() {
               />
             </div>
             <div>
-              <p className="eyebrow mb-3">№ 03 — The House of VK</p>
-              <span aria-hidden="true" className="mb-5 block h-px w-12 bg-champagne-400" />
-              <h2 className="text-balance font-serif text-display-sm text-charcoal-800">
+              <p className="eyebrow mb-3 text-[var(--warm-700)]">№ 03 — The House of VK</p>
+              <h2 className="font-display text-[var(--text-h1)] text-[var(--warm-900)] tracking-tight">
                 Shown by invitation, not by sale.
               </h2>
-              <div className="mt-8 space-y-5 text-base leading-relaxed font-light text-charcoal-500">
+              <div className="mt-8 space-y-5 text-[var(--text-body-lg)] leading-relaxed text-[var(--warm-600)]">
                 <p>
                   This is a catalogue, not a shop. Pieces are shown here so clients can see the
                   current work; nothing is sold through the site and no prices are listed.
@@ -154,8 +181,9 @@ export function Home() {
                 </p>
               </div>
               <div className="mt-10">
-                <ButtonLink to="/about" variant="outline">
-                  Our story
+                <ButtonLink to="/about" variant="secondary" size="lg">
+                  Our Story
+                  <ArrowRight size={16} strokeWidth={2} className="ml-2" />
                 </ButtonLink>
               </div>
             </div>
@@ -163,14 +191,15 @@ export function Home() {
         </div>
       </section>
 
-      {/* Selected pieces */}
-      <section className="py-24 lg:py-32">
-        <div className="container-lux">
-          <div className="mb-16 text-center">
-            <p className="eyebrow mb-3">№ 04 — Selected</p>
-            <span aria-hidden="true" className="mx-auto mb-6 block h-px w-12 bg-champagne-400" />
-            <h2 className="font-serif text-display-sm text-charcoal-800">From the collection</h2>
-            <p className="mx-auto mt-4 max-w-md text-base font-light text-charcoal-400">
+      {/* Selected Pieces */}
+      <section className="py-20 lg:py-32 bg-[var(--color-bg)]">
+        <div className="container">
+          <div className="mb-16 text-center max-w-2xl mx-auto">
+            <p className="eyebrow mb-3 text-[var(--color-accent)]">№ 04 — Selected</p>
+            <h2 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight">
+              From the collection
+            </h2>
+            <p className="mt-4 text-[var(--text-body-lg)] text-[var(--color-fg-muted)]">
               {products && !loading
                 ? `${products.length} ${products.length === 1 ? 'piece' : 'pieces'} shown. Browse a category for the full listing.`
                 : 'Browse a category for the full listing.'}
@@ -181,32 +210,40 @@ export function Home() {
         </div>
       </section>
 
-      {/* Premium invitation */}
+      {/* Premium Invitation - Aurate/Ana Luisa color-rich style */}
       {tier !== 'premium' && (
-        <section className="relative overflow-hidden border-y border-champagne-500/25 bg-charcoal-900 py-24 lg:py-32">
+        <section className="relative overflow-hidden py-20 lg:py-32" data-theme="dark-premium">
           <img
             src={samplePhoto('ring', 2)}
             alt=""
             aria-hidden="true"
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-25"
+            className="absolute inset-0 h-full w-full object-cover opacity-20"
           />
-          <div className="relative container-lux text-center">
-            <p className="eyebrow mb-6 text-champagne-300">№ 05 — By invitation</p>
-            <Crown size={28} strokeWidth={1} className="mx-auto mb-6 text-champagne-400" />
-            <h2 className="text-balance font-serif text-display-sm text-ivory-100">
+          <div className="relative container text-center">
+            <p className="eyebrow mb-6 text-[var(--accent-300)]">№ 05 — By Invitation</p>
+            <div className="mx-auto mb-6 p-4 bg-white/10 rounded-full inline-block">
+              <svg className="h-12 w-12 text-[var(--accent-300)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h2 className="font-display text-[var(--text-h1)] text-white tracking-tight max-w-2xl mx-auto">
               {tier === 'guest'
                 ? 'The full archive is reserved for clients'
                 : 'Selected pieces are shown to premium clients'}
             </h2>
-            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed font-light text-ivory-200/70">
+            <p className="mx-auto mt-6 max-w-lg text-[var(--text-body-lg)] leading-relaxed text-[var(--base-300)]">
               {tier === 'guest'
                 ? 'Sign in with your registered number to view the wider catalogue.'
                 : 'Premium access is arranged by VK Jewellers. Speak to us to have it added to your account.'}
             </p>
             <div className="mt-10">
-              <ButtonLink to={tier === 'guest' ? '/sign-in' : '/contact'} variant="light" size="lg">
-                {tier === 'guest' ? 'Sign in' : 'Contact us'}
+              <ButtonLink
+                to={tier === 'guest' ? '/sign-in' : '/contact'}
+                variant="premium"
+                size="lg"
+              >
+                {tier === 'guest' ? 'Sign In' : 'Contact Us'}
               </ButtonLink>
             </div>
           </div>

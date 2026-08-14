@@ -1,261 +1,239 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { ChevronLeft, ChevronRight, Expand } from 'lucide-react'
 import type { ProductImage } from '@/types/db'
 import type { ArtKind } from './art'
 import { GalleryImage } from './GalleryImage'
+import { Modal } from '@/components/ui'
 
 /**
- * Product gallery: thumbnail rail plus a full-screen lightbox.
+ * Product gallery: large frame, thumbnail strip, full-screen lightbox.
  *
  * Galleries are never gated (scope §1) — if a product is visible at all, every
  * image of it is. Access has already been decided upstream by the time this
  * component renders.
+ *
+ * Mobile-first: the thumbnail strip sits below the frame, swipe navigates,
+ * and the lightbox fills the screen.
  */
 export function Gallery({
   images,
   kind,
-  offset = 0,
+  offset,
   productName,
 }: {
   images: ProductImage[]
   kind: ArtKind
   /** Placeholder-art variant offset; ignored once real images exist. */
-  offset?: number
+  offset: number
   productName: string
 }) {
-  const [active, setActive] = useState(0)
-  const [lightbox, setLightbox] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const mainImageRef = useRef<HTMLDivElement>(null)
 
-  const count = images.length
-  const next = useCallback(() => setActive((i) => (i + 1) % count), [count])
-  const prev = useCallback(() => setActive((i) => (i - 1 + count) % count), [count])
+  const goTo = useCallback(
+    (index: number) => {
+      setCurrentIndex((index + images.length) % images.length)
+    },
+    [images.length],
+  )
 
-  if (count === 0) return null
+  const next = useCallback(() => goTo(currentIndex + 1), [currentIndex, goTo])
+  const prev = useCallback(() => goTo(currentIndex - 1), [currentIndex, goTo])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prev()
+      if (e.key === 'ArrowRight') next()
+      if (e.key === 'Escape' && isFullscreen) setIsFullscreen(false)
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [prev, next, isFullscreen])
+
+  // Touch swipe support
+  const touchStart = useRef<number | null>(null)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX
+  }
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart.current === null) return
+    const diff = e.changedTouches[0].clientX - touchStart.current
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) prev()
+      else next()
+    }
+    touchStart.current = null
+  }
+
+  const currentImage = images[currentIndex]
 
   return (
-    <div>
-      <div className="flex flex-col-reverse gap-3.5 lg:flex-row">
+    <div className="relative">
+      {/* Main Image */}
+      <div
+        ref={mainImageRef}
+        className="relative aspect-4/5 overflow-hidden bg-[var(--color-bg-muted)] rounded-xl"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className="absolute inset-0 transition-opacity duration-500 ease-out">
+          <GalleryImage
+            image={currentImage}
+            kind={kind}
+            index={offset + currentIndex}
+            eager
+            className="object-cover"
+          />
+        </div>
+
+        {/* Watermark overlay */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 60%27%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Playfair Display, serif%27 font-size=%2718%27 font-weight=%27500%27 fill=%27white%27 fill-opacity=%270.06%27%3EVK JEWELLERS%3C/text%3E%3C/svg%27')] bg-repeat bg-[200px_60px]" />
+        </div>
+
+        {/* Prev/Next arrows on hover - Blue Nile style */}
+        {images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={prev}
+              aria-label="Previous image"
+              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white shadow-lg"
+            >
+              <ChevronLeft className="h-6 w-6" strokeWidth={2} />
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              aria-label="Next image"
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white shadow-lg"
+            >
+              <ChevronRight className="h-6 w-6" strokeWidth={2} />
+            </button>
+          </>
+        )}
+
+        {/* Image counter */}
+        {images.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] text-sm font-medium rounded-full">
+            {currentIndex + 1} / {images.length}
+          </div>
+        )}
+
+        {/* Fullscreen button */}
+        {images.length > 1 && (
+          <button
+            type="button"
+            onClick={() => setIsFullscreen(true)}
+            aria-label="View fullscreen"
+            className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full hover:bg-white shadow-lg transition-all"
+          >
+            <Expand className="h-5 w-5" strokeWidth={2} />
+          </button>
+        )}
+      </div>
+
+      {/* Thumbnail Strip - CaratLane/Blue Nile style */}
+      {images.length > 1 && (
         <div
-          className="flex flex-row gap-3 overflow-x-auto lg:w-[82px] lg:shrink-0 lg:flex-col"
-          role="tablist"
-          aria-label={`${productName} gallery`}
+          className="mt-4 flex gap-3 overflow-x-auto pb-2 scrollbar-hide"
+          role="group"
+          aria-label="Product images"
         >
           {images.map((img, i) => (
             <button
-              key={img.id}
+              key={img.storage_path}
               type="button"
-              role="tab"
-              aria-selected={i === active}
-              aria-label={`View image ${i + 1} of ${count}`}
-              onClick={() => setActive(i)}
-              className={[
-                'relative aspect-4/5 w-18 shrink-0 cursor-pointer overflow-hidden rounded-[2px] border bg-sand transition-colors duration-200',
-                i === active ? 'border-gold-light' : 'border-transparent hover:border-gold-light',
-              ].join(' ')}
+              onClick={() => goTo(i)}
+              aria-label={`View image ${i + 1}`}
+              aria-current={i === currentIndex ? 'true' : 'false'}
+              className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                i === currentIndex
+                  ? 'border-[var(--color-accent)] ring-2 ring-[var(--color-accent)] ring-offset-2 ring-offset-[var(--color-bg)]'
+                  : 'border-transparent hover:border-[var(--color-border)]'
+              }`}
             >
-              <GalleryImage image={img} kind={kind} index={offset + i} sizeClass="w-[70%]" />
+              <GalleryImage
+                image={img}
+                kind={kind}
+                index={offset + i}
+                className="h-full w-full object-cover"
+              />
             </button>
           ))}
         </div>
-
-        <button
-          type="button"
-          onClick={() => setLightbox(true)}
-          aria-label="Open full-screen view"
-          className="relative aspect-4/5 flex-1 cursor-zoom-in overflow-hidden rounded-[2px] bg-sand"
-        >
-          <GalleryImage
-            image={images[active]}
-            kind={kind}
-            index={offset + active}
-            sizeClass="w-[58%]"
-            eager
-          />
-        </button>
-      </div>
-
-      <p className="mt-3 text-[0.65rem] tracking-[0.2em] text-charcoal-400 tabular-nums lg:ml-[96px]">
-        {active + 1} / {count}
-      </p>
-
-      {lightbox && (
-        <Lightbox
-          images={images}
-          kind={kind}
-          offset={offset}
-          active={active}
-          count={count}
-          productName={productName}
-          onClose={() => setLightbox(false)}
-          onNext={next}
-          onPrev={prev}
-        />
       )}
-    </div>
-  )
-}
 
-function Lightbox({
-  images,
-  kind,
-  offset,
-  active,
-  count,
-  productName,
-  onClose,
-  onNext,
-  onPrev,
-}: {
-  images: ProductImage[]
-  kind: ArtKind
-  offset: number
-  active: number
-  count: number
-  productName: string
-  onClose: () => void
-  onNext: () => void
-  onPrev: () => void
-}) {
-  const panel = useRef<HTMLDivElement>(null)
-  const closeRef = useRef<HTMLButtonElement>(null)
-  const restoreTo = useRef<Element | null>(null)
-  const [zoomed, setZoomed] = useState(false)
-
-  // Changing image drops the zoom, so the next view starts at 1:1.
-  useEffect(() => setZoomed(false), [active])
-
-  useEffect(() => {
-    restoreTo.current = document.activeElement
-    closeRef.current?.focus()
-
-    const { overflow } = document.body.style
-    document.body.style.overflow = 'hidden'
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        // Escape first unzooms, then closes — the same gesture as desktop.
-        if (zoomed) {
-          setZoomed(false)
-          return
-        }
-        onClose()
-        return
-      }
-      if (e.key === 'ArrowRight') {
-        onNext()
-        return
-      }
-      if (e.key === 'ArrowLeft') {
-        onPrev()
-        return
-      }
-      if (e.key !== 'Tab') return
-
-      // Keep Tab inside the lightbox — without a trap, a keyboard user tabs
-      // into the page behind and cannot find their way back.
-      const items = Array.from(
-        panel.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ) ?? [],
-      )
-      if (items.length === 0) return
-      const first = items[0]
-      const last = items[items.length - 1]
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault()
-        last.focus()
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault()
-        first.focus()
-      }
-    }
-    document.addEventListener('keydown', onKey)
-
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = overflow
-      ;(restoreTo.current as HTMLElement | null)?.focus?.()
-    }
-  }, [onClose, onNext, onPrev, zoomed])
-
-  return (
-    <div
-      ref={panel}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${productName}, image ${active + 1} of ${count}`}
-      className="fixed inset-0 z-50 flex flex-col bg-noir/97"
-    >
-      <div className="flex items-center justify-between px-6 py-5 text-ivory/70">
-        <span className="text-xs tracking-[0.16em] tabular-nums">
-          {String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
-        </span>
-        <button
-          ref={closeRef}
-          type="button"
-          onClick={onClose}
-          aria-label="Close full-screen view"
-          className="cursor-pointer transition-colors duration-200 hover:text-ivory"
-        >
-          <X size={22} strokeWidth={1.25} />
-        </button>
-      </div>
-
-      <div className="flex flex-1 items-center justify-between gap-4 px-4 pb-10">
-        <NavButton onClick={onPrev} label="Previous image">
-          <ChevronLeft size={28} strokeWidth={1} />
-        </NavButton>
-
-        {/* Click to zoom in, click again to return (DESIGN.md §5). */}
-        <button
-          type="button"
-          onClick={() => setZoomed((z) => !z)}
-          aria-label={zoomed ? 'Zoom out' : 'Zoom in'}
-          aria-pressed={zoomed}
-          className={`relative aspect-4/5 h-full max-h-[76vh] flex-1 self-center overflow-hidden ${
-            zoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
-          }`}
-        >
-          <div
-            className={`h-full w-full transition-transform duration-500 ease-lux ${
-              zoomed ? 'scale-[1.6]' : 'scale-100'
-            }`}
-          >
+      {/* Fullscreen Modal */}
+      <Modal
+        isOpen={isFullscreen}
+        onClose={() => setIsFullscreen(false)}
+        title={productName}
+        size="full"
+        showCloseButton
+        closeOnOverlayClick
+        closeOnEscape
+      >
+        <div className="relative aspect-4/5 max-h-[80vh]">
+          <div className="absolute inset-0 flex items-center justify-center">
             <GalleryImage
-              image={images[active]}
+              image={currentImage}
               kind={kind}
-              index={offset + active}
-              sizeClass="w-[46%]"
+              index={offset + currentIndex}
               eager
+              className="max-h-[80vh] max-w-full object-contain"
             />
           </div>
-        </button>
 
-        <NavButton onClick={onNext} label="Next image">
-          <ChevronRight size={28} strokeWidth={1} />
-        </NavButton>
-      </div>
+          {images.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={prev}
+                aria-label="Previous image"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 text-[var(--color-fg)] rounded-full shadow-lg hover:bg-white transition-colors lg:left-8"
+              >
+                <ChevronLeft className="h-8 w-8" strokeWidth={2} />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                aria-label="Next image"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 text-[var(--color-fg)] rounded-full shadow-lg hover:bg-white transition-colors lg:right-8"
+              >
+                <ChevronRight className="h-8 w-8" strokeWidth={2} />
+              </button>
+            </>
+          )}
+
+          {/* Thumbnails in modal */}
+          <div className="mt-6 flex gap-3 justify-center overflow-x-auto pb-2 scrollbar-hide">
+            {images.map((img, i) => (
+              <button
+                key={img.storage_path}
+                type="button"
+                onClick={() => goTo(i)}
+                aria-label={`View image ${i + 1}`}
+                aria-current={i === currentIndex ? 'true' : 'false'}
+                className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                  i === currentIndex
+                    ? 'border-[var(--color-accent)]'
+                    : 'border-transparent hover:border-[var(--color-border)]'
+                }`}
+              >
+                <GalleryImage
+                  image={img}
+                  kind={kind}
+                  index={offset + i}
+                  className="h-full w-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
-  )
-}
-
-function NavButton({
-  onClick,
-  label,
-  children,
-}: {
-  onClick: () => void
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      className="grid size-11 shrink-0 cursor-pointer place-items-center text-ivory/60 transition-colors duration-200 hover:text-ivory"
-    >
-      {children}
-    </button>
   )
 }

@@ -1,111 +1,206 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { type ReactNode, useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
+import { createPortal } from 'react-dom'
+import { Button } from './Button'
 
-/**
- * Dialog.
- *
- * The Bolt version handled Escape and the body scroll lock. This adds the
- * three things a dialog also needs to be usable without a mouse: it announces
- * itself as a dialog, it keeps Tab inside itself, and it puts focus back where
- * it came from on close. Without those, a keyboard user tabs into the page
- * behind and cannot find their way out.
- */
-export function Modal({
-  open,
-  onClose,
-  title,
-  subtitle,
-  children,
-  maxWidth = 'max-w-lg',
-}: {
-  open: boolean
+interface ModalProps {
+  isOpen: boolean
   onClose: () => void
   title?: string
-  subtitle?: string
+  description?: string
   children: ReactNode
-  maxWidth?: string
-}) {
-  const panel = useRef<HTMLDivElement>(null)
-  const restoreTo = useRef<Element | null>(null)
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  showCloseButton?: boolean
+  closeOnOverlayClick?: boolean
+  closeOnEscape?: boolean
+}
+
+const sizeClasses = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  full: 'max-w-4xl',
+}
+
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  description,
+  children,
+  size = 'md',
+  showCloseButton = true,
+  closeOnOverlayClick = true,
+  closeOnEscape = true,
+}: ModalProps) {
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const previousActiveElement = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
-    if (!open) return
+    if (!isOpen) return
 
-    restoreTo.current = document.activeElement
-    const { overflow } = document.body.style
+    previousActiveElement.current = document.activeElement as HTMLElement
+
     document.body.style.overflow = 'hidden'
 
-    // Focus the first thing inside, so the dialog is where typing goes.
-    const focusable = () =>
-      Array.from(
-        panel.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ) ?? [],
-      )
-    focusable()[0]?.focus()
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && closeOnEscape) {
         onClose()
-        return
       }
-      if (e.key !== 'Tab') return
-
-      const items = focusable()
-      if (items.length === 0) return
-      const first = items[0]
-      const last = items[items.length - 1]
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault()
-        last.focus()
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault()
-        first.focus()
+      if (e.key === 'Tab') {
+        trapFocus(e)
       }
     }
 
-    document.addEventListener('keydown', onKey)
+    document.addEventListener('keydown', handleKeyDown)
+    contentRef.current?.focus()
+
     return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = overflow
-      ;(restoreTo.current as HTMLElement | null)?.focus?.()
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', handleKeyDown)
+      previousActiveElement.current?.focus()
     }
-  }, [open, onClose])
+  }, [isOpen, closeOnEscape, onClose])
 
-  if (!open) return null
+  const trapFocus = (e: KeyboardEvent) => {
+    const focusableElements = contentRef.current?.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    )
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    if (!focusableElements?.length) return
+
+    const firstElement = focusableElements[0] as HTMLElement
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+
+    if (e.shiftKey && document.activeElement === firstElement) {
+      e.preventDefault()
+      lastElement.focus()
+    } else if (!e.shiftKey && document.activeElement === lastElement) {
+      e.preventDefault()
+      firstElement.focus()
+    }
+  }
+
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget && closeOnOverlayClick) {
+      onClose()
+    }
+  }
+
+  if (!isOpen) return null
+
+  const modalContent = (
+    <div
+      ref={overlayRef}
+      className="fixed inset-0 z-[var(--z-modal-backdrop)] flex items-center justify-center p-4"
+      onClick={handleOverlayClick}
+      role="presentation"
+    >
       <div
+        className="absolute inset-0 bg-[var(--color-fg)]/50 backdrop-blur-sm animate-fade-in"
         aria-hidden="true"
-        onClick={onClose}
-        className="absolute inset-0 bg-charcoal-900/40 backdrop-blur-sm"
       />
-
       <div
-        ref={panel}
+        ref={contentRef}
+        tabIndex={-1}
+        className={[
+          'relative w-full',
+          'bg-[var(--color-bg-elevated)]',
+          'rounded-xl',
+          'shadow-[var(--shadow-2xl)]',
+          'animate-scale-in',
+          'max-h-[90vh] overflow-y-auto',
+          sizeClasses[size],
+        ].join(' ')}
         role="dialog"
         aria-modal="true"
-        aria-label={title}
-        className={`relative max-h-[90vh] w-full overflow-y-auto border border-ivory-300 bg-ivory-100 shadow-elevated animate-scale-in ${maxWidth}`}
+        aria-labelledby={title ? 'modal-title' : undefined}
+        aria-describedby={description ? 'modal-description' : undefined}
       >
-        <div className="flex items-start justify-between px-8 pt-8 pb-4">
-          <div>
-            {title && <h2 className="font-serif text-2xl text-charcoal-800">{title}</h2>}
-            {subtitle && <p className="mt-1 text-sm font-light text-charcoal-400">{subtitle}</p>}
+        {(title || showCloseButton) && (
+          <div className="flex items-start justify-between gap-4 p-6 border-b border-[var(--color-border)]">
+            <div>
+              {title && (
+                <h2
+                  id="modal-title"
+                  className="text-lg font-semibold text-[var(--color-fg)]"
+                >
+                  {title}
+                </h2>
+              )}
+              {description && (
+                <p
+                  id="modal-description"
+                  className="mt-1 text-sm text-[var(--color-fg-muted)]"
+                >
+                  {description}
+                </p>
+              )}
+            </div>
+            {showCloseButton && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                aria-label="Close modal"
+                className="flex-shrink-0 p-1"
+              >
+                <X className="h-5 w-5" strokeWidth={2} />
+              </Button>
+            )}
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="-mt-1 cursor-pointer p-1 text-charcoal-400 transition-colors duration-300 hover:text-charcoal-800"
-          >
-            <X size={20} strokeWidth={1.5} />
-          </button>
-        </div>
-        <div className="px-8 pb-8">{children}</div>
+        )}
+        <div className="p-6">{children}</div>
       </div>
     </div>
+  )
+
+  if (typeof window === 'undefined') return null
+
+  return createPortal(modalContent, document.body)
+}
+
+/** Alert modal for confirmations */
+interface AlertModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+  title: string
+  message: string
+  confirmText?: string
+  cancelText?: string
+  variant?: 'danger' | 'primary'
+  loading?: boolean
+}
+
+export function AlertModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  message,
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
+  variant = 'primary',
+  loading = false,
+}: AlertModalProps) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
+      <p className="text-[var(--color-fg-muted)] mb-6">{message}</p>
+      <div className="flex justify-end gap-3">
+        <Button variant="secondary" onClick={onClose} disabled={loading}>
+          {cancelText}
+        </Button>
+        <Button
+          variant={variant === 'danger' ? 'destructive' : 'primary'}
+          onClick={onConfirm}
+          disabled={loading}
+        >
+          {confirmText}
+        </Button>
+      </div>
+    </Modal>
   )
 }

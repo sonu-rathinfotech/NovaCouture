@@ -49,7 +49,7 @@ const AdminLinkDetail = lazy(() =>
 /** Shown for the brief moment a lazily-loaded route is being fetched. */
 function RouteFallback() {
   return (
-    <div className="grid min-h-screen place-items-center bg-ivory-100">
+    <div className="grid min-h-screen place-items-center bg-[var(--color-bg)]">
       <span className="eyebrow">Loading…</span>
     </div>
   )

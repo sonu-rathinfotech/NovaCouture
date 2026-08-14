@@ -11,14 +11,14 @@ export function PageStub({
   note: string
 }) {
   return (
-    <section className="mx-auto max-w-[1360px] px-6 py-24 lg:px-14">
-      <span className="eyebrow">{eyebrow}</span>
-      <h1 className="mt-3 font-serif text-4xl font-light capitalize">
+    <section className="container py-24">
+      <span className="eyebrow text-[var(--color-accent)]">{eyebrow}</span>
+      <h1 className="mt-3 font-display text-4xl font-light capitalize text-[var(--color-fg)]">
         {title.replace(/-/g, ' ')}
       </h1>
-      <hr className="my-8 h-px border-0 bg-line" />
-      <p className="max-w-[60ch] text-sm leading-relaxed text-ink-soft">
-        <span className="text-gold">{phase}</span> — {note}
+      <hr className="my-8 h-px border-0 bg-[var(--color-border)]" />
+      <p className="max-w-[60ch] text-sm leading-relaxed text-[var(--color-fg-muted)]">
+        <span className="text-[var(--color-accent)]">{phase}</span> — {note}
       </p>
     </section>
   )

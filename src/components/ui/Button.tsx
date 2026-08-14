@@ -1,67 +1,229 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import {
+  Children,
+  cloneElement,
+  forwardRef,
+  type AnchorHTMLAttributes,
+  type ButtonHTMLAttributes,
+  type ReactElement,
+  type ReactNode,
+  type Ref,
+} from 'react'
+import { ArrowRight } from 'lucide-react'
 
-/**
- * Buttons.
- *
- * Uppercase, widely tracked, generously padded — the letter-spacing is what
- * makes a button read as considered rather than utilitarian. Transitions use
- * the one decelerating curve from index.css; at 500ms a linear ease would feel
- * sluggish, this feels deliberate.
- */
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'light' | 'invert' | 'danger'
-type Size = 'sm' | 'md' | 'lg'
+/** Button variants using the new design system */
+export type ButtonVariant =
+  | 'primary'      // Filled, high emphasis
+  | 'secondary'    // Outlined, medium emphasis
+  | 'ghost'        // Text only, low emphasis
+  | 'destructive'  // Danger actions
+  | 'premium'      // Gold accent for premium features
 
-const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-charcoal-900 text-ivory-100 border border-charcoal-900 hover:bg-charcoal-700',
-  secondary: 'bg-ivory-100 text-charcoal-800 border border-charcoal-200 hover:bg-ivory-200',
-  // Editorial couture: a black hairline that fills black on hover — no gold.
-  outline: 'bg-transparent text-charcoal-800 border border-charcoal-300 hover:bg-charcoal-900 hover:border-charcoal-900 hover:text-ivory-100',
-  ghost: 'bg-transparent text-charcoal-700 border border-transparent hover:bg-ivory-200',
-  // For use over photography or a dark section.
-  light: 'bg-transparent text-ivory-100 border border-ivory-100/50 hover:bg-ivory-100 hover:text-charcoal-900',
-  // Solid ivory on a dark background. A variant rather than a className
-  // override: overriding bg/text through className collides with the variant
-  // at equal specificity, so CSS order decides the winner — which is how the
-  // hero button ended up white text on a white block.
-  invert: 'bg-ivory-100 text-charcoal-900 border border-ivory-100 hover:bg-ivory-200',
-  danger: 'bg-transparent text-danger border border-danger/40 hover:border-danger',
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl'
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant
+  size?: ButtonSize
+  leadingIcon?: ReactNode
+  trailingIcon?: ReactNode
+  fullWidth?: boolean
+  loading?: boolean
+  asChild?: boolean
 }
 
-const SIZES: Record<Size, string> = {
-  sm: 'px-5 py-2.5 text-[0.65rem] tracking-[0.18em]',
-  md: 'px-7 py-3 text-[0.65rem] tracking-[0.2em]',
-  lg: 'px-9 py-3.5 text-[0.7rem] tracking-[0.2em]',
+const baseStyles =
+  'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 ease-out ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ' +
+  'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none ' +
+  'active:scale-[0.98]'
+
+const variantStyles: Record<ButtonVariant, string> = {
+  primary:
+    'bg-[var(--color-accent)] text-white ' +
+    'hover:bg-[var(--color-accent-hover)] ' +
+    'focus-visible:ring-[var(--color-accent)] ' +
+    'shadow-sm hover:shadow-md',
+  secondary:
+    'bg-transparent border border-[var(--color-border-strong)] text-[var(--color-fg)] ' +
+    'hover:bg-[var(--color-bg-muted)] hover:border-[var(--color-accent)] ' +
+    'focus-visible:ring-[var(--color-accent)]',
+  ghost:
+    'bg-transparent text-[var(--color-fg)] ' +
+    'hover:bg-[var(--color-bg-muted)] ' +
+    'focus-visible:ring-[var(--color-fg-muted)]',
+  destructive:
+    'bg-[var(--color-danger)] text-white ' +
+    'hover:bg-[var(--color-danger)]/90 ' +
+    'focus-visible:ring-[var(--color-danger)] ' +
+    'shadow-sm hover:shadow-md',
+  premium:
+    'bg-gradient-to-r from-[var(--trust-gold)] to-[var(--accent-600)] text-white ' +
+    'hover:from-[var(--accent-600)] hover:to-[var(--accent-700)] ' +
+    'focus-visible:ring-[var(--trust-gold)] ' +
+    'shadow-[var(--shadow-gold)] hover:shadow-[var(--shadow-glow)]',
 }
 
-const BASE =
-  'inline-flex cursor-pointer items-center justify-center font-sans font-medium uppercase transition-colors duration-500 ease-lux disabled:cursor-not-allowed disabled:opacity-40'
-
-export function Button({
-  variant = 'primary',
-  size = 'md',
-  className = '',
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size }) {
-  return <button className={`${BASE} ${VARIANTS[variant]} ${SIZES[size]} ${className}`} {...props} />
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: 'px-3 py-1.5 text-sm gap-1.5',
+  md: 'px-4 py-2 text-base gap-2',
+  lg: 'px-6 py-3 text-lg gap-2.5',
+  xl: 'px-8 py-4 text-xl gap-3',
 }
 
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      variant = 'primary',
+      size = 'md',
+      leadingIcon,
+      trailingIcon,
+      fullWidth = false,
+      loading = false,
+      asChild = false,
+      children,
+      className = '',
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
+    const isDisabled = disabled || loading
+
+    const content = (
+      <>
+        {loading ? (
+          <svg
+            className="animate-spin h-4 w-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="3"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+        ) : (
+          leadingIcon
+        )}
+        {children}
+        {!loading && trailingIcon}
+      </>
+    )
+
+    const classNames = [
+      baseStyles,
+      variantStyles[variant],
+      sizeStyles[size],
+      fullWidth && 'w-full',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    if (asChild) {
+      // Render a single child (e.g. a router <Link>) with the button's
+      // classes and behaviour applied to it.
+      const child = Children.only(children) as ReactElement<{
+        className?: string
+        ref?: Ref<HTMLButtonElement>
+      }>
+      return cloneElement(child, {
+        ref,
+        className: [child.props.className, classNames].filter(Boolean).join(' '),
+        ...(isDisabled ? { disabled: true } : {}),
+        ...props,
+      })
+    }
+
+    return (
+      <button
+        ref={ref}
+        className={classNames}
+        disabled={isDisabled}
+        aria-busy={loading}
+        {...props}
+      >
+        {content}
+      </button>
+    )
+  },
+)
+
+Button.displayName = 'Button'
+
+/** Link-styled button for navigation */
 export function ButtonLink({
   to,
   variant = 'primary',
   size = 'md',
-  className = '',
   children,
+  className = '',
+  ...props
 }: {
   to: string
-  variant?: Variant
-  size?: Size
-  className?: string
+  variant?: ButtonVariant
+  size?: ButtonSize
   children: ReactNode
-}) {
+  className?: string
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>) {
   return (
-    <Link to={to} className={`${BASE} ${VARIANTS[variant]} ${SIZES[size]} ${className}`}>
+    <a
+      href={to}
+      className={[
+        baseStyles,
+        variantStyles[variant],
+        sizeStyles[size],
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      {...props}
+    >
       {children}
-    </Link>
+      {variant === 'primary' && <ArrowRight size={16} strokeWidth={2} />}
+    </a>
+  )
+}
+
+/** Icon-only button */
+export function IconButton({
+  children,
+  variant = 'ghost',
+  size = 'md',
+  className = '',
+  'aria-label': ariaLabel,
+  ...props
+}: {
+  children: ReactNode
+  variant?: ButtonVariant
+  size?: ButtonSize
+  className?: string
+  'aria-label': string
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>) {
+  return (
+    <button
+      className={[
+        'inline-flex items-center justify-center',
+        variantStyles[variant],
+        sizeStyles[size],
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      aria-label={ariaLabel}
+      {...props}
+    >
+      {children}
+    </button>
   )
 }

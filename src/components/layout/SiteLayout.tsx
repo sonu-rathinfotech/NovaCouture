@@ -16,11 +16,11 @@ function ScrollToTop() {
 
 export function SiteLayout() {
   return (
-    <div className="ui-opulence flex min-h-screen flex-col">
+    <div className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
       <ScrollToTop />
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:bg-charcoal-900 focus:px-4 focus:py-2 focus:text-ivory-100"
+        className="visually-hidden focus:not-visually-hidden focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--color-accent)] focus:text-white"
       >
         Skip to content
       </a>

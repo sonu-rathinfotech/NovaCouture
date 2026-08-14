@@ -1,0 +1,445 @@
+/* VK JEWELLERS — FREEUI DESIGN SYSTEM
+ * Synthesized from 10 reference sites:
+ * Indian: Tanishq, GIVA, CaratLane, BlueStone, Kalyan Jewellers
+ * Foreign: Blue Nile, Tiffany & Co., Mejuri, Aurate, Ana Luisa
+ *
+ * Principles:
+ * - Trust-first (Tanishq, Blue Nile): certification badges, hallmarks prominent
+ * - Editorial storytelling (Tiffany, Kalyan): hero narratives, collection stories
+ * - Minimalist luxury (GIVA, Mejuri): white space, product-first, clean grids
+ * - Smart filtering (CaratLane, Blue Nile): sticky filters, faceted search
+ * - Customization CTA (BlueStone, Aurate): "Design Yours" prominence
+ * - Color-rich premium (Aurate, Ana Luisa): deep tones for premium sections
+ * - Sustainability trust (Ana Luisa, Mejuri): cert badges, transparency
+ * - Mobile-first (Melorra, GIVA): bottom sheets, sticky bar, swipe galleries
+ */
+
+@import '@fontsource/playfair-display/latin-400.css';
+@import '@fontsource/playfair-display/latin-500.css';
+@import '@fontsource/playfair-display/latin-600.css';
+@import '@fontsource/playfair-display/latin-700.css';
+@import '@fontsource/dm-sans/latin-300.css';
+@import '@fontsource/dm-sans/latin-400.css';
+@import '@fontsource/dm-sans/latin-500.css';
+@import '@fontsource/dm-sans/latin-600.css';
+
+:root {
+  /* ==========================================================================
+     COLOUR — Four semantic palettes for different contexts
+     ========================================================================== */
+
+  /* ---- BASE: Clean minimalist (GIVA, Mejuri) - Public/Registered pages ---- */
+  --base-50: #fafafa;
+  --base-100: #f5f5f5;
+  --base-200: #e5e5e5;
+  --base-300: #d4d4d4;
+  --base-400: #a3a3a3;
+  --base-500: #737373;
+  --base-600: #525252;
+  --base-700: #404040;
+  --base-800: #262626;
+  --base-900: #171717;
+  --base-950: #0a0a0a;
+
+  /* ---- WARM: Heritage gold (Tanishq, Kalyan, Aurate) - Premium/Bridal ---- */
+  --warm-50: #fdf8f3;
+  --warm-100: #faebe0;
+  --warm-200: #f5d7c1;
+  --warm-300: #edb896;
+  --warm-400: #e09268;
+  --warm-500: #d17248;
+  --warm-600: #c05735;
+  --warm-700: #9c422c;
+  --warm-800: #7e3628;
+  --warm-900: #662e23;
+  --warm-950: #371510;
+
+  /* ---- COOL: Platinum/White gold (Tiffany, Blue Nile, CaratLane) - High-value ---- */
+  --cool-50: #f8fafc;
+  --cool-100: #f1f5f9;
+  --cool-200: #e2e8f0;
+  --cool-300: #cbd5e1;
+  --cool-400: #94a3b8;
+  --cool-500: #64748b;
+  --cool-600: #475569;
+  --cool-700: #334155;
+  --cool-800: #1e293b;
+  --cool-900: #0f172a;
+  --cool-950: #020617;
+
+  /* ---- ACCENT: Champagne gold (BlueStone, Mejuri) - CTAs, highlights ---- */
+  --accent-50: #fefce8;
+  --accent-100: #fef9c3;
+  --accent-200: #fef08a;
+  --accent-300: #fde047;
+  --accent-400: #facc15;
+  --accent-500: #eab308;
+  --accent-600: #ca8a04;
+  --accent-700: #a16207;
+  --accent-800: #854d0e;
+  --accent-900: #713f12;
+
+  /* ---- SEMANTIC ALIASES (context-aware) ---- */
+  /* Default/base context */
+  --color-bg: var(--base-50);
+  --color-bg-elevated: #ffffff;
+  --color-bg-muted: var(--base-100);
+  --color-fg: var(--base-900);
+  --color-fg-muted: var(--base-500);
+  --color-fg-subtle: var(--base-400);
+  --color-border: var(--base-200);
+  --color-border-strong: var(--base-300);
+  --color-accent: var(--accent-600);
+  --color-accent-hover: var(--accent-700);
+  --color-accent-light: var(--accent-100);
+  --color-focus: var(--cool-500);
+
+  /* Trust badges */
+  --trust-gold: #c59d5f;
+  --trust-silver: #b8bcc0;
+  --trust-platinum: #e5e4e2;
+
+  /* Status */
+  --color-success: #166534;
+  --color-success-bg: #dcfce7;
+  --color-warning: #854d0e;
+  --color-warning-bg: #fef9c3;
+  --color-danger: #991b1b;
+  --color-danger-bg: #fee2e2;
+  --color-info: #1e40af;
+  --color-info-bg: #dbeafe;
+
+  /* ==========================================================================
+     TYPOGRAPHY
+     ========================================================================== */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-ui: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* Fluid type scale */
+  --text-display: clamp(2.5rem, 5vw, 5rem);
+  --text-display-lg: clamp(3rem, 6vw, 6.5rem);
+  --text-h1: clamp(2rem, 4vw, 3.5rem);
+  --text-h2: clamp(1.5rem, 3vw, 2.5rem);
+  --text-h3: clamp(1.25rem, 2.5vw, 2rem);
+  --text-h4: clamp(1.125rem, 2vw, 1.5rem);
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.75rem;
+  --text-micro: 0.625rem;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.1em;
+  --tracking-widest: 0.2em;
+
+  /* ==========================================================================
+     SPACING
+     ========================================================================== */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Container */
+  --container-max: 1440px;
+  --container-padding: 1.5rem;
+  --container-padding-lg: 2.5rem;
+  --container-padding-xl: 4rem;
+
+  /* ==========================================================================
+     DEPTH & ELEVATION
+     ========================================================================== */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.03);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.04), 0 10px 10px rgba(0, 0, 0, 0.02);
+  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.08);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+
+  --shadow-gold: 0 4px 20px rgba(197, 157, 95, 0.15);
+  --shadow-glow: 0 0 40px rgba(197, 157, 95, 0.2);
+
+  /* ==========================================================================
+     RADIUS
+     ========================================================================== */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  /* ==========================================================================
+     MOTION
+     ========================================================================== */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+
+  /* ==========================================================================
+     Z-INDEX
+     ========================================================================== */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-toast: 700;
+  --z-tooltip: 800;
+}
+
+/* ==========================================================================
+   CONTEXT VARIANTS — Applied via data-theme attribute on sections
+   ========================================================================== */
+
+/* Premium/Heritage context */
+[data-theme="warm"] {
+  --color-bg: var(--warm-50);
+  --color-bg-elevated: #ffffff;
+  --color-bg-muted: var(--warm-100);
+  --color-fg: var(--warm-900);
+  --color-fg-muted: var(--warm-600);
+  --color-fg-subtle: var(--warm-400);
+  --color-border: var(--warm-200);
+  --color-border-strong: var(--warm-300);
+  --color-accent: var(--warm-700);
+  --color-accent-hover: var(--warm-800);
+  --color-accent-light: var(--warm-100);
+  --color-focus: var(--warm-600);
+}
+
+/* High-value/Platinum context */
+[data-theme="cool"] {
+  --color-bg: var(--cool-50);
+  --color-bg-elevated: #ffffff;
+  --color-bg-muted: var(--cool-100);
+  --color-fg: var(--cool-900);
+  --color-fg-muted: var(--cool-600);
+  --color-fg-subtle: var(--cool-400);
+  --color-border: var(--cool-200);
+  --color-border-strong: var(--cool-300);
+  --color-accent: var(--cool-700);
+  --color-accent-hover: var(--cool-800);
+  --color-accent-light: var(--cool-100);
+  --color-focus: var(--cool-500);
+}
+
+/* Dark premium context (Aurate-style) */
+[data-theme="dark-premium"] {
+  --color-bg: var(--warm-950);
+  --color-bg-elevated: var(--warm-900);
+  --color-bg-muted: var(--warm-800);
+  --color-fg: var(--warm-50);
+  --color-fg-muted: var(--warm-300);
+  --color-fg-subtle: var(--warm-500);
+  --color-border: var(--warm-800);
+  --color-border-strong: var(--warm-700);
+  --color-accent: var(--accent-400);
+  --color-accent-hover: var(--accent-300);
+  --color-accent-light: var(--warm-800);
+  --color-focus: var(--accent-400);
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-max);
+  padding-inline: var(--container-padding);
+}
+@media (min-width: 768px) {
+  .container { padding-inline: var(--container-padding-lg); }
+}
+@media (min-width: 1280px) {
+  .container { padding-inline: var(--container-padding-xl); }
+}
+
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }
+
+/* Type utilities — the freeui tokens exposed as classes so components can
+   pick the display face without repeating the font stack. Colour is left to
+   the caller so these never fight a text-* utility. */
+.font-display { font-family: var(--font-display); }
+.font-ui { font-family: var(--font-ui); }
+
+/* Editorial kicker: small caps label above headings. No colour here — callers
+   pair it with a text-* utility (gold on light, pale on dark sections). */
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-fg);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-bg-muted); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   KEYFRAMES
+   ========================================================================== */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes rotate-in {
+  from { opacity: 0; transform: rotate(-5deg) scale(0.95); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+/* Animation utilities */
+.animate-fade-in { animation: fade-in var(--duration-slow) var(--ease-out) both; }
+.animate-fade-in-up { animation: fade-in-up var(--duration-slower) var(--ease-out) both; }
+.animate-scale-in { animation: scale-in var(--duration-normal) var(--ease-out) both; }
+.animate-slide-up { animation: slide-up var(--duration-slower) var(--ease-out) both; }
+.animate-slide-down { animation: slide-down var(--duration-normal) var(--ease-out) both; }
+.animate-shimmer { animation: shimmer 2s infinite linear; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+.animate-rotate-in { animation: rotate-in var(--duration-slow) var(--ease-spring) both; }
+
+/* Stagger delays */
+.delay-1 { animation-delay: 80ms; }
+.delay-2 { animation-delay: 160ms; }
+.delay-3 { animation-delay: 240ms; }
+.delay-4 { animation-delay: 320ms; }
+.delay-5 { animation-delay: 400ms; }
+.delay-6 { animation-delay: 480ms; }
+.delay-7 { animation-delay: 560ms; }
+.delay-8 { animation-delay: 640ms; }
+
+/* ==========================================================================
+   IMAGE PROTECTION (Watermark + Copy Deterrents)
+   ========================================================================== */
+.protected-image {
+  position: relative;
+  display: block;
+  /* Watermark via pseudo-element */
+}
+.protected-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Playfair Display, serif' font-size='18' font-weight='500' fill='white' fill-opacity='0.08'%3EVK JEWELLERS%3C/text%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Copy deterrents */
+.no-copy {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+.no-copy img {
+  pointer-events: none;
+}
+
+/* Context menu suppression for images */
+.protected-image img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+/* ==========================================================================
+   PRINT
+   ========================================================================== */
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+}

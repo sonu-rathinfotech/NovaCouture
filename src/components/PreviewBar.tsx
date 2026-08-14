@@ -20,7 +20,7 @@ export function PreviewBar() {
   if (!isPreview) return null
 
   return (
-    <div className="bg-noir text-ivory/70">
+    <div className="bg-[var(--color-fg)] text-[var(--base-300)]">
       <div className="mx-auto flex max-w-[1360px] flex-wrap items-center justify-center gap-x-4 gap-y-2 px-6 py-2.5 lg:px-14">
         <span className="text-[0.625rem] tracking-[0.16em] uppercase">
           Preview data · viewing as
@@ -35,8 +35,8 @@ export function PreviewBar() {
               className={[
                 'cursor-pointer border px-3 py-1 text-[0.625rem] tracking-[0.14em] uppercase transition-colors duration-200',
                 tier === t.value
-                  ? 'border-gold-light text-gold-light'
-                  : 'border-ivory/20 hover:border-ivory/50 hover:text-ivory',
+                  ? 'border-[var(--trust-gold)] text-[var(--trust-gold)]'
+                  : 'border-white/20 hover:border-white/50 hover:text-white',
               ].join(' ')}
             >
               {t.label}

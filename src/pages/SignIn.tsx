@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Field, FormMessage } from '@/components/ui/Field'
+import { Field, FormMessage } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { normaliseMobile, formatMobile } from '@/lib/mobile'
 import { auth, authMode } from '@/auth'
@@ -11,7 +11,7 @@ import { usePageTitle } from '@/hooks/usePageTitle'
 
 /**
  * Sign-in.
- *
+ * 
  * The destination is WhatsApp number + one-time code (scope §B). Until the
  * Business API is available the adapter asks for a temporary credential
  * instead, so the screen renders whichever form the active adapter supports.
@@ -24,11 +24,11 @@ export function SignIn() {
 
 function RegisterFooter() {
   return (
-    <p className="text-sm font-light text-charcoal-400">
+    <p className="text-sm font-light text-[var(--color-fg-muted)]">
       New to VK Jewellers?{' '}
       <Link
         to="/register"
-        className="text-charcoal-800 underline underline-offset-4 transition-colors hover:text-champagne-800"
+        className="text-[var(--color-accent)] underline underline-offset-4 transition-colors hover:text-[var(--color-accent-hover)]"
       >
         Request membership
       </Link>
@@ -106,11 +106,13 @@ function CredentialSignIn() {
         </Button>
       </form>
 
-      <p className="mt-8 border-l-2 border-champagne-400 bg-ivory-50 px-5 py-4 text-[0.8125rem] leading-relaxed font-light text-charcoal-500">
-        <strong className="font-medium text-charcoal-800">Temporary sign-in.</strong> WhatsApp
-        one-time codes replace this once the Business API is connected. Access is arranged by VK
-        Jewellers in the meantime.
-      </p>
+      <div className="mt-8 p-4 bg-[var(--color-bg-muted)] border-l-4 border-[var(--color-accent)] rounded-r-lg">
+        <p className="text-sm leading-relaxed text-[var(--color-fg-muted)]">
+          <strong className="font-medium text-[var(--color-fg)]">Temporary sign-in.</strong> WhatsApp
+          one-time codes replace this once the Business API is connected. Access is arranged by VK
+          Jewellers in the meantime.
+        </p>
+      </div>
     </AuthLayout>
   )
 }
@@ -242,7 +244,7 @@ function OtpSignIn() {
             {busy ? 'Verifying…' : 'Verify and sign in'}
           </Button>
 
-          <div className="mt-6 flex items-center justify-between text-sm font-light text-charcoal-400">
+          <div className="mt-6 flex items-center justify-between text-sm font-light text-[var(--color-fg-muted)]">
             <button
               type="button"
               onClick={() => {
@@ -250,7 +252,7 @@ function OtpSignIn() {
                 setCode('')
                 setDevCode(null)
               }}
-              className="cursor-pointer underline underline-offset-4 transition-colors hover:text-charcoal-700"
+              className="cursor-pointer underline underline-offset-4 transition-colors hover:text-[var(--color-accent)]"
             >
               Change number
             </button>
@@ -259,7 +261,7 @@ function OtpSignIn() {
               type="button"
               disabled={cooldown > 0 || busy}
               onClick={() => void sendCode(e164)}
-              className="cursor-pointer underline underline-offset-4 transition-colors hover:text-charcoal-700 disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
+              className="cursor-pointer underline underline-offset-4 transition-colors hover:text-[var(--color-accent)] disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
             >
               {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
             </button>
@@ -268,11 +270,13 @@ function OtpSignIn() {
       )}
 
       {devCode && (
-        <p className="mt-8 border-l-2 border-champagne-400 bg-ivory-50 px-5 py-4 text-[0.8125rem] leading-relaxed font-light text-charcoal-500">
-          <strong className="font-medium text-charcoal-800">Preview mode.</strong> No message is
-          sent — the WhatsApp Business API is still being procured. Use code{' '}
-          <strong className="font-medium text-charcoal-800">{devCode}</strong>.
-        </p>
+        <div className="mt-8 p-4 bg-[var(--color-bg-muted)] border-l-4 border-[var(--color-accent)] rounded-r-lg">
+          <p className="text-sm leading-relaxed text-[var(--color-fg-muted)]">
+            <strong className="font-medium text-[var(--color-fg)]">Preview mode.</strong> No message is
+            sent — the WhatsApp Business API is still being procured. Use code{' '}
+            <strong className="font-medium text-[var(--color-fg)]">{devCode}</strong>.
+          </p>
+        </div>
       )}
     </AuthLayout>
   )

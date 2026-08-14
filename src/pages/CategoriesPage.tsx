@@ -1,7 +1,6 @@
 import { CategoryCard } from '@/components/catalogue/CategoryCard'
-import { PageHeader } from '@/components/ui/PageHeader'
+import { EmptyState, PageHeader } from '@/components/ui/PageHeader'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { EmptyState } from '@/components/ui/EmptyState'
 import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
@@ -18,7 +17,7 @@ export function CategoriesPage() {
   const cats = categories ?? []
 
   return (
-    <section className="container-lux py-20 lg:py-28">
+    <section className="container py-20 lg:py-28">
       <PageHeader
         eyebrow="The Catalogue"
         title="Jewellery Collections"
