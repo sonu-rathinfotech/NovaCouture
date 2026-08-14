@@ -15,9 +15,8 @@ type Size = 'sm' | 'md' | 'lg'
 const VARIANTS: Record<Variant, string> = {
   primary: 'bg-charcoal-900 text-ivory-100 border border-charcoal-900 hover:bg-charcoal-700',
   secondary: 'bg-ivory-100 text-charcoal-800 border border-charcoal-200 hover:bg-ivory-200',
-  // Light opulence: the outline button becomes a gold rule that fills gold on
-  // hover — the primary accent of this variant.
-  outline: 'bg-transparent text-champagne-800 border border-champagne-600 hover:bg-champagne-800 hover:border-champagne-800 hover:text-ivory-50',
+  // Editorial couture: a black hairline that fills black on hover — no gold.
+  outline: 'bg-transparent text-charcoal-800 border border-charcoal-300 hover:bg-charcoal-900 hover:border-charcoal-900 hover:text-ivory-100',
   ghost: 'bg-transparent text-charcoal-700 border border-transparent hover:bg-ivory-200',
   // For use over photography or a dark section.
   light: 'bg-transparent text-ivory-100 border border-ivory-100/50 hover:bg-ivory-100 hover:text-charcoal-900',

@@ -10,9 +10,9 @@ import { artKindFor } from '@/components/catalogue/art'
 /**
  * Site header.
  *
- * Transparent over the homepage hero and solid once scrolled — on a catalogue
- * built around photography, a bar of chrome across the top of the first image
- * is the thing that makes a site look like a template.
+ * Editorial couture: the bar is permanently solid ivory with a hairline rule
+ * beneath — masthead, not chrome. The wordmark sits in near-black ink and
+ * links stay black; there is no gold anywhere in this design.
  */
 export function Header() {
   const { tier, profile, signOut } = useSession()
@@ -20,20 +20,11 @@ export function Header() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [collectionsOpen, setCollectionsOpen] = useState(false)
   const menuButton = useRef<HTMLButtonElement>(null)
 
   const isHome = location.pathname === '/'
-  const transparent = isHome && !scrolled && !mobileOpen
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   // Leaving either menu open across a navigation is the most common way a
   // header feels broken.
@@ -65,36 +56,19 @@ export function Header() {
   }
 
   const nav = categories ?? []
-  // Light opulence: over the hero the links stay ivory; solid state warms to
-  // taupe with a gold hover.
-  const linkTone = transparent
-    ? 'text-ivory-100 hover:text-champagne-200'
-    : 'text-charcoal-700 hover:text-champagne-800'
+  // Editorial: black links on ivory, darkening on hover. No gold.
+  const linkTone = 'text-charcoal-700 hover:text-charcoal-900'
 
   return (
     <>
-      <header
-        className={`fixed inset-x-0 top-0 z-40 transition-all duration-700 ease-lux ${
-          transparent
-            ? 'bg-transparent'
-            : 'border-b border-champagne-200 bg-ivory-100/95 backdrop-blur-md'
-        }`}
-      >
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-ivory-300 bg-ivory-100/95 backdrop-blur-md">
         <div className="container-lux">
           <div className="flex h-20 items-center justify-between">
             <Link to="/" className="flex items-baseline gap-2" aria-label="VK Jewellers, home">
-              <span
-                className={`font-serif text-2xl tracking-wide transition-colors duration-500 ${
-                  transparent ? 'text-ivory-100' : 'text-champagne-800'
-                }`}
-              >
+              <span className="font-serif text-2xl tracking-wide text-charcoal-900 transition-colors duration-500">
                 VK
               </span>
-              <span
-                className={`font-sans text-[0.6rem] tracking-[0.3em] uppercase transition-colors duration-500 ${
-                  transparent ? 'text-ivory-200/80' : 'text-charcoal-400'
-                }`}
-              >
+              <span className="font-sans text-[0.6rem] tracking-[0.3em] text-charcoal-400 uppercase transition-colors duration-500">
                 Jewellers
               </span>
             </Link>
@@ -180,11 +154,7 @@ export function Header() {
                 </Link>
               ) : (
                 <>
-                  <span
-                    className={`hidden items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase md:flex ${
-                      transparent ? 'text-ivory-100' : 'text-charcoal-700'
-                    }`}
-                  >
+                  <span className="hidden items-center gap-2 text-xs font-medium tracking-[0.2em] text-charcoal-700 uppercase md:flex">
                     {tier === 'premium' && (
                       <Crown size={14} strokeWidth={1.5} className="text-champagne-600" />
                     )}
@@ -198,11 +168,7 @@ export function Header() {
                   <button
                     type="button"
                     onClick={onSignOut}
-                    className={`hidden cursor-pointer text-[0.65rem] font-light tracking-[0.15em] uppercase transition-colors duration-300 md:block ${
-                      transparent
-                        ? 'text-ivory-200/70 hover:text-ivory-100'
-                        : 'text-charcoal-300 hover:text-charcoal-600'
-                    }`}
+                    className="hidden cursor-pointer text-[0.65rem] font-light tracking-[0.15em] text-charcoal-400 uppercase transition-colors duration-300 hover:text-charcoal-600 md:block"
                   >
                     Sign out
                   </button>
@@ -215,9 +181,7 @@ export function Header() {
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={mobileOpen}
-                className={`-mr-2 grid size-11 cursor-pointer place-items-center transition-colors lg:hidden ${
-                  transparent ? 'text-ivory-100' : 'text-charcoal-800'
-                }`}
+                className="-mr-2 grid size-11 cursor-pointer place-items-center text-charcoal-800 transition-colors hover:text-charcoal-900 lg:hidden"
               >
                 <Menu size={22} strokeWidth={1.5} />
               </button>

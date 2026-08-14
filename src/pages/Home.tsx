@@ -22,51 +22,50 @@ export function Home() {
 
   return (
     <div>
-      {/* Full-height hero, text anchored to the bottom. The header sits over
-          it transparently — a bar of chrome across the first photograph is
-          what makes a catalogue look like a template. */}
-      <section className="relative flex h-screen min-h-[600px] items-end overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={HERO_PHOTO}
-            alt=""
-            aria-hidden="true"
-            className="h-full w-full object-cover"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 via-charcoal-900/20 to-charcoal-900/30"
-          />
-        </div>
-
-        <div className="relative container-lux pb-24 lg:pb-32">
-          <div className="max-w-2xl animate-fade-in">
-            <p className="eyebrow mb-6 text-ivory-200/80">VK Jewellers — Private Catalogue</p>
-            <h1 className="text-balance font-serif text-display text-ivory-100">
+      {/* Editorial hero: a split composition — oversized Bodoni type on the
+          left, the photograph full-height on the right, like a magazine cover
+          opened flat. The header is a solid ivory bar, so the hero begins
+          beneath it cleanly. */}
+      <section className="border-b border-ivory-300">
+        <div className="container-lux grid min-h-[92vh] grid-cols-1 items-center gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-24">
+          <div className="max-w-xl animate-fade-in">
+            <p className="mb-8 flex items-center gap-4 text-[0.65rem] font-medium tracking-[0.32em] text-charcoal-400 uppercase">
+              <span aria-hidden="true" className="block h-px w-10 bg-champagne-500" />
+              № 01 — Private Catalogue
+            </p>
+            <h1 className="text-balance font-serif text-display text-charcoal-900">
               Pieces made to be inherited.
             </h1>
-            <p className="mt-8 max-w-md text-lg leading-relaxed font-light text-ivory-200/80">
+            <p className="mt-8 max-w-md text-lg leading-relaxed font-light text-charcoal-400">
               A private catalogue of fine gold and stone work, shown by registered access.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <ButtonLink to={cats[0] ? `/c/${cats[0].slug}` : '/'} variant="invert" size="lg">
+              <ButtonLink to={cats[0] ? `/c/${cats[0].slug}` : '/'} variant="primary" size="lg">
                 Explore the collection
               </ButtonLink>
               {tier === 'guest' && (
-                <ButtonLink to="/sign-in" variant="light" size="lg">
+                <ButtonLink to="/sign-in" variant="outline" size="lg">
                   Client sign in
                 </ButtonLink>
               )}
             </div>
           </div>
-        </div>
 
-        <div
-          aria-hidden="true"
-          className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-ivory-200/50 lg:flex"
-        >
-          <span className="text-[0.6rem] tracking-[0.3em] uppercase">Scroll</span>
-          <span className="block h-12 w-px bg-ivory-200/30" />
+          <div className="relative aspect-4/5 w-full overflow-hidden bg-ivory-200 lg:aspect-auto lg:h-[68vh]">
+            <img
+              src={HERO_PHOTO}
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-cover"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-charcoal-900/20 to-transparent"
+            />
+            <p className="absolute right-5 bottom-4 text-[0.6rem] tracking-[0.25em] text-charcoal-500 uppercase">
+              VK Jewellers — Plate № 01
+            </p>
+          </div>
         </div>
       </section>
 
@@ -81,7 +80,7 @@ export function Home() {
         <div className="container-lux">
           <div className="mb-16 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <p className="eyebrow mb-3">Collections</p>
+              <p className="eyebrow mb-3">№ 02 — Collections</p>
               <span aria-hidden="true" className="mb-5 block h-px w-12 bg-champagne-400" />
               <h2 className="font-serif text-display-sm text-charcoal-800">Curated by category</h2>
             </div>
@@ -137,7 +136,7 @@ export function Home() {
               />
             </div>
             <div>
-              <p className="eyebrow mb-3">The House of VK</p>
+              <p className="eyebrow mb-3">№ 03 — The House of VK</p>
               <span aria-hidden="true" className="mb-5 block h-px w-12 bg-champagne-400" />
               <h2 className="text-balance font-serif text-display-sm text-charcoal-800">
                 Shown by invitation, not by sale.
@@ -166,7 +165,7 @@ export function Home() {
       <section className="py-24 lg:py-32">
         <div className="container-lux">
           <div className="mb-16 text-center">
-            <p className="eyebrow mb-3">Selected</p>
+            <p className="eyebrow mb-3">№ 04 — Selected</p>
             <span aria-hidden="true" className="mx-auto mb-6 block h-px w-12 bg-champagne-400" />
             <h2 className="font-serif text-display-sm text-charcoal-800">From the collection</h2>
             <p className="mx-auto mt-4 max-w-md text-base font-light text-charcoal-400">
@@ -182,7 +181,7 @@ export function Home() {
 
       {/* Premium invitation */}
       {tier !== 'premium' && (
-        <section className="relative overflow-hidden bg-charcoal-900 py-24 lg:py-32">
+        <section className="relative overflow-hidden border-y border-champagne-500/25 bg-charcoal-900 py-24 lg:py-32">
           <img
             src={samplePhoto('ring', 2)}
             alt=""
@@ -191,6 +190,7 @@ export function Home() {
             className="absolute inset-0 h-full w-full object-cover opacity-25"
           />
           <div className="relative container-lux text-center">
+            <p className="eyebrow mb-6 text-champagne-300">№ 05 — By invitation</p>
             <Crown size={28} strokeWidth={1} className="mx-auto mb-6 text-champagne-400" />
             <h2 className="text-balance font-serif text-display-sm text-ivory-100">
               {tier === 'guest'

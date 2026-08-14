@@ -1,47 +1,64 @@
+/* Self-hosted display font for this variant (keeps the no-CDN rule from
+   DESIGN.md §3). Bodoni Moda ships 400–900; we use 400, 500 and 600. */
+@import '@fontsource/bodoni-moda/latin-400.css';
+@import '@fontsource/bodoni-moda/latin-500.css';
+@import '@fontsource/bodoni-moda/latin-600.css';
+
 /* ---------------------------------------------------------------------------
    LIGHT OPULENCE — design variant (branch ui/light-opulence)
    ---------------------------------------------------------------------------
-   Direction: a light base, but richer — larger Cormorant display, deeper
-   golds, gold hairlines and rules, more editorial spacing. Couture rather
-   than gallery-restraint.
+   Direction: editorial couture. A high-fashion magazine of a catalogue —
+   stark warm-white grounds, near-black ink, PLATINUM instead of gold, and a
+   Didone display face (Bodoni Moda). Asymmetric compositions, numbered
+   editorial markers (№ 01…), thin hairlines, generous negative space.
+
+   This is a design adaptation, not a palette swap: beyond the tokens the
+   branch also changes structure — the header is a permanent solid ivory bar
+   (no transparent-over-hero mode), the hero is a split editorial composition
+   (oversized type left, photograph right), page sections carry numbered
+   kickers, and the premium invitation is a black panel with platinum rules.
 
    Scoped under `.ui-opulence` on the public shell (SiteLayout) and the auth
    screens (AuthLayout). The admin panel renders outside the scope and keeps
    the original design.
+
+   Token note: the base gold ramp (champagne-*) is re-mapped to platinum — a
+   cool silver family. `--color-gold` becomes dark platinum so links and
+   eyebrows stay readable on ivory; `--color-gold-light` stays decorative.
    ------------------------------------------------------------------------- */
 
 .ui-opulence {
-  /* --- surfaces (warm ivory, a step richer than the base) --- */
-  --color-ivory-50: #fefcf8;
-  --color-ivory-100: #fbf7f0; /* page background */
-  --color-ivory-200: #f4eddf; /* card / image frame ground */
-  --color-ivory-300: #eae0cc; /* skeleton, hairlines */
-  --color-ivory-400: #dccfb2;
-  --color-ivory-500: #c9b892;
+  /* --- surfaces (stark warm whites) --- */
+  --color-ivory-50: #ffffff; /* raised: modal, dropdown, mobile panel */
+  --color-ivory-100: #faf9f6; /* page background */
+  --color-ivory-200: #f3f1eb; /* card / image-frame ground */
+  --color-ivory-300: #e9e6de; /* skeleton, hairlines */
+  --color-ivory-400: #d8d4c9; /* borders, dividers */
+  --color-ivory-500: #bbb6a8;
 
-  /* --- text (warm taupe ink instead of neutral gray) --- */
-  --color-charcoal-50: #f7f5f0;
-  --color-charcoal-100: #ebe6dc;
-  --color-charcoal-200: #d6cfc1;
-  --color-charcoal-300: #b0a794;
-  --color-charcoal-400: #7c7263; /* muted */
-  --color-charcoal-500: #57503f; /* body */
-  --color-charcoal-600: #453e31;
-  --color-charcoal-700: #332d23;
-  --color-charcoal-800: #242019; /* headings */
-  --color-charcoal-900: #171310;
+  /* --- text (editorial near-black ink) --- */
+  --color-charcoal-50: #f5f4f2;
+  --color-charcoal-100: #e4e2dd;
+  --color-charcoal-200: #c6c3bc;
+  --color-charcoal-300: #9c988e; /* faint text */
+  --color-charcoal-400: #706c62; /* body, secondary text */
+  --color-charcoal-500: #4c4940;
+  --color-charcoal-600: #37342e;
+  --color-charcoal-700: #272520;
+  --color-charcoal-800: #1b1915; /* headings */
+  --color-charcoal-900: #0e0d0b; /* near-black — panels, fills, overlays */
 
-  /* --- gold (deep, rich champagne) --- */
-  --color-champagne-50: #fbf6ec;
-  --color-champagne-100: #f4e9d1;
-  --color-champagne-200: #e9d6ab;
-  --color-champagne-300: #dabf7d;
-  --color-champagne-400: #cba75c; /* gold-light decorative */
-  --color-champagne-500: #b68d3f;
-  --color-champagne-600: #9c7430;
-  --color-champagne-700: #7f5d27;
-  --color-champagne-800: #664a1f; /* eyebrows, links */
-  --color-champagne-900: #4b3718;
+  /* --- platinum (the champagne ramp re-mapped: gold is gone) --- */
+  --color-champagne-50: #f7f7f6;
+  --color-champagne-100: #ececea;
+  --color-champagne-200: #d8d8d5; /* hairlines */
+  --color-champagne-300: #bcbcb8;
+  --color-champagne-400: #a0a09b; /* decorative silver */
+  --color-champagne-500: #85857f; /* accent silver */
+  --color-champagne-600: #6d6d68;
+  --color-champagne-700: #555550;
+  --color-champagne-800: #3f3f3b; /* eyebrows, links — dark platinum */
+  --color-champagne-900: #2c2c29;
 
   /* --- semantic aliases --- */
   --color-ink: var(--color-charcoal-800);
@@ -57,30 +74,47 @@
   --color-danger: #9e5b5b;
   --color-warning: #b8956a;
 
-  /* --- type: same Cormorant + Jost pairing, larger and heavier --- */
-  --text-display: clamp(3rem, 7vw, 6.5rem);
-  --text-display--line-height: 1.02;
+  /* --- type: Bodoni Moda — a Didone with the razor hairlines of a fashion
+     masthead. Display only; Jost stays the UI workhorse. --- */
+  --font-serif: 'Bodoni Moda', 'Cormorant Garamond', Georgia, serif;
+
+  --text-display: clamp(2.75rem, 6vw, 5.5rem);
+  --text-display--line-height: 1.06;
   --text-display--letter-spacing: -0.02em;
 
-  --text-display-sm: clamp(2.25rem, 5vw, 4.25rem);
-  --text-display-sm--line-height: 1.08;
-  --text-display-sm--letter-spacing: -0.01em;
+  --text-display-sm: clamp(2.1rem, 4.5vw, 3.75rem);
+  --text-display-sm--line-height: 1.12;
+  --text-display-sm--letter-spacing: -0.015em;
 
-  --text-hero: clamp(1.875rem, 3.75vw, 3rem);
-  --text-hero--line-height: 1.12;
+  --text-hero: clamp(1.75rem, 3.5vw, 2.75rem);
+  --text-hero--line-height: 1.15;
+
+  /* --- depth: minimal — editorial pages are flat --- */
+  --shadow-soft: 0 2px 20px rgba(14, 13, 11, 0.05);
+  --shadow-card: 0 4px 30px rgba(14, 13, 11, 0.07);
+  --shadow-elevated: 0 12px 50px rgba(14, 13, 11, 0.12);
 }
 
-/* The shell is inside <body>, so the body ground needs the same warm ivory. */
-body:has(.ui-opulence) {
-  background-color: var(--color-ivory-100);
-  color: var(--color-charcoal-800);
+/* Bodoni Moda has no 300 cut — without this, serif elements that inherit the
+   body's 300 weight get a browser-synthesised thin face. All serif here is
+   400; the Didone hairlines do the emphasis. */
+.ui-opulence .font-serif {
+  font-weight: 400;
 }
 
-/* Headings move from the light 300 to a 500 presence — the editorial weight
-   that separates opulence from restraint. */
-.ui-opulence h1,
-.ui-opulence h2,
-.ui-opulence h3,
-.ui-opulence h4 {
-  font-weight: 500;
+/* Eyebrows: wider tracking, sitting in dark platinum on ivory. */
+.ui-opulence .eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+}
+
+/* A black focus ring — visible on ivory and on the black panels. */
+.ui-opulence :focus-visible {
+  outline-color: var(--color-charcoal-900);
+}
+
+/* Selection in ink: black ground, ivory letters. */
+.ui-opulence ::selection {
+  background-color: var(--color-charcoal-900);
+  color: var(--color-ivory-100);
 }
