@@ -81,7 +81,12 @@ export function Home() {
         <div className="container-lux">
           <div className="mb-16 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <p className="eyebrow mb-4">Collections</p>
+              <p className="eyebrow mb-3">Collections</p>
+              <span aria-hidden="true" className="mb-5 flex items-center gap-2">
+                <span className="h-px w-8 bg-champagne-400" />
+                <span className="size-1.5 rotate-45 bg-champagne-500" />
+                <span className="h-px w-8 bg-champagne-400" />
+              </span>
               <h2 className="font-serif text-display-sm text-charcoal-800">Curated by category</h2>
             </div>
             {cats[0] && (
@@ -136,7 +141,12 @@ export function Home() {
               />
             </div>
             <div>
-              <p className="eyebrow mb-6">The House of VK</p>
+              <p className="eyebrow mb-3">The House of VK</p>
+              <span aria-hidden="true" className="mb-5 flex items-center gap-2">
+                <span className="h-px w-8 bg-champagne-400" />
+                <span className="size-1.5 rotate-45 bg-champagne-500" />
+                <span className="h-px w-8 bg-champagne-400" />
+              </span>
               <h2 className="text-balance font-serif text-display-sm text-charcoal-800">
                 Shown by invitation, not by sale.
               </h2>
@@ -164,7 +174,12 @@ export function Home() {
       <section className="py-24 lg:py-32">
         <div className="container-lux">
           <div className="mb-16 text-center">
-            <p className="eyebrow mb-4">Selected</p>
+            <p className="eyebrow mb-3">Selected</p>
+            <span aria-hidden="true" className="mb-6 flex items-center justify-center gap-2">
+              <span className="h-px w-8 bg-champagne-400" />
+              <span className="size-1.5 rotate-45 bg-champagne-500" />
+              <span className="h-px w-8 bg-champagne-400" />
+            </span>
             <h2 className="font-serif text-display-sm text-charcoal-800">From the collection</h2>
             <p className="mx-auto mt-4 max-w-md text-base font-light text-charcoal-400">
               {products && !loading
@@ -179,7 +194,7 @@ export function Home() {
 
       {/* Premium invitation */}
       {tier !== 'premium' && (
-        <section className="relative overflow-hidden bg-charcoal-900 py-24 lg:py-32">
+        <section className="relative overflow-hidden bg-[var(--color-velvet-deep)] py-24 lg:py-32">
           <img
             src={samplePhoto('ring', 2)}
             alt=""
@@ -188,7 +203,14 @@ export function Home() {
             className="absolute inset-0 h-full w-full object-cover opacity-25"
           />
           <div className="relative container-lux text-center">
-            <Crown size={28} strokeWidth={1} className="mx-auto mb-6 text-champagne-400" />
+            <span
+              aria-hidden="true"
+              className="mx-auto mb-6 flex items-center justify-center gap-2"
+            >
+              <span className="h-px w-10 bg-champagne-600/60" />
+              <Crown size={22} strokeWidth={1} className="text-champagne-400" />
+              <span className="h-px w-10 bg-champagne-600/60" />
+            </span>
             <h2 className="text-balance font-serif text-display-sm text-ivory-100">
               {tier === 'guest'
                 ? 'The full archive is reserved for clients'

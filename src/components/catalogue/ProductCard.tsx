@@ -56,11 +56,11 @@ export function ProductCard({
 
         <div className="mt-4">
           {product.category && (
-            <p className="text-[0.6rem] font-light tracking-[0.2em] text-charcoal-400 uppercase">
+            <p className="text-[0.6rem] font-light tracking-[0.2em] text-champagne-700 uppercase">
               {product.category.name}
             </p>
           )}
-          <h3 className="mt-1 font-serif text-lg text-charcoal-800 transition-colors duration-500 group-hover:text-charcoal-500">
+          <h3 className="mt-1 font-serif text-lg text-charcoal-800 transition-colors duration-500 group-hover:text-champagne-700">
             {product.name}
           </h3>
         </div>

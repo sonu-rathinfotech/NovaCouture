@@ -46,7 +46,9 @@ export function CategoryCard({
           </p>
         )}
         <h3
-          className={`font-serif text-ivory-100 ${large ? 'text-4xl lg:text-5xl' : 'text-3xl'}`}
+          className={`font-serif text-ivory-100 transition-colors duration-500 group-hover:text-champagne-200 ${
+            large ? 'text-4xl lg:text-5xl' : 'text-3xl'
+          }`}
         >
           {category.name}
         </h3>

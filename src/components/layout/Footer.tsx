@@ -49,7 +49,7 @@ export function Footer() {
 
           {columns.map((col) => (
             <div key={col.heading}>
-              <h2 className="mb-5 text-[0.65rem] font-medium tracking-[0.25em] text-ivory-100 uppercase">
+              <h2 className="mb-5 text-[0.65rem] font-medium tracking-[0.25em] text-champagne-200 uppercase">
                 {col.heading}
               </h2>
               <ul className="space-y-3">
@@ -68,7 +68,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-wrap justify-between gap-3 border-t border-charcoal-700 pt-8 text-[0.7rem] font-light tracking-[0.1em] text-charcoal-400">
+        <div className="flex flex-wrap justify-between gap-3 border-t border-champagne-700 pt-8 text-[0.7rem] font-light tracking-[0.1em] text-charcoal-400">
           <span>© {new Date().getFullYear()} VK Jewellers</span>
           <span>Display only — no online sale</span>
         </div>

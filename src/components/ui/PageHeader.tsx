@@ -20,7 +20,16 @@ export function PageHeader({
 
   return (
     <div className={`mb-16 ${centred ? 'text-center' : ''}`}>
-      {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
+      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+      {/* The heritage ornament: a gold diamond between two hairlines. */}
+      <span
+        aria-hidden="true"
+        className={`mb-6 flex items-center gap-2 ${centred ? 'justify-center' : ''}`}
+      >
+        <span className="h-px w-8 bg-champagne-400" />
+        <span className="size-1.5 rotate-45 bg-champagne-500" />
+        <span className="h-px w-8 bg-champagne-400" />
+      </span>
       <h1 className="text-balance font-serif text-display-sm text-charcoal-800">{title}</h1>
       {note && (
         <p
@@ -47,7 +56,12 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-16 text-center">
-      <p className="eyebrow mb-4">{eyebrow}</p>
+      <p className="eyebrow mb-3">{eyebrow}</p>
+      <span aria-hidden="true" className="mb-6 flex items-center justify-center gap-2">
+        <span className="h-px w-8 bg-champagne-400" />
+        <span className="size-1.5 rotate-45 bg-champagne-500" />
+        <span className="h-px w-8 bg-champagne-400" />
+      </span>
       <h2 className="font-serif text-display-sm text-charcoal-800">{title}</h2>
       {note && (
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed font-light text-charcoal-400">
