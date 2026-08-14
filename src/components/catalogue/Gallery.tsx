@@ -116,8 +116,13 @@ function Lightbox({
   onNext: () => void
   onPrev: () => void
 }) {
+  const panel = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const restoreTo = useRef<Element | null>(null)
+  const [zoomed, setZoomed] = useState(false)
+
+  // Changing image drops the zoom, so the next view starts at 1:1.
+  useEffect(() => setZoomed(false), [active])
 
   useEffect(() => {
     restoreTo.current = document.activeElement
@@ -127,9 +132,42 @@ function Lightbox({
     document.body.style.overflow = 'hidden'
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowRight') onNext()
-      if (e.key === 'ArrowLeft') onPrev()
+      if (e.key === 'Escape') {
+        // Escape first unzooms, then closes — the same gesture as desktop.
+        if (zoomed) {
+          setZoomed(false)
+          return
+        }
+        onClose()
+        return
+      }
+      if (e.key === 'ArrowRight') {
+        onNext()
+        return
+      }
+      if (e.key === 'ArrowLeft') {
+        onPrev()
+        return
+      }
+      if (e.key !== 'Tab') return
+
+      // Keep Tab inside the lightbox — without a trap, a keyboard user tabs
+      // into the page behind and cannot find their way back.
+      const items = Array.from(
+        panel.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      )
+      if (items.length === 0) return
+      const first = items[0]
+      const last = items[items.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
     document.addEventListener('keydown', onKey)
 
@@ -138,10 +176,11 @@ function Lightbox({
       document.body.style.overflow = overflow
       ;(restoreTo.current as HTMLElement | null)?.focus?.()
     }
-  }, [onClose, onNext, onPrev])
+  }, [onClose, onNext, onPrev, zoomed])
 
   return (
     <div
+      ref={panel}
       role="dialog"
       aria-modal="true"
       aria-label={`${productName}, image ${active + 1} of ${count}`}
@@ -167,15 +206,30 @@ function Lightbox({
           <ChevronLeft size={28} strokeWidth={1} />
         </NavButton>
 
-        <div className="relative aspect-4/5 h-full max-h-[76vh] flex-1 self-center overflow-hidden">
-          <GalleryImage
-            image={images[active]}
-            kind={kind}
-            index={offset + active}
-            sizeClass="w-[46%]"
-            eager
-          />
-        </div>
+        {/* Click to zoom in, click again to return (DESIGN.md §5). */}
+        <button
+          type="button"
+          onClick={() => setZoomed((z) => !z)}
+          aria-label={zoomed ? 'Zoom out' : 'Zoom in'}
+          aria-pressed={zoomed}
+          className={`relative aspect-4/5 h-full max-h-[76vh] flex-1 self-center overflow-hidden ${
+            zoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
+          }`}
+        >
+          <div
+            className={`h-full w-full transition-transform duration-500 ease-lux ${
+              zoomed ? 'scale-[1.6]' : 'scale-100'
+            }`}
+          >
+            <GalleryImage
+              image={images[active]}
+              kind={kind}
+              index={offset + active}
+              sizeClass="w-[46%]"
+              eager
+            />
+          </div>
+        </button>
 
         <NavButton onClick={onNext} label="Next image">
           <ChevronRight size={28} strokeWidth={1} />

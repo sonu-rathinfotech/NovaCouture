@@ -1,4 +1,5 @@
 import { STATIC_PAGES, splitPlaceholders, type StaticPageSlug } from '@/content/staticPages'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 /**
  * Renders the About, Contact, Privacy and Terms pages from src/content.
@@ -11,6 +12,7 @@ import { STATIC_PAGES, splitPlaceholders, type StaticPageSlug } from '@/content/
 export function StaticPage({ slug }: { slug: StaticPageSlug }) {
   const page = STATIC_PAGES[slug]
   const isLegal = slug === 'privacy' || slug === 'terms'
+  usePageTitle(page.title)
 
   return (
     <article className="container-lux max-w-[760px] py-20 lg:py-28">

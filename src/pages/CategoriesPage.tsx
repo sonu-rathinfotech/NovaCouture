@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { useAsync } from '@/hooks/useAsync'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
 
 /**
@@ -12,6 +13,7 @@ import { catalogue } from '@/data/catalogue'
  * that has to hold all of them however many VK ends up with.
  */
 export function CategoriesPage() {
+  usePageTitle('Jewellery Collections')
   const { data: categories, loading } = useAsync(() => catalogue.listCategories(), [])
   const cats = categories ?? []
 

@@ -7,6 +7,7 @@ import { ProductGrid } from '@/components/catalogue/ProductGrid'
 import { NotFound } from './NotFound'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
 import { features } from '@/lib/env'
 import { enquiryVisibleTo } from '@/lib/enquiry'
@@ -19,6 +20,7 @@ export function ProductPage() {
     () => catalogue.getProduct(productSlug, tier),
     [productSlug, tier],
   )
+  usePageTitle(product?.name)
 
   // Needed to name the parent of a sub-category: the product carries only its
   // own category, so the trail read "Home / Temple" and lost "Necklaces".

@@ -4,6 +4,7 @@ import { ProductGrid, ProductGridSkeleton } from '@/components/catalogue/Product
 import { ButtonLink } from '@/components/ui/Button'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { collections } from '@/data/collections'
 import { features } from '@/lib/env'
 
@@ -21,6 +22,7 @@ export function CollectionPage() {
   const { data, loading } = useAsync(() => collections.open(token, tier), [token, tier])
 
   const opened = data?.status === 'ok'
+  usePageTitle(data?.status === 'ok' ? data.collection.title : undefined)
 
   useEffect(() => {
     // One "open" per successful view (scope §G metrics).
