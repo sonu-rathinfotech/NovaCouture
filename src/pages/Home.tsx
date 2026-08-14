@@ -22,34 +22,38 @@ export function Home() {
 
   return (
     <div>
-      {/* Full-height hero, text anchored to the bottom. The header sits over
-          it transparently — a bar of chrome across the first photograph is
-          what makes a catalogue look like a template. */}
-      <section className="relative flex h-screen min-h-[600px] items-end overflow-hidden">
+      {/* Full-height hero. Dark luxury: the photograph recedes behind a noir
+          scrim and a radial gold glow — the gold in the air rather than in a
+          gradient fill. Text is anchored to the bottom, under the dark bar. */}
+      <section className="relative flex h-screen min-h-[640px] items-end overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={HERO_PHOTO}
             alt=""
             aria-hidden="true"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover opacity-30"
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-noir/85 via-noir/20 to-noir/40"
+            className="absolute inset-0 bg-gradient-to-t from-noir via-noir/70 to-noir/50"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(217,180,92,0.10),transparent_70%)]"
           />
         </div>
 
-        <div className="relative container-lux pb-24 lg:pb-32">
+        <div className="relative container-lux pb-24 lg:pb-28">
           <div className="max-w-2xl animate-fade-in">
-            <p className="eyebrow mb-6 text-charcoal-900/70">VK Jewellers — Private Catalogue</p>
+            <p className="eyebrow mb-6 text-champagne-400">VK Jewellers — Private Catalogue</p>
             <h1 className="text-balance font-serif text-display text-charcoal-900">
               Pieces made to be inherited.
             </h1>
-            <p className="mt-8 max-w-md text-lg leading-relaxed font-light text-charcoal-900/70">
+            <p className="mt-8 max-w-md text-lg leading-relaxed font-light text-charcoal-400">
               A private catalogue of fine gold and stone work, shown by registered access.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <ButtonLink to={cats[0] ? `/c/${cats[0].slug}` : '/'} variant="invert" size="lg">
+              <ButtonLink to={cats[0] ? `/c/${cats[0].slug}` : '/'} variant="primary" size="lg">
                 Explore the collection
               </ButtonLink>
               {tier === 'guest' && (
@@ -63,10 +67,10 @@ export function Home() {
 
         <div
           aria-hidden="true"
-          className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-ivory-200/50 lg:flex"
+          className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-charcoal-400/70 lg:flex"
         >
           <span className="text-[0.6rem] tracking-[0.3em] uppercase">Scroll</span>
-          <span className="block h-12 w-px bg-charcoal-900/30" />
+          <span className="block h-12 w-px bg-charcoal-400/40" />
         </div>
       </section>
 
@@ -81,7 +85,12 @@ export function Home() {
         <div className="container-lux">
           <div className="mb-16 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <p className="eyebrow mb-4">Collections</p>
+              <p className="eyebrow mb-3">Collections</p>
+              <span aria-hidden="true" className="mb-5 flex items-center gap-2">
+                <span className="h-px w-8 bg-champagne-400" />
+                <span className="size-1.5 rotate-45 bg-champagne-500" />
+                <span className="h-px w-8 bg-champagne-400" />
+              </span>
               <h2 className="font-serif text-display-sm text-charcoal-800">Curated by category</h2>
             </div>
             {cats[0] && (
@@ -136,7 +145,12 @@ export function Home() {
               />
             </div>
             <div>
-              <p className="eyebrow mb-6">The House of VK</p>
+              <p className="eyebrow mb-3">The House of VK</p>
+              <span aria-hidden="true" className="mb-5 flex items-center gap-2">
+                <span className="h-px w-8 bg-champagne-400" />
+                <span className="size-1.5 rotate-45 bg-champagne-500" />
+                <span className="h-px w-8 bg-champagne-400" />
+              </span>
               <h2 className="text-balance font-serif text-display-sm text-charcoal-800">
                 Shown by invitation, not by sale.
               </h2>
@@ -164,7 +178,12 @@ export function Home() {
       <section className="py-24 lg:py-32">
         <div className="container-lux">
           <div className="mb-16 text-center">
-            <p className="eyebrow mb-4">Selected</p>
+            <p className="eyebrow mb-3">Selected</p>
+            <span aria-hidden="true" className="mb-6 flex items-center justify-center gap-2">
+              <span className="h-px w-8 bg-champagne-400" />
+              <span className="size-1.5 rotate-45 bg-champagne-500" />
+              <span className="h-px w-8 bg-champagne-400" />
+            </span>
             <h2 className="font-serif text-display-sm text-charcoal-800">From the collection</h2>
             <p className="mx-auto mt-4 max-w-md text-base font-light text-charcoal-400">
               {products && !loading
@@ -177,24 +196,36 @@ export function Home() {
         </div>
       </section>
 
-      {/* Premium invitation */}
+      {/* Premium invitation. A panel of the deepest ground with a gold glow
+          rising from the top — the reserved section of the house. */}
       {tier !== 'premium' && (
-        <section className="relative overflow-hidden bg-noir py-24 lg:py-32">
+        <section className="relative overflow-hidden border-y border-champagne-500/20 bg-noir py-24 lg:py-32">
           <img
             src={samplePhoto('ring', 2)}
             alt=""
             aria-hidden="true"
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-25"
+            className="absolute inset-0 h-full w-full object-cover opacity-15"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_70%_90%_at_50%_0%,rgba(217,180,92,0.12),transparent_65%)]"
           />
           <div className="relative container-lux text-center">
-            <Crown size={28} strokeWidth={1} className="mx-auto mb-6 text-champagne-600" />
+            <span
+              aria-hidden="true"
+              className="mx-auto mb-6 flex items-center justify-center gap-2"
+            >
+              <span className="h-px w-10 bg-champagne-600/50" />
+              <Crown size={22} strokeWidth={1} className="text-champagne-400" />
+              <span className="h-px w-10 bg-champagne-600/50" />
+            </span>
             <h2 className="text-balance font-serif text-display-sm text-charcoal-900">
               {tier === 'guest'
                 ? 'The full archive is reserved for clients'
                 : 'Selected pieces are shown to premium clients'}
             </h2>
-            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed font-light text-charcoal-900/70">
+            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed font-light text-charcoal-400">
               {tier === 'guest'
                 ? 'Sign in with your registered number to view the wider catalogue.'
                 : 'Premium access is arranged by VK Jewellers. Speak to us to have it added to your account.'}

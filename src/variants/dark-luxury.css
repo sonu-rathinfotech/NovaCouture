@@ -1,5 +1,5 @@
 /* Self-hosted display font for this variant (keeps the no-CDN rule from
-   DESIGN.md §3). Latin subsets only. */
+   DESIGN.md §3). Playfair Display ships 400–900; we use 400, 500 and 600. */
 @import '@fontsource/playfair-display/latin-400.css';
 @import '@fontsource/playfair-display/latin-500.css';
 @import '@fontsource/playfair-display/latin-600.css';
@@ -7,69 +7,83 @@
 /* ---------------------------------------------------------------------------
    DARK LUXURY — design variant (branch ui/dark-luxury)
    ---------------------------------------------------------------------------
-   Direction: deep noir + gold. Bvlgari / Graff / Harry Winston.
+   Direction: a nocturnal gallery. Warm obsidian grounds, champagne gold,
+   dramatic high-contrast serif. The page is dark from edge to edge; light
+   only arrives as text, gold rules and the photography itself.
 
-   Everything here is scoped under `.ui-dark`, which is applied on the public
-   site shell (SiteLayout) and the auth screens (AuthLayout). The admin panel
-   renders outside that scope, so it keeps the original light design.
+   This is a design adaptation, not a palette swap. Beyond the tokens below
+   the branch also changes structure — the header is permanently dark (no
+   transparent-over-hero mode), the hero carries a radial gold glow, buttons
+   are gold-filled or gold-outlined, and sections alternate deep surfaces
+   instead of light ones.
 
-   Tailwind v4 utilities resolve to `var(--color-*)` at runtime, so overriding
-   the tokens here restyles every component without touching its classes.
+   Scoped under `.ui-dark-luxury` on the public shell (SiteLayout) and the
+   auth screens (AuthLayout). The admin panel renders outside the scope and
+   keeps the original design.
+
+   Token inversion: the base design is light-on-dark (ivory page, charcoal
+   text). Here `ivory-*` becomes the dark surface family and `charcoal-*`
+   becomes the light text family, so components using the ramp tokens switch
+   over without a rewrite. `--color-ivory` (the semantic, unnumbered alias)
+   is intentionally left as a bright warm white because the lightbox and the
+   preview bar use it for text on `noir`.
    ------------------------------------------------------------------------- */
 
-.ui-dark {
-  /* --- surfaces (ivory ramp becomes the dark "stone" ramp) --- */
-  --color-ivory-50: #0e0c0a; /* deepest section ground */
-  --color-ivory-100: #12100d; /* page background */
-  --color-ivory-200: #1b1814; /* card / image frame ground */
-  --color-ivory-300: #2a251e; /* skeleton, hairlines, gallery mat */
-  --color-ivory-400: #38322a; /* stronger hairlines */
-  --color-ivory-500: #453c31;
+.ui-dark-luxury {
+  /* --- surfaces (warm obsidian; never pure black, which deadens gold) --- */
+  --color-ivory-50: #1a1713; /* raised: modal, dropdown, mobile panel */
+  --color-ivory-100: #0f0e0c; /* page background */
+  --color-ivory-200: #151311; /* card / image-frame ground */
+  --color-ivory-300: #1e1b16; /* skeleton, hover surfaces, hairlines */
+  --color-ivory-400: #2b2720; /* borders, dividers */
+  --color-ivory-500: #3a342a;
 
-  /* --- text (charcoal ramp is inverted: 50 darkest → 900 brightest) --- */
-  --color-charcoal-50: #0c0a08; /* footer, deep overlays */
-  --color-charcoal-100: #1b1814;
-  --color-charcoal-200: #2e2820; /* field underlines */
-  --color-charcoal-300: #3a332a; /* placeholders, low-emphasis */
-  --color-charcoal-400: #7a6d5b; /* muted captions */
-  --color-charcoal-500: #8f8270; /* body copy */
-  --color-charcoal-600: #a99c86;
-  --color-charcoal-700: #c0b49c; /* nav links */
-  --color-charcoal-800: #e6decc; /* headings, input text */
-  --color-charcoal-900: #f8f2e6; /* brightest text on photography */
+  /* --- text (warm light family — the inversion of the base ramp) --- */
+  --color-charcoal-50: #3a352c;
+  --color-charcoal-100: #4e483e;
+  --color-charcoal-200: #645d51;
+  --color-charcoal-300: #7f7768; /* faint text */
+  --color-charcoal-400: #a89f8d; /* body, secondary text — 7:1 on the page */
+  --color-charcoal-500: #c4bbaa;
+  --color-charcoal-600: #d6cdbc;
+  --color-charcoal-700: #e2d9c8;
+  --color-charcoal-800: #ece5d6; /* headings */
+  --color-charcoal-900: #f6f1e5; /* brightest — over photography, dark fills */
 
-  /* --- gold (champagne ramp, brightened for dark grounds) --- */
-  --color-champagne-50: #241c0f;
-  --color-champagne-100: #2f2513;
-  --color-champagne-200: #403217; /* selection ground */
-  --color-champagne-300: #5a471f;
-  --color-champagne-400: #7c6530; /* gold-light decorative */
-  --color-champagne-500: #a5823c; /* primary gold */
-  --color-champagne-600: #c29a44;
-  --color-champagne-700: #d4ac4f;
-  --color-champagne-800: #e0bc63; /* eyebrows, links */
-  --color-champagne-900: #efd391;
+  /* --- gold (champagne, brightened to sit on dark grounds) --- */
+  --color-champagne-50: #2a2215; /* mark / callout ground */
+  --color-champagne-100: #3f331e;
+  --color-champagne-200: #8a6f3b; /* dusky gold — hairlines, header rule */
+  --color-champagne-300: #a9893f;
+  --color-champagne-400: #cfae68; /* decorative light gold */
+  --color-champagne-500: #d9b45c; /* primary gold — CTA fills, diamonds */
+  --color-champagne-600: #c39c48; /* outline borders, crowns */
+  --color-champagne-700: #a88438;
+  --color-champagne-800: #d9b45c; /* eyebrows, links — bright enough for dark */
+  --color-champagne-900: #c39c48;
 
-  /* --- semantic aliases (re-resolved against the overridden ramps) --- */
+  /* --- semantic aliases --- */
   --color-ink: var(--color-charcoal-800);
-  --color-ink-soft: var(--color-charcoal-500);
-  --color-ivory: var(--color-ivory-100);
+  --color-ink-soft: var(--color-charcoal-400);
+  --color-ivory: #ece5d6; /* bright: lightbox + preview bar text on noir */
   --color-sand: var(--color-ivory-300);
-  --color-line: var(--color-ivory-300);
+  --color-line: var(--color-ivory-400);
   --color-gold: var(--color-champagne-800);
-  --color-gold-light: #b8933f; /* decorative gold, visible on dark */
-  --color-noir: #0a0907; /* fixed, decoupled from the charcoal ramp */
+  --color-gold-light: var(--color-champagne-400);
+  --color-noir: #080706; /* deepest ground — footer, lightbox, scrims */
 
-  --color-success: #7a9a6f;
-  --color-danger: #b06a5f;
-  --color-warning: #c2a24b;
+  --color-success: #93b083;
+  --color-danger: #d39080;
+  --color-warning: #d6b06a;
 
-  /* --- type: Playfair Display replaces Cormorant for the fashion-luxury cut */
+  /* --- type: Playfair Display, a high-contrast Didone whose thin hairlines
+     and dramatic thick strokes read as evening-wear on a dark ground.
+     Display only — Jost remains the UI workhorse. --- */
   --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
 
-  --text-display: clamp(2.75rem, 6.5vw, 6rem);
-  --text-display--line-height: 1.04;
-  --text-display--letter-spacing: -0.02em;
+  --text-display: clamp(2.75rem, 6.5vw, 5.75rem);
+  --text-display--line-height: 1.06;
+  --text-display--letter-spacing: -0.01em;
 
   --text-display-sm: clamp(2.1rem, 4.5vw, 3.75rem);
   --text-display-sm--line-height: 1.1;
@@ -78,33 +92,51 @@
   --text-hero: clamp(1.75rem, 3.5vw, 2.75rem);
   --text-hero--line-height: 1.15;
 
-  /* --- depth: shadows become meaningful again on a dark ground --- */
-  --shadow-soft: 0 2px 20px rgba(0, 0, 0, 0.35);
-  --shadow-card: 0 4px 30px rgba(0, 0, 0, 0.45);
-  --shadow-elevated: 0 12px 50px rgba(0, 0, 0, 0.6);
+  /* --- depth: black shadows for lift plus a whisper of gold glow --- */
+  --shadow-soft: 0 2px 24px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 4px 32px rgba(0, 0, 0, 0.5);
+  --shadow-elevated: 0 24px 80px rgba(0, 0, 0, 0.65), 0 0 40px rgba(217, 180, 92, 0.05);
 }
 
-/* The shell is inside <body>, so the body ground itself needs the dark tone
-   or the page shows a light rim on overscroll. */
-body:has(.ui-dark) {
-  background-color: var(--color-ivory-100);
-  color: var(--color-charcoal-800);
+/* The shell is inside <body>, so the body ground needs the same obsidian.
+   Literal values, not var(): the overridden tokens live on the scope div, and
+   custom properties inherit down, so `var()` here would resolve against
+   :root's light ramp instead. */
+body:has(.ui-dark-luxury) {
+  background-color: #0f0e0c;
+  color: #ece5d6;
 }
 
-/* Scrollbars belong to the viewport, not to the shell — restyle them for the
-   dark ground explicitly. */
-body:has(.ui-dark)::-webkit-scrollbar-track {
-  background: var(--color-ivory-100);
-}
-body:has(.ui-dark)::-webkit-scrollbar-thumb {
-  background: var(--color-charcoal-200);
-}
-body:has(.ui-dark)::-webkit-scrollbar-thumb:hover {
-  background: var(--color-champagne-600);
+/* Playfair Display has no 300 cut — without this, every serif element that
+   inherits the body's 300 weight gets a browser-synthesised thin face, which
+   is the fastest way for a Didone to look broken. All serif here is 400;
+   the contrast of the face does the emphasis. */
+.ui-dark-luxury .font-serif {
+  font-weight: 400;
 }
 
-/* The solid (scrolled) header gets a gold-tinted hairline instead of the
-   generic surface line. */
-.ui-dark header.border-b {
-  border-bottom-color: rgba(194, 154, 68, 0.28);
+/* Eyebrows: wider tracking than the base, so the small caps feel engraved. */
+.ui-dark-luxury .eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.32em;
+}
+
+/* Focus and selection tuned for dark grounds. */
+.ui-dark-luxury :focus-visible {
+  outline-color: var(--color-champagne-400);
+}
+body:has(.ui-dark-luxury) ::selection {
+  background-color: #d9b45c;
+  color: #080706;
+}
+
+/* Scrollbar in the page's own dark tones. Literal values — see the body rule. */
+body:has(.ui-dark-luxury)::-webkit-scrollbar-track {
+  background: #0f0e0c;
+}
+body:has(.ui-dark-luxury)::-webkit-scrollbar-thumb {
+  background: #2b2720;
+}
+body:has(.ui-dark-luxury)::-webkit-scrollbar-thumb:hover {
+  background: #3a342a;
 }

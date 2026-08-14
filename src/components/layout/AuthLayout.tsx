@@ -25,7 +25,7 @@ export function AuthLayout({
   footer?: ReactNode
 }) {
   return (
-    <div className="ui-dark grid min-h-screen grid-cols-1 lg:grid-cols-2">
+    <div className="ui-dark-luxury grid min-h-screen grid-cols-1 lg:grid-cols-2">
       <div className="relative hidden lg:block">
         <img
           src={HERO_PHOTO}
@@ -33,7 +33,7 @@ export function AuthLayout({
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-noir/45" />
+        <div aria-hidden="true" className="absolute inset-0 bg-noir/60" />
         <div className="absolute inset-x-0 bottom-0 p-16">
           {/* Deliberately not a quotation attributed to VK Jewellers: putting
               invented words in a real business's mouth is not ours to do. */}
@@ -42,7 +42,7 @@ export function AuthLayout({
             <br />
             shown by invitation.
           </p>
-          <p className="mt-4 text-sm font-light tracking-wide text-charcoal-900/60">
+          <p className="mt-4 text-sm font-light tracking-wide text-charcoal-400/80">
             VK Jewellers
           </p>
         </div>

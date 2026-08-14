@@ -57,11 +57,11 @@ export function CategoryPage() {
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-r from-noir/85 via-noir/45 to-noir/10"
+            className="absolute inset-0 bg-gradient-to-r from-noir/90 via-noir/55 to-noir/10"
           />
           <div className="relative flex h-full items-end">
             <div className="container-lux pb-12">
-              <p className="eyebrow mb-3 text-charcoal-900/70">
+              <p className="eyebrow mb-3 text-champagne-400">
                 {children.length > 0
                   ? children.map((c) => c.name).join(' · ')
                   : 'From the catalogue'}

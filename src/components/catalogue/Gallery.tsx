@@ -147,7 +147,7 @@ function Lightbox({
       aria-label={`${productName}, image ${active + 1} of ${count}`}
       className="fixed inset-0 z-50 flex flex-col bg-noir/97"
     >
-      <div className="flex items-center justify-between px-6 py-5 text-charcoal-500">
+      <div className="flex items-center justify-between px-6 py-5 text-charcoal-400/80">
         <span className="text-xs tracking-[0.16em] tabular-nums">
           {String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
         </span>
@@ -199,7 +199,7 @@ function NavButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="grid size-11 shrink-0 cursor-pointer place-items-center text-charcoal-500 transition-colors duration-200 hover:text-charcoal-900"
+      className="grid size-11 shrink-0 cursor-pointer place-items-center text-charcoal-400/70 transition-colors duration-200 hover:text-charcoal-900"
     >
       {children}
     </button>

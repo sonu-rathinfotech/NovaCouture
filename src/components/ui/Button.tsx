@@ -12,20 +12,21 @@ import { Link } from 'react-router-dom'
 type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'light' | 'invert' | 'danger'
 type Size = 'sm' | 'md' | 'lg'
 
-// Dark luxury variant (branch ui/dark-luxury): primary is a solid gold CTA,
-// and the light/dark button roles are inverted to match the noir ground.
-// The charcoal ramp is inverted in this variant (50 darkest → 900 brightest),
-// so `charcoal-50` here is a near-black and `charcoal-900` a bright ivory.
+// Dark luxury variant (branch ui/dark-luxury): on a dark ground the CTA
+// language is gold — the primary is a solid champagne fill with near-black
+// ink, and the quiet options are gold hairlines that fill on hover.
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-champagne-500 text-charcoal-50 border border-champagne-500 hover:bg-champagne-600',
-  secondary: 'bg-ivory-200 text-charcoal-800 border border-ivory-400 hover:bg-ivory-300',
-  outline: 'bg-transparent text-charcoal-800 border border-charcoal-600 hover:border-charcoal-900',
-  ghost: 'bg-transparent text-charcoal-700 border border-transparent hover:bg-ivory-200',
-  // For use over photography: bright text and hairline on the image.
-  light: 'bg-transparent text-charcoal-900 border border-charcoal-900/50 hover:bg-charcoal-900 hover:text-charcoal-50',
-  // Solid bright button on a dark ground.
-  invert: 'bg-charcoal-900 text-charcoal-50 border border-charcoal-900 hover:bg-charcoal-800',
-  danger: 'bg-transparent text-danger border border-danger/40 hover:border-danger',
+  primary: 'bg-champagne-500 text-noir border border-champagne-500 hover:bg-champagne-400',
+  secondary: 'bg-ivory-200 text-charcoal-800 border border-champagne-300 hover:bg-ivory-300',
+  outline: 'bg-transparent text-champagne-400 border border-champagne-600 hover:bg-champagne-500 hover:border-champagne-500 hover:text-noir',
+  ghost: 'bg-transparent text-charcoal-400 border border-transparent hover:bg-ivory-200 hover:text-charcoal-600',
+  // For use over photography or a dark section: a gold hairline that fills.
+  light: 'bg-transparent text-champagne-300 border border-champagne-300/60 hover:bg-champagne-500 hover:border-champagne-500 hover:text-noir',
+  // Solid gold on a dark background. A variant rather than a className
+  // override: overriding bg/text through className collides with the variant
+  // at equal specificity, so CSS order decides the winner.
+  invert: 'bg-champagne-500 text-noir border border-champagne-500 hover:bg-champagne-400',
+  danger: 'bg-transparent text-danger border border-danger/50 hover:border-danger',
 }
 
 const SIZES: Record<Size, string> = {
