@@ -49,7 +49,7 @@ function CredentialSignIn() {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
-  const unavailable = authMode !== 'supabase'
+  const unavailable = authMode === 'unavailable'
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()

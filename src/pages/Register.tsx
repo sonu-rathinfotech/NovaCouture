@@ -102,7 +102,7 @@ export function Register() {
       }
     >
       <form onSubmit={onSubmit} noValidate>
-        {authMode !== 'mock' && (
+        {authMode === 'unavailable' && (
           <FormMessage tone="error">
             Self-registration is not open yet. VK Jewellers arranges access while the WhatsApp
             sign-in is being set up.
@@ -145,7 +145,7 @@ export function Register() {
         <Button
           type="submit"
           size="lg"
-          disabled={submitting || authMode !== 'mock'}
+          disabled={submitting || authMode === 'unavailable'}
           className="w-full"
         >
           {submitting ? 'Creating account…' : 'Create account'}

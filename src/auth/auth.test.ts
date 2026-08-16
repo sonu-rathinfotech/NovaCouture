@@ -53,3 +53,20 @@ describe('unavailableAuth', () => {
     expect(error).toMatch(/not connected/i)
   })
 })
+
+describe('selectAuthMode — live modes', () => {
+  it('uses the WhatsApp adapter when the OTP flag is on', () => {
+    // Scope §B: this is the destination. The flag is what flips it, so it
+    // must actually reach whatsappAuth rather than the refusal adapter.
+    expect(selectAuthMode(true, true)).toBe('whatsapp')
+  })
+
+  it('uses the interim credential adapter when the OTP flag is off', () => {
+    expect(selectAuthMode(true, false)).toBe('supabase')
+  })
+
+  it('never reaches a live mode without Supabase', () => {
+    expect(selectAuthMode(false, true)).toBe('mock')
+    expect(selectAuthMode(false, false)).toBe('mock')
+  })
+})

@@ -3,6 +3,7 @@ import { isConfigured, features } from '@/lib/env'
 import { mockAuth } from './mockAuth'
 import { unavailableAuth } from './unavailableAuth'
 import { supabaseAuth } from './supabaseAuth'
+import { whatsappAuth } from './whatsappAuth'
 
 /**
  * Auth adapter selection.
@@ -11,11 +12,12 @@ import { supabaseAuth } from './supabaseAuth'
  * |----------|----------|----------------|-------------------------------------|
  * | no       | –        | mockAuth       | Fixture review; accounts in browser |
  * | yes      | off      | supabaseAuth   | Interim credential login (scope §B) |
- * | yes      | on       | (whatsappAuth) | Live WhatsApp OTP                   |
+ * | yes      | on       | whatsappAuth   | Live WhatsApp OTP (scope §B)        |
  *
- * whatsappAuth is not written yet — turning VITE_FEATURE_OTP_LOGIN on before
- * it exists resolves to `unavailableAuth`, which refuses every call with a
- * clear message rather than pretending to work.
+ * whatsappAuth is written but has never run against a live provider. Turning
+ * VITE_FEATURE_OTP_LOGIN on before the Supabase phone provider and an approved
+ * WhatsApp template are configured will fail at the send step with a visible
+ * error — not silently. See whatsappAuth.ts for the configuration checklist.
  *
  * The mock MUST NOT be selected once Supabase is configured. It writes accounts
  * to localStorage, so it would report a successful registration while
@@ -27,9 +29,7 @@ export type AuthMode = 'mock' | 'unavailable' | 'supabase' | 'whatsapp'
 
 export function selectAuthMode(configured: boolean, otpEnabled: boolean): AuthMode {
   if (!configured) return 'mock'
-  // TODO: return 'whatsapp' once whatsappAuth.ts exists and the OTP template
-  // is approved.
-  return otpEnabled ? 'unavailable' : 'supabase'
+  return otpEnabled ? 'whatsapp' : 'supabase'
 }
 
 export const authMode: AuthMode = selectAuthMode(isConfigured, features.otpLogin)
@@ -38,7 +38,7 @@ const ADAPTERS: Record<AuthMode, AuthAdapter> = {
   mock: mockAuth,
   supabase: supabaseAuth,
   unavailable: unavailableAuth,
-  whatsapp: unavailableAuth,
+  whatsapp: whatsappAuth,
 }
 
 export const auth: AuthAdapter = ADAPTERS[authMode]
