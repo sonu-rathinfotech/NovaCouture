@@ -5,6 +5,7 @@ import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
+import { CategorySuggestions } from '@/components/catalogue/CategorySuggestions'
 
 /**
  * Search results.
@@ -56,14 +57,48 @@ export function SearchPage() {
       ) : loading ? (
         <ProductGridSkeleton count={3} />
       ) : results.length === 0 ? (
-        <div className="max-w-[52ch]">
-          <p className="leading-relaxed text-[var(--color-fg-muted)]">
-            Nothing in the catalogue matches that name. Try a shorter word, or browse the
-            collections — some pieces are shown only to clients who are signed in.
+        <div className="max-w-[560px] mx-auto py-16 lg:py-24 text-center">
+          {/* Decorative gold line */}
+          <div className="mb-8 w-24 h-px bg-gradient-to-r from-transparent via-[var(--trust-gold)] to-transparent mx-auto" aria-hidden="true" />
+
+          {/* Icon */}
+          <div className="mb-6">
+            <svg className="mx-auto h-14 w-14 text-[var(--trust-gold)] opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+
+          {/* Headline */}
+          <h2 className="mb-4 font-display text-[var(--text-h2)] font-medium text-[var(--color-fg)] tracking-tight">
+            Nothing matches &ldquo;{query}&rdquo;
+          </h2>
+
+          {/* Subtext - editorial tone */}
+          <p className="mb-10 mx-auto max-w-lg text-[var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)]">
+            The piece you&apos;re looking for may be reserved for clients, or the name might differ.
+            <br />
+            <span className="font-medium text-[var(--color-fg)]">Try a shorter word, or explore the collections.</span>
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink to="/collections">Browse collections</ButtonLink>
-            <ButtonLink to="/contact">Ask us</ButtonLink>
+
+          {/* Divider */}
+          <div className="mb-8 flex items-center justify-center gap-4 max-w-md mx-auto">
+            <div className="flex-1 h-px bg-[var(--color-border)]" aria-hidden="true" />
+            <span className="text-[var(--trust-gold)]">✦</span>
+            <div className="flex-1 h-px bg-[var(--color-border)]" aria-hidden="true" />
+          </div>
+
+          <div className="mb-8">
+            <CategorySuggestions />
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-col gap-3 items-center sm:flex-row sm:justify-center">
+            <ButtonLink to="/collections" variant="primary" size="lg" className="w-full sm:w-auto">
+              Browse all collections
+            </ButtonLink>
+            <ButtonLink to="/contact" variant="secondary" size="lg" className="w-full sm:w-auto">
+              Ask us
+            </ButtonLink>
           </div>
         </div>
       ) : (

@@ -6,6 +6,7 @@ import { artKindFor, artOffsetFor } from '@/components/catalogue/art'
 import { EnquiryForm } from '@/components/catalogue/EnquiryForm'
 import { ProductGrid } from '@/components/catalogue/ProductGrid'
 import { NotFound } from './NotFound'
+import { LoadError } from '@/components/LoadError'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -31,7 +32,7 @@ export function ProductPage() {
   const { productSlug = '' } = useParams()
   const { tier } = useSession()
 
-  const { data: product, loading } = useAsync(
+  const { data: product, loading, error } = useAsync(
     () => catalogue.getProduct(productSlug, tier),
     [productSlug, tier],
   )
@@ -54,6 +55,19 @@ export function ProductPage() {
     )
   }
 
+  /*
+   * The order of these two matters.
+   *
+   * A THROWN error means the site could not reach the database. A null product
+   * means the piece is not there — or is there and this visitor is not entitled
+   * to it, which by design is indistinguishable, so that a 404 cannot be used
+   * to confirm a premium piece exists.
+   *
+   * Showing "this piece cannot be found" for a failed request tells a customer
+   * a piece is gone when it is not. On a jeweller's catalogue that is the worst
+   * thing the site can get wrong.
+   */
+  if (error) return <LoadError what="this piece" />
   if (!product) return <NotFound />
 
   const kind = artKindFor(product.category?.slug)

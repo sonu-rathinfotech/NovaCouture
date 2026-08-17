@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/ui'
 import { samplePhoto } from '@/components/catalogue/samplePhotos'
 import { artKindFor } from '@/components/catalogue/art'
 import { NotFound } from './NotFound'
+import { LoadError } from '@/components/LoadError'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -58,13 +59,13 @@ export function CategoryPage() {
   const { categorySlug = '' } = useParams()
   const { tier } = useSession()
 
-  const { data: category, loading: loadingCategory } = useAsync(
+  const { data: category, loading: loadingCategory, error: categoryError } = useAsync(
     () => catalogue.getCategory(categorySlug),
     [categorySlug],
   )
   const { data: allCategories } = useAsync(() => catalogue.listCategories(), [])
   usePageTitle(category?.name ? `${category.name} — Collection` : undefined)
-  const { data: products, loading } = useAsync(
+  const { data: products, loading, error: productsError } = useAsync(
     () => catalogue.listProducts({ categorySlug, tier }),
     [categorySlug, tier],
   )
@@ -73,6 +74,8 @@ export function CategoryPage() {
 
   const shown = useMemo(() => sortProducts(products ?? [], sortBy), [products, sortBy])
 
+  // A failed request is not a missing category — see the note in ProductPage.
+  if (categoryError) return <LoadError what="this collection" />
   if (!loadingCategory && !category) return <NotFound />
 
   const children = category?.children ?? []
@@ -183,7 +186,9 @@ export function CategoryPage() {
           </div>
         </div>
 
-        {loading ? (
+        {productsError ? (
+          <LoadError what="these pieces" />
+        ) : loading ? (
           <ProductGridSkeleton />
         ) : count > 0 ? (
           <ProductGrid products={shown} />

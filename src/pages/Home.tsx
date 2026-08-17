@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui'
 import { ProductGrid, ProductGridSkeleton } from '@/components/catalogue/ProductGrid'
+import { LoadError } from '@/components/LoadError'
 import { CategoryCard } from '@/components/catalogue/CategoryCard'
 import { HERO_PHOTO, samplePhoto, USING_SAMPLE_PHOTOS } from '@/components/catalogue/samplePhotos'
 import { useSession } from '@/hooks/useSession'
@@ -12,7 +13,7 @@ export function Home() {
   usePageTitle()
   const { tier } = useSession()
   const { data: categories } = useAsync(() => catalogue.listCategories(), [])
-  const { data: products, loading } = useAsync(
+  const { data: products, loading, error } = useAsync(
     () => catalogue.listProducts({ tier, limit: 8 }),
     [tier],
   )
@@ -183,7 +184,15 @@ export function Home() {
             </p>
           </div>
 
-          {loading ? <ProductGridSkeleton /> : <ProductGrid products={products ?? []} />}
+          {/* An empty grid would read as "VK has nothing", which is a worse lie
+              than admitting the catalogue could not be reached. */}
+          {error ? (
+            <LoadError what="the catalogue" />
+          ) : loading ? (
+            <ProductGridSkeleton />
+          ) : (
+            <ProductGrid products={products ?? []} />
+          )}
         </div>
       </section>
 
