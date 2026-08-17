@@ -63,26 +63,26 @@ export function AdminCategories() {
       />
       <AdminError error={error} />
 
-      <div className="mb-4 flex flex-wrap items-end gap-3 border border-ivory-300 bg-ivory-50 p-4">
+      <div className="mb-4 flex flex-wrap items-end gap-3 admin-panel p-4">
         <label className="flex-1">
-          <span className="mb-1.5 block text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">
+          <span className="mb-1.5 block admin-label">
             New category
           </span>
           <input
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Earrings"
-            className="w-full border border-ivory-400 bg-transparent px-3 py-2 text-sm font-light focus:border-charcoal-800 focus:outline-none"
+            className="w-full admin-input"
           />
         </label>
         <label>
-          <span className="mb-1.5 block text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">
+          <span className="mb-1.5 block admin-label">
             Inside
           </span>
           <select
             value={newParent}
             onChange={(e) => setNewParent(e.target.value)}
-            className="cursor-pointer border border-ivory-300 bg-ivory-50 px-3 py-2 text-sm focus:border-charcoal-800 focus:outline-none"
+            className="cursor-pointer admin-panel px-3 py-2 text-sm focus:border-charcoal-800 focus:outline-none"
           >
             <option value="">Top level</option>
             {top.map((c) => (
@@ -103,9 +103,9 @@ export function AdminCategories() {
           return (
             <Fragment key={parent.id}>
               <tr className="border-b border-ivory-300">
-                <td className="px-5 py-4 font-serif text-lg text-charcoal-800">{parent.name}</td>
-                <td className="px-5 py-4 font-light text-charcoal-400 tabular-nums">{countFor(parent.id)}</td>
-                <td className="px-5 py-4 text-right whitespace-nowrap">
+                <td className="admin-title text-lg">{parent.name}</td>
+                <td className="text-[var(--admin-fg-muted)] tabular-nums">{countFor(parent.id)}</td>
+                <td className="text-right whitespace-nowrap">
                   <span className="inline-flex gap-2">
                     <AdminButton disabled={busy} onClick={() => onRename(parent.id, parent.name)}>
                       Rename
@@ -121,13 +121,13 @@ export function AdminCategories() {
                 </td>
               </tr>
               {children.map((child) => (
-                <tr key={child.id} className="border-b border-ivory-300 last:border-0">
-                  <td className="px-4 py-3 pl-10 text-charcoal-400">
-                    <span className="mr-2 text-line">└</span>
+                <tr key={child.id} className="">
+                  <td className="px-4 py-3 pl-10 text-[var(--admin-fg-muted)]">
+                    <span className="mr-2 text-[var(--admin-border-strong)]">└</span>
                     {child.name}
                   </td>
-                  <td className="px-5 py-4 font-light text-charcoal-400 tabular-nums">{countFor(child.id)}</td>
-                  <td className="px-5 py-4 text-right whitespace-nowrap">
+                  <td className="text-[var(--admin-fg-muted)] tabular-nums">{countFor(child.id)}</td>
+                  <td className="text-right whitespace-nowrap">
                     <span className="inline-flex gap-2">
                       <AdminButton disabled={busy} onClick={() => onRename(child.id, child.name)}>
                         Rename
@@ -148,7 +148,7 @@ export function AdminCategories() {
         })}
       </AdminTable>
 
-      <p className="mt-4 text-sm leading-relaxed font-light text-charcoal-400">
+      <p className="mt-4 text-sm leading-relaxed text-[var(--admin-fg-muted)]">
         The one-level rule is enforced by the database, not just here — a trigger rejects any
         attempt to give a sub-category its own children, whatever the screen allows.
       </p>

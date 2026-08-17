@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom'
 import { useAsync } from '@/hooks/useAsync'
 import { checkIsAdmin } from '@/data/admin'
@@ -10,7 +10,7 @@ const NAV = [
   { to: '/admin/products', label: 'Products' },
   { to: '/admin/categories', label: 'Categories' },
   { to: '/admin/users', label: 'Users' },
-  { to: '/admin/links', label: 'Collection links' },
+  { to: '/admin/links', label: 'Collection Links' },
 ]
 
 /**
@@ -19,16 +19,15 @@ const NAV = [
  * The gate below is a convenience, not the protection. Admin rights are
  * enforced by RLS on every write (migration 0004), so someone who bypassed
  * this component would reach a panel where nothing works and nothing is
- * visible. Hiding a route protects nothing — the audit is right about that,
- * and this does not rely on it.
+ * visible. Hiding a route protects nothing, and this does not rely on it.
  */
 export function AdminLayout() {
   const navigate = useNavigate()
   const [reload, setReload] = useState(0)
   const { data: isAdmin, loading } = useAsync(() => checkIsAdmin(), [reload])
 
-  // Also re-check whenever the session itself changes — signing in from
-  // another tab, or a token refresh, should not leave a stale verdict.
+  // Re-check whenever the session changes — signing in from another tab, or a
+  // token refresh, should not leave a stale verdict.
   useEffect(() => {
     const { data } = getSupabase().auth.onAuthStateChange(() => setReload((n) => n + 1))
     return () => data.subscription.unsubscribe()
@@ -36,8 +35,8 @@ export function AdminLayout() {
 
   if (loading) {
     return (
-      <div className="grid min-h-screen place-items-center bg-ivory-100">
-        <span className="text-sm font-light text-charcoal-400">Checking access…</span>
+      <div className="admin-root grid min-h-screen place-items-center">
+        <span className="text-sm text-[var(--admin-fg-muted)]">Checking access…</span>
       </div>
     )
   }
@@ -51,24 +50,32 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-ivory-100">
-      <header className="border-b border-ivory-300 bg-ivory-50">
-        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <Link to="/admin" className="font-serif text-xl tracking-[0.2em] text-charcoal-900">
-            VK <span className="font-sans text-[0.6rem] tracking-[0.3em] text-charcoal-400 uppercase">Admin</span>
+    <div className="admin-root min-h-screen">
+      <header className="border-b border-[var(--admin-border)] bg-[var(--admin-surface)]">
+        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-4 px-6 py-5">
+          <Link to="/admin" className="flex items-baseline gap-2.5">
+            <span className="admin-title text-xl tracking-[0.2em]">VK</span>
+            <span className="admin-label">Management</span>
           </Link>
-          <div className="flex items-center gap-6 text-[0.65rem] tracking-[0.2em] uppercase">
-            <Link to="/" className="text-charcoal-400 transition-colors hover:text-charcoal-900">
+          <div className="flex items-center gap-6">
+            <Link
+              to="/"
+              className="text-[0.65rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
+            >
               View site
             </Link>
-            <button type="button" onClick={signOut} className="cursor-pointer uppercase">
+            <button
+              type="button"
+              onClick={signOut}
+              className="cursor-pointer text-[0.65rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
+            >
               Sign out
             </button>
           </div>
         </div>
 
-        <nav aria-label="Admin sections" className="border-t border-ivory-300">
-          <div className="mx-auto flex max-w-[1200px] flex-wrap gap-6 px-6">
+        <nav aria-label="Admin sections" className="border-t border-[var(--admin-border)]">
+          <div className="mx-auto flex max-w-[1280px] flex-wrap gap-8 px-6">
             {NAV.map((item) => (
               <NavLink
                 key={item.to}
@@ -76,10 +83,10 @@ export function AdminLayout() {
                 end={item.end}
                 className={({ isActive }) =>
                   [
-                    '-mb-px border-b-2 py-4 text-[0.65rem] tracking-[0.2em] uppercase transition-colors duration-500 ease-lux',
+                    '-mb-px border-b-2 py-4 text-[0.65rem] font-semibold tracking-[0.16em] uppercase transition-colors duration-200',
                     isActive
-                      ? 'border-champagne-500 text-charcoal-900'
-                      : 'border-transparent text-charcoal-400 hover:text-charcoal-900',
+                      ? 'border-[var(--admin-accent-line)] text-[var(--admin-fg)]'
+                      : 'border-transparent text-[var(--admin-fg-muted)] hover:text-[var(--admin-fg)]',
                   ].join(' ')
                 }
               >
@@ -90,7 +97,7 @@ export function AdminLayout() {
         </nav>
       </header>
 
-      <div className="mx-auto max-w-[1200px] px-6 py-10">
+      <div className="mx-auto max-w-[1280px] px-6 py-10">
         <Outlet />
       </div>
     </div>
@@ -98,38 +105,43 @@ export function AdminLayout() {
 }
 
 // ---------------------------------------------------------------------------
-// Shared admin primitives
+// Shared primitives
 // ---------------------------------------------------------------------------
 
-export function AdminHeading({ title, note }: { title: string; note?: string }) {
+export function AdminHeading({
+  title,
+  note,
+  actions,
+}: {
+  title: string
+  note?: string
+  actions?: ReactNode
+}) {
   return (
-    <div className="mb-6">
-      <h1 className="font-serif text-4xl text-charcoal-800">{title}</h1>
-      {note && <p className="mt-3 max-w-2xl text-sm leading-relaxed font-light text-charcoal-400">{note}</p>}
+    <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <div>
+        <h1 className="admin-title text-4xl">{title}</h1>
+        {note && (
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--admin-fg-muted)]">
+            {note}
+          </p>
+        )}
+      </div>
+      {actions && <div className="flex flex-wrap items-center gap-3">{actions}</div>}
     </div>
   )
 }
 
-export function AdminTable({
-  columns,
-  children,
-}: {
-  columns: string[]
-  children: React.ReactNode
-}) {
+export function AdminTable({ columns, children }: { columns: string[]; children: ReactNode }) {
   return (
     // Wide tables scroll inside their own container rather than pushing the
     // page sideways.
-    <div className="overflow-x-auto border border-ivory-300 bg-ivory-50">
-      <table className="w-full min-w-[720px] border-collapse text-sm">
+    <div className="overflow-x-auto border border-[var(--admin-border)]">
+      <table className="admin-table min-w-[760px]">
         <thead>
-          <tr className="border-b border-ivory-300">
-            {columns.map((c) => (
-              <th
-                key={c}
-                scope="col"
-                className="px-5 py-4 text-left text-[0.6rem] font-medium tracking-[0.2em] text-charcoal-400 uppercase"
-              >
+          <tr>
+            {columns.map((c, i) => (
+              <th key={c || i} scope="col">
                 {c}
               </th>
             ))}
@@ -141,11 +153,21 @@ export function AdminTable({
   )
 }
 
-export function Stat({ label, value }: { label: string; value: string | number }) {
+export function Stat({
+  label,
+  value,
+  sub,
+}: {
+  label: string
+  value: string | number
+  /** Optional second figure, e.g. total opens under Active Collections. */
+  sub?: string
+}) {
   return (
-    <div className="border border-ivory-300 bg-ivory-50 px-6 py-7">
-      <div className="text-[0.6rem] font-medium tracking-[0.2em] text-charcoal-400 uppercase">{label}</div>
-      <div className="mt-3 font-serif text-4xl text-charcoal-800 tabular-nums">{value}</div>
+    <div className="admin-panel px-6 py-6">
+      <div className="admin-label">{label}</div>
+      <div className="admin-stat-value mt-3">{value}</div>
+      {sub && <div className="mt-2 text-xs text-[var(--admin-fg-muted)]">{sub}</div>}
     </div>
   )
 }
@@ -155,34 +177,67 @@ export function AdminButton({
   onClick,
   disabled,
   tone = 'default',
+  type = 'button',
 }: {
-  children: React.ReactNode
+  children: ReactNode
   onClick?: () => void
   disabled?: boolean
-  tone?: 'default' | 'danger'
+  tone?: 'default' | 'primary' | 'danger'
+  type?: 'button' | 'submit'
 }) {
+  const cls =
+    tone === 'primary' ? 'admin-btn admin-btn-primary'
+    : tone === 'danger' ? 'admin-btn admin-btn-danger'
+    : 'admin-btn'
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={[
-        'cursor-pointer border px-4 py-2 text-[0.6rem] tracking-[0.18em] uppercase transition-colors duration-500 ease-lux disabled:cursor-not-allowed disabled:opacity-40',
-        tone === 'danger'
-          ? 'border-ivory-400 text-danger hover:border-danger'
-          : 'border-ivory-300 text-charcoal-400 hover:border-charcoal-800 hover:text-ink',
-      ].join(' ')}
-    >
+    <button type={type} onClick={onClick} disabled={disabled} className={cls}>
       {children}
     </button>
   )
+}
+
+/** Same shape as AdminButton, for navigation rather than an action. */
+export function AdminLinkButton({
+  to,
+  children,
+  tone = 'default',
+}: {
+  to: string
+  children: ReactNode
+  tone?: 'default' | 'primary'
+}) {
+  return (
+    <Link to={to} className={tone === 'primary' ? 'admin-btn admin-btn-primary' : 'admin-btn'}>
+      {children}
+    </Link>
+  )
+}
+
+export function Status({
+  children,
+  tone = 'default',
+}: {
+  children: ReactNode
+  tone?: 'default' | 'premium' | 'active' | 'muted'
+}) {
+  const cls =
+    tone === 'premium' ? 'admin-status admin-status-premium'
+    : tone === 'active' ? 'admin-status admin-status-active'
+    : tone === 'muted' ? 'admin-status admin-status-muted'
+    : 'admin-status'
+
+  return <span className={cls}>{children}</span>
 }
 
 /** Inline error for a failed write, so a refused action is never silent. */
 export function AdminError({ error }: { error: string | null }) {
   if (!error) return null
   return (
-    <p role="alert" className="mb-6 border-l-2 border-danger bg-ivory-50 px-5 py-4 text-sm font-light text-danger">
+    <p
+      role="alert"
+      className="mb-6 border-l-2 border-[var(--admin-danger)] bg-[var(--admin-surface)] px-5 py-4 text-sm text-[var(--admin-danger)]"
+    >
       {error}
     </p>
   )

@@ -30,6 +30,9 @@ const AdminProducts = lazy(() =>
 const AdminProductEdit = lazy(() =>
   import('./pages/admin/AdminProductEdit').then((m) => ({ default: m.AdminProductEdit })),
 )
+const AdminBulkUpload = lazy(() =>
+  import('./pages/admin/AdminBulkUpload').then((m) => ({ default: m.AdminBulkUpload })),
+)
 const AdminCategories = lazy(() =>
   import('./pages/admin/AdminCategories').then((m) => ({ default: m.AdminCategories })),
 )
@@ -84,6 +87,7 @@ export default function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="products/new" element={<AdminProductEdit />} />
+          <Route path="bulk-upload" element={<AdminBulkUpload />} />
           <Route path="products/:productId" element={<AdminProductEdit />} />
           <Route path="categories" element={<AdminCategories />} />
           <Route path="users" element={<AdminUsers />} />

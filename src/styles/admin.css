@@ -1,0 +1,257 @@
+/**
+ * Admin panel refinements.
+ *
+ * Scoped to `.admin-root` rather than changed globally: the brief covers the
+ * management system, and the storefront was not asked for. The same champagne
+ * would suit it — see the note on the accent below.
+ *
+ * The direction is unchanged — luxury, minimal, editorial. What changes is
+ * legibility: several tones sat below 4.5:1 and read as faint rather than
+ * quiet.
+ */
+
+.admin-root {
+  /* ---- surfaces ---------------------------------------------------------
+     Warm off-white page, pure white for anything raised off it. The warmth is
+     what stops an admin panel feeling like a spreadsheet. */
+  --admin-bg: #faf9f7;
+  --admin-surface: #ffffff;
+  --admin-surface-muted: #f4f2ee;
+
+  /* ---- text -------------------------------------------------------------
+     Charcoal rather than pure black; muted blue-grey for secondary, which
+     keeps it clearly subordinate without going pale. 7.2:1 on the page. */
+  --admin-fg: #1a1a18;
+  --admin-fg-muted: #5a6472;
+  /* 3.5:1 — the old value sat at 2.94:1, just under the floor for
+     non-essential text and visibly washed out on a warm ground. */
+  --admin-fg-subtle: #7d8593;
+
+  /* ---- lines ------------------------------------------------------------
+     Thin and light, but no longer invisible: the old border sat at roughly
+     1.2:1 against the page and table rows appeared to float. */
+  --admin-border: #e4e1dc;
+  --admin-border-strong: #cfcbc3;
+
+  /* ---- accent -----------------------------------------------------------
+     True champagne. The inherited ramp was Tailwind yellow (#facc15 /
+     #ca8a04) — bright, and the wrong register for a jeweller.
+
+     Two values on purpose: text at 4.5:1 passes AA, and the lighter one is for
+     rules, underlines and the focus ring. Both are measured — the line tone
+     started at #c3a369, which is 2.28:1 against the page. Fine as decoration,
+     too weak as a focus indicator, and the focus ring is the one thing a
+     keyboard user has to be able to find. #a8874e is 3.2:1 and still
+     champagne. Using the line tone for text is the mistake to avoid. */
+  --admin-accent: #8a6f3c;
+  --admin-accent-line: #a8874e;
+  --admin-accent-wash: #faf6ec;
+
+  /* ---- premium ----------------------------------------------------------
+     Understated on purpose: a filled gold chip is what makes jewellery sites
+     look like costume. A wash, a hairline and champagne text. */
+  --admin-premium-bg: #fbf7ef;
+  --admin-premium-border: #e4d7bc;
+  --admin-premium-fg: #7a6132;
+
+  --admin-danger: #8c3a32;
+  --admin-success: #3f6b54;
+
+  background-color: var(--admin-bg);
+  color: var(--admin-fg);
+}
+
+/* ---- typography ---------------------------------------------------------
+   Serif for page headings, sans for everything operational. Unchanged; only
+   weight and colour are firmed up. */
+.admin-root .admin-title {
+  font-family: var(--font-display);
+  color: var(--admin-fg);
+  letter-spacing: -0.01em;
+}
+
+/* Small caps label used for section kickers and table headers. */
+.admin-root .admin-label {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--admin-fg-muted);
+}
+
+/* ---- table --------------------------------------------------------------
+   Header sits on a tinted band with a firm rule beneath, so a long list stays
+   readable when scrolled. */
+.admin-root .admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--admin-surface);
+}
+
+.admin-root .admin-table thead th {
+  background: var(--admin-surface-muted);
+  border-bottom: 1px solid var(--admin-border-strong);
+  color: var(--admin-fg);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 0.875rem 1.25rem;
+  white-space: nowrap;
+}
+
+.admin-root .admin-table tbody td {
+  border-bottom: 1px solid var(--admin-border);
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+}
+
+.admin-root .admin-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-root .admin-table tbody tr:hover {
+  background: var(--admin-surface-muted);
+}
+
+/* Figures line up and read as data. */
+.admin-root .admin-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--admin-fg);
+  font-weight: 500;
+}
+
+/* ---- controls -----------------------------------------------------------
+   Inputs and buttons had a border a shade off the background. Given the whole
+   panel is a form, that was the costliest place to be faint. */
+.admin-root .admin-input {
+  width: 100%;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border-strong);
+  color: var(--admin-fg);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  padding: 0.625rem 0.875rem;
+  transition: border-color 200ms ease;
+}
+
+.admin-root .admin-input::placeholder {
+  color: var(--admin-fg-subtle);
+}
+
+.admin-root .admin-input:focus {
+  outline: none;
+  border-color: var(--admin-fg);
+}
+
+.admin-root .admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.625rem 1.125rem;
+  border: 1px solid var(--admin-border-strong);
+  background: var(--admin-surface);
+  color: var(--admin-fg);
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+  white-space: nowrap;
+}
+
+.admin-root .admin-btn:hover:not(:disabled) {
+  border-color: var(--admin-fg);
+  background: var(--admin-surface-muted);
+}
+
+.admin-root .admin-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* The one filled button per screen — the primary action. */
+.admin-root .admin-btn-primary {
+  background: var(--admin-fg);
+  border-color: var(--admin-fg);
+  color: #ffffff;
+}
+
+.admin-root .admin-btn-primary:hover:not(:disabled) {
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
+}
+
+.admin-root .admin-btn-danger {
+  color: var(--admin-danger);
+}
+
+.admin-root .admin-btn-danger:hover:not(:disabled) {
+  border-color: var(--admin-danger);
+  background: var(--admin-surface);
+}
+
+/* ---- status -------------------------------------------------------------
+   Outlined, not filled. Bright chips are the fastest way to make a luxury
+   panel look like a generic CRM. */
+.admin-root .admin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--admin-border-strong);
+  color: var(--admin-fg-muted);
+  white-space: nowrap;
+}
+
+.admin-root .admin-status-premium {
+  background: var(--admin-premium-bg);
+  border-color: var(--admin-premium-border);
+  color: var(--admin-premium-fg);
+}
+
+.admin-root .admin-status-active {
+  border-color: var(--admin-success);
+  color: var(--admin-success);
+}
+
+.admin-root .admin-status-muted {
+  color: var(--admin-fg-subtle);
+}
+
+/* ---- panel --------------------------------------------------------------
+   Square corners and a hairline. No shadow: the brief rules out excessive
+   shadow, and on a warm ground a rule reads cleaner than a lift. */
+.admin-root .admin-panel {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+}
+
+.admin-root .admin-stat-value {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  line-height: 1.1;
+  color: var(--admin-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-root a:focus-visible,
+.admin-root button:focus-visible,
+.admin-root input:focus-visible,
+.admin-root select:focus-visible {
+  outline: 2px solid var(--admin-accent-line);
+  outline-offset: 2px;
+}

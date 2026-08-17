@@ -16,6 +16,7 @@
  */
 import { getSupabase } from '@/lib/supabase'
 import { isConfigured } from '@/lib/env'
+import { applyPreview, hiddenByPreview } from '@/lib/previewTier'
 import type { Category, ProductWithImages, Tier, Visibility } from '@/types/db'
 import { categories as fxCategories, productImages as fxImages, products as fxProducts } from './fixtures'
 
@@ -163,7 +164,9 @@ const supabaseRepo: CatalogueRepo = {
 
     const { data, error } = await query.order('sort_order').limit(limit ?? 100)
     if (error) throw error
-    return (data ?? []) as unknown as ProductWithImages[]
+    // "View as client": removes rows the previewed tier would not be shown.
+    // Filtering only ever narrows, so this cannot widen anyone's access.
+    return applyPreview((data ?? []) as unknown as ProductWithImages[])
   },
 
   async getProduct(slug) {
@@ -174,7 +177,9 @@ const supabaseRepo: CatalogueRepo = {
       .eq('is_active', true)
       .maybeSingle()
     if (error) throw error
-    return (data as unknown as ProductWithImages) ?? null
+    const product = (data as unknown as ProductWithImages) ?? null
+    if (product && hiddenByPreview(product.visibility)) return null
+    return product
   },
 }
 

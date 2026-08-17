@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './styles/admin.css';
 
 /* Legacy token aliases — admin panel only (out of design scope, DESIGN.md §10).
    The admin always keeps the base design; these map the old token names onto

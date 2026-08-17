@@ -442,3 +442,53 @@ export async function getCollection(id: string): Promise<{
   if (error) throw error
   return (data as never) ?? null
 }
+
+// -----------------------------------------------------------------------------
+// Creating a client (scope §F)
+// -----------------------------------------------------------------------------
+
+export interface NewClient {
+  name: string
+  mobile: string
+  company?: string
+  email?: string
+  password: string
+  isPremium?: boolean
+}
+
+/**
+ * Creates a client account through the add-client Edge Function.
+ *
+ * Not done from here directly: creating a login needs the service-role key,
+ * which bypasses RLS and must never reach the browser. The function holds it,
+ * and asks the database whether the caller is an administrator before doing
+ * anything — so this call carries no authority of its own.
+ */
+export async function createClient(input: NewClient): Promise<void> {
+  const supabase = getSupabase()
+
+  const { data: session } = await supabase.auth.getSession()
+  const token = session.session?.access_token
+  if (!token) throw new Error('Your session has expired. Sign in again.')
+
+  const { data, error } = await supabase.functions.invoke('add-client', {
+    body: input,
+    headers: { Authorization: `Bearer ${token}` },
+  })
+
+  if (error) {
+    // The function returns a readable reason in the body; surface that rather
+    // than "Edge Function returned a non-2xx status code".
+    const detail = (data as { error?: string } | null)?.error
+    throw new Error(detail || readableFunctionError(error))
+  }
+  if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error)
+}
+
+function readableFunctionError(error: unknown): string {
+  const message = (error as Error)?.message ?? ''
+  if (message.includes('Failed to send') || message.includes('Failed to fetch')) {
+    return 'The add-client function is not deployed yet. Run: supabase functions deploy add-client'
+  }
+  return message || 'Could not create the client.'
+}

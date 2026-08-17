@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowRight, Share2, Heart, ChevronRight } from 'lucide-react'
+import { ArrowRight, Share2, MessageCircle, ChevronRight } from 'lucide-react'
 import { Gallery } from '@/components/catalogue/Gallery'
 import { artKindFor, artOffsetFor } from '@/components/catalogue/art'
 import { EnquiryForm } from '@/components/catalogue/EnquiryForm'
@@ -27,6 +28,7 @@ import { Badge, ButtonLink } from '@/components/ui'
  */
 
 export function ProductPage() {
+  const [copied, setCopied] = useState(false)
   const { productSlug = '' } = useParams()
   const { tier } = useSession()
 
@@ -61,6 +63,19 @@ export function ProductPage() {
   const parent = product.category
     ? (categories ?? []).find((c) => c.children.some((child) => child.id === product.category!.id))
     : undefined
+
+  const shareUrl = typeof window === 'undefined' ? '' : window.location.href
+
+  async function onCopyLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard access can be refused; saying nothing is better than a
+      // "copied" message when nothing was copied.
+    }
+  }
 
   const alsoIn = (related ?? []).filter((p) => p.id !== product.id).slice(0, 4)
 
@@ -195,18 +210,38 @@ export function ProductPage() {
               )
             )}
 
-            {/* Share - Mejuri social proof */}
-            <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-border)]">
+            {/* Share. These now do something: WhatsApp opens a prefilled
+                message, and Copy puts the link on the clipboard. The wishlist
+                heart that sat here was removed — there is no wishlist in this
+                platform, and a heart that does nothing is a broken promise.
+
+                Sharing a gated piece is safe: the recipient still has to be
+                entitled to see it, or they get the same "not available" page
+                as anyone else. */}
+            <div className="flex items-center gap-3 border-t border-[var(--color-border)] pt-4">
               <span className="text-sm text-[var(--color-fg-muted)]">Share:</span>
-              <button className="p-2 bg-[var(--color-bg-elevated)] border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-bg-muted)] transition-colors" aria-label="Share on WhatsApp">
-                <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.472.099-.174.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378 9.86 9.86 0 01-.473-.288 10.5 10.5 0 01-.427-.307c-.719-.68-1.198-1.726-1.322-2.466l-.062-.363c-.061-.347-.293-.857-.075-1.118.171-.21.404-.52.687-.705l.638-.427c.226-.15.568-.347.898-.427.189-.047.37.037.606.31.302.347.825.85 1.185 1.218.59.623 1.388 1.541 2.17 2.13.185.14.389.28.497.28.108 0 .31-.124.352-.231.051-.134-.133-.864-.45-1.438-.316-.574-.752-1.18-1.125-1.855-.373-.675-.543-.792-.536-.805z"/></svg>
-              </button>
-              <button className="p-2 bg-[var(--color-bg-elevated)] border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-bg-muted)] transition-colors" aria-label="Share via email">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`${product.name} — ${shareUrl}`)}`}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-2 transition-colors hover:bg-[var(--color-bg-muted)]"
+                aria-label="Share on WhatsApp"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </a>
+              <button
+                type="button"
+                onClick={onCopyLink}
+                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-2 transition-colors hover:bg-[var(--color-bg-muted)]"
+                aria-label="Copy link to this piece"
+              >
                 <Share2 className="h-5 w-5" />
               </button>
-              <button className="p-2 bg-[var(--color-bg-elevated)] border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-bg-muted)] transition-colors" aria-label="Add to wishlist">
-                <Heart className="h-5 w-5" />
-              </button>
+              {copied && (
+                <span role="status" className="text-sm text-[var(--color-fg-muted)]">
+                  Link copied
+                </span>
+              )}
             </div>
           </div>
         </div>

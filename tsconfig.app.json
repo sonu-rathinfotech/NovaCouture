@@ -18,7 +18,8 @@
 
     /* Paths — resolved relative to this tsconfig, so no baseUrl needed. */
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@shared/*": ["../tools/lib/*"]
     },
 
     /* Linting */

@@ -145,27 +145,27 @@ export function AdminProductEdit() {
       <AdminError error={error} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
-        <div className="border border-ivory-300 bg-ivory-50 p-5">
+        <div className="admin-panel p-6">
           <label className="mb-4 block">
-            <span className="mb-1.5 block text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">
+            <span className="admin-label mb-2 block">
               Name
             </span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Meera Temple Haram"
-              className="w-full border border-ivory-400 bg-transparent px-3 py-2 text-sm font-light focus:border-charcoal-800 focus:outline-none"
+              className="admin-input"
             />
           </label>
 
           <label className="mb-4 block">
-            <span className="mb-1.5 block text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">
+            <span className="admin-label mb-2 block">
               Category
             </span>
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full cursor-pointer border border-ivory-300 bg-ivory-50 px-3 py-2 text-sm focus:border-charcoal-800 focus:outline-none"
+              className="admin-input cursor-pointer"
             >
               <option value="">No category</option>
               {(categories ?? []).map((c) => (
@@ -178,7 +178,7 @@ export function AdminProductEdit() {
           </label>
 
           <fieldset className="mb-5">
-            <legend className="mb-1.5 text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">
+            <legend className="admin-label mb-2">
               Who can see it
             </legend>
             {VISIBILITY.map((v) => (
@@ -189,14 +189,14 @@ export function AdminProductEdit() {
                   value={v}
                   checked={visibility === v}
                   onChange={() => setVisibility(v)}
-                  className="cursor-pointer accent-ink"
+                  className="cursor-pointer accent-[var(--admin-fg)]"
                 />
                 {LABEL[v]}
               </label>
             ))}
             {/* New pieces default to Premium. It is easy to widen access later;
                 a piece shown publicly by accident cannot be un-shown. */}
-            <p className="mt-2 text-[0.8125rem] text-charcoal-400">
+            <p className="mt-2 text-sm text-[var(--admin-fg-muted)]">
               New pieces start as Premium. Widening access later is easy; a piece shown publicly by
               mistake cannot be un-shown.
             </p>
@@ -208,7 +208,7 @@ export function AdminProductEdit() {
             </AdminButton>
             <Link
               to="/admin/products"
-              className="text-[0.625rem] tracking-[0.12em] text-charcoal-400 uppercase underline underline-offset-4"
+              className="admin-label underline underline-offset-4"
             >
               Back to products
             </Link>
@@ -222,9 +222,9 @@ export function AdminProductEdit() {
           </div>
         </div>
 
-        <div className="border border-ivory-300 bg-ivory-50 p-5">
+        <div className="admin-panel p-6">
           <div className="mb-4 flex items-center justify-between">
-            <span className="text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">
+            <span className="text-[0.6rem] tracking-[0.2em] text-[var(--admin-fg-muted)] uppercase">
               Photographs — {gallery.length}
             </span>
             {!isNew && (
@@ -242,12 +242,19 @@ export function AdminProductEdit() {
             )}
           </div>
 
+          {/* Scope §E: the watermark is burned in server-side at upload. Until
+              VK supplies the logo there is nothing to burn in, and saying so is
+              better than implying the images are protected. */}
+          <p className="admin-label mb-4 border border-[var(--admin-border)] bg-[var(--admin-accent-wash)] px-4 py-2.5 text-[var(--admin-accent)]">
+            VK Jewellers watermark — pending logo file
+          </p>
+
           {isNew ? (
-            <p className="py-10 text-center text-sm text-charcoal-400">
+            <p className="py-10 text-center text-sm text-[var(--admin-fg-muted)]">
               Photographs can be added once the product exists.
             </p>
           ) : gallery.length === 0 ? (
-            <p className="py-10 text-center text-sm text-charcoal-400">
+            <p className="py-10 text-center text-sm text-[var(--admin-fg-muted)]">
               No photographs yet. The first one is used on the catalogue grid.
             </p>
           ) : (
@@ -256,7 +263,7 @@ export function AdminProductEdit() {
                 <li key={image.id}>
                   <GalleryThumb image={image} />
                   <div className="mt-1.5 flex items-center justify-between gap-1">
-                    <span className="text-[0.625rem] text-charcoal-400">
+                    <span className="text-xs text-[var(--admin-fg-muted)]">
                       {i === 0 ? 'Main' : i + 1}
                     </span>
                     <span className="flex gap-1">
@@ -286,7 +293,7 @@ export function AdminProductEdit() {
             </ul>
           )}
 
-          <p className="mt-4 text-sm leading-relaxed font-light text-charcoal-400">
+          <p className="mt-4 text-sm leading-relaxed font-light text-[var(--admin-fg-muted)]">
             Portrait photographs, plain light background, at least 600px on each side. The first
             photograph is what appears on the catalogue grid.
           </p>

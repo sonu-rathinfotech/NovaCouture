@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { PreviewBanner } from '@/components/PreviewBanner'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { PreviewBar } from '@/components/PreviewBar'
@@ -25,6 +26,7 @@ export function SiteLayout() {
         Skip to content
       </a>
       <PreviewBar />
+      <PreviewBanner />
       <Header />
       <main id="main" className="flex-1">
         <Outlet />

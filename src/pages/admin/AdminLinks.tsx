@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AdminButton, AdminError, AdminHeading, AdminTable } from './AdminLayout'
+import {
+  AdminButton,
+  AdminError,
+  AdminHeading,
+  AdminLinkButton,
+  AdminTable,
+  Status,
+} from './AdminLayout'
 import { useAsync } from '@/hooks/useAsync'
 import { listCollectionMetrics, setCollectionActive } from '@/data/admin'
 
@@ -33,75 +40,70 @@ export function AdminLinks() {
     setTimeout(() => setCopied(null), 2000)
   }
 
+  const rows = links ?? []
+
   return (
     <>
       <AdminHeading
-        title="Collection links"
+        title="Collection Links"
         note="Curated selections sent to premium clients. Opens and unique viewers are counted by mobile number."
+        actions={
+          <AdminLinkButton to="/admin/links/new" tone="primary">
+            + New Collection
+          </AdminLinkButton>
+        }
       />
       <AdminError error={error} />
 
-      <div className="mb-4 flex justify-end">
-        <Link
-          to="/admin/links/new"
-          className="cursor-pointer border border-ivory-400 px-4 py-2 text-[0.6rem] tracking-[0.18em] text-charcoal-500 uppercase transition-colors duration-500 ease-lux hover:border-charcoal-800 hover:text-charcoal-900"
-        >
-          New link
-        </Link>
-      </div>
-
-      <AdminTable
-        columns={['Title', 'Created', 'Opens', 'Unique viewers', 'Last opened', 'Status', '']}
-      >
-        {(links ?? []).map((link) => (
-          <tr key={link.collection_id} className="border-b border-ivory-300 last:border-0">
-            <td className="px-5 py-4">
+      <AdminTable columns={['Collection', 'Opens', 'Viewers', 'Created', 'Status', 'Actions']}>
+        {rows.map((link) => (
+          <tr key={link.collection_id}>
+            <td>
               <Link
                 to={`/admin/links/${link.collection_id}`}
-                className="font-serif text-base underline decoration-line underline-offset-4 hover:decoration-gold"
+                className="admin-title text-lg underline decoration-[var(--admin-border-strong)] underline-offset-4 transition-colors hover:decoration-[var(--admin-accent-line)]"
               >
                 {link.title}
               </Link>
-              <button
-                type="button"
-                onClick={() => copy(link.token)}
-                className="mt-1 cursor-pointer font-mono text-[0.6875rem] break-all text-charcoal-400 underline underline-offset-2 hover:text-charcoal-800"
-              >
-                {copied === link.token ? 'Copied to clipboard' : `/collection/${link.token}`}
-              </button>
+              <div className="mt-1 font-mono text-[0.7rem] break-all text-[var(--admin-fg-subtle)]">
+                /collection/{link.token}
+              </div>
             </td>
-            <td className="px-5 py-4 font-light text-charcoal-400">{DATE.format(new Date(link.created_at))}</td>
-            <td className="px-5 py-4 tabular-nums">{link.opens}</td>
-            <td className="px-5 py-4 tabular-nums">{link.unique_viewers}</td>
-            <td className="px-5 py-4 font-light text-charcoal-400">
-              {link.last_opened_at ? DATE.format(new Date(link.last_opened_at)) : '—'}
+            <td className="admin-num text-sm">{link.opens}</td>
+            <td className="admin-num text-sm">{link.unique_viewers}</td>
+            <td className="text-sm text-[var(--admin-fg-muted)]">
+              {DATE.format(new Date(link.created_at))}
             </td>
-            <td className="px-5 py-4">
+            <td>
               {link.is_active ? (
-                <span className="border border-success px-2 py-1 text-[0.625rem] tracking-[0.12em] text-success uppercase">
-                  Active
-                </span>
+                <Status tone="active">Active</Status>
               ) : (
-                <span className="border border-ivory-300 px-2 py-1 text-[0.625rem] tracking-[0.12em] text-charcoal-400 uppercase">
-                  Disabled
-                </span>
+                <Status tone="muted">Disabled</Status>
               )}
             </td>
-            <td className="px-5 py-4 text-right whitespace-nowrap">
-              <AdminButton
-                disabled={busyId === link.collection_id}
-                tone={link.is_active ? 'danger' : 'default'}
-                onClick={() => toggle(link.collection_id, !link.is_active)}
-              >
-                {link.is_active ? 'Disable' : 'Enable'}
-              </AdminButton>
+            <td>
+              <div className="flex flex-wrap items-center gap-2">
+                <AdminButton onClick={() => copy(link.token)}>
+                  {copied === link.token ? 'Copied' : 'Copy Link'}
+                </AdminButton>
+                <Link to={`/admin/links/${link.collection_id}`} className="admin-btn">
+                  View
+                </Link>
+                <AdminButton
+                  disabled={busyId === link.collection_id}
+                  tone={link.is_active ? 'danger' : 'default'}
+                  onClick={() => toggle(link.collection_id, !link.is_active)}
+                >
+                  {link.is_active ? 'Disable' : 'Enable'}
+                </AdminButton>
+              </div>
             </td>
           </tr>
         ))}
-        {!loading && (links ?? []).length === 0 && (
+        {!loading && rows.length === 0 && (
           <tr>
-            <td colSpan={7} className="px-5 py-14 text-center font-light text-charcoal-400">
-              No collection links yet.
+            <td colSpan={6} className="py-14 text-center text-sm text-[var(--admin-fg-muted)]">
+              No collections yet.
             </td>
           </tr>
         )}
@@ -109,7 +111,7 @@ export function AdminLinks() {
 
       {/* Links never expire by design (scope §G), which makes this the only
           way to withdraw one. Worth stating plainly on the screen. */}
-      <p className="mt-4 text-sm leading-relaxed font-light text-charcoal-400">
+      <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[var(--admin-fg-muted)]">
         Links do not expire. Disabling one is the only way to withdraw it — a disabled link shows
         the same “not available” message as an unknown one, so the recipient learns nothing.
       </p>

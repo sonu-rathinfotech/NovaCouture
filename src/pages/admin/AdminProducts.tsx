@@ -1,14 +1,21 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AdminButton, AdminError, AdminHeading, AdminTable } from './AdminLayout'
+import {
+  AdminButton,
+  AdminError,
+  AdminHeading,
+  AdminLinkButton,
+  AdminTable,
+  Status,
+} from './AdminLayout'
 import { useAsync } from '@/hooks/useAsync'
 import { listAllProducts, setProductActive, setProductVisibility } from '@/data/admin'
 import { VISIBILITY, type Visibility } from '@/types/db'
 
 const LABEL: Record<Visibility, string> = {
   public: 'Public',
-  login_required: 'Registered',
-  premium_only: 'Premium',
+  login_required: 'Login Required',
+  premium_only: 'Premium Only',
 }
 
 export function AdminProducts() {
@@ -22,7 +29,9 @@ export function AdminProducts() {
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase()
     return (products ?? []).filter((p) =>
-      !q ? true : p.name.toLowerCase().includes(q) || (p.category?.name ?? '').toLowerCase().includes(q),
+      !q
+        ? true
+        : p.name.toLowerCase().includes(q) || (p.category?.name ?? '').toLowerCase().includes(q),
     )
   }, [products, query])
 
@@ -46,39 +55,46 @@ export function AdminProducts() {
       <AdminHeading
         title="Products"
         note="Visibility decides who can see each piece. Changes apply immediately."
+        actions={
+          <>
+            <AdminLinkButton to="/admin/bulk-upload">Bulk Upload</AdminLinkButton>
+            <AdminLinkButton to="/admin/products/new" tone="primary">
+              + New Product
+            </AdminLinkButton>
+          </>
+        }
       />
       <AdminError error={error} />
 
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <label className="flex-1">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <label className="w-full max-w-sm">
           <span className="sr-only">Search products</span>
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search products or categories"
-            className="w-full max-w-sm border border-ivory-300 bg-ivory-50 px-4 py-2.5 text-sm focus:border-charcoal-800 focus:outline-none"
+            className="admin-input"
           />
         </label>
-        <span className="flex items-center gap-4">
-          <span className="text-[0.65rem] tracking-[0.2em] text-charcoal-400 uppercase">
-            {loading ? 'Loading…' : `${rows.length} shown`}
-          </span>
-          <Link
-            to="/admin/products/new"
-            className="cursor-pointer border border-ivory-400 px-4 py-2 text-[0.6rem] tracking-[0.18em] text-charcoal-500 uppercase transition-colors duration-500 ease-lux hover:border-charcoal-800 hover:text-charcoal-900"
-          >
-            New product
-          </Link>
+        <span className="admin-label">
+          {loading ? 'Loading…' : `${rows.length} shown`}
         </span>
       </div>
 
-      <AdminTable columns={['Name', 'Category', 'Visibility', 'Images', 'Status', '']}>
+      <AdminTable columns={['Name', 'Category', 'Visibility', 'Images', 'Status', 'Actions']}>
         {rows.map((p) => (
-          <tr key={p.id} className={`border-b border-ivory-300 last:border-0 ${p.is_active ? '' : 'opacity-55'}`}>
-            <td className="px-5 py-4 font-serif text-lg text-charcoal-800">{p.name}</td>
-            <td className="px-5 py-4 font-light text-charcoal-400">{p.category?.name ?? '—'}</td>
-            <td className="px-5 py-4">
+          <tr key={p.id} className={p.is_active ? '' : 'opacity-60'}>
+            <td>
+              <Link
+                to={`/admin/products/${p.id}`}
+                className="admin-title text-lg underline decoration-[var(--admin-border-strong)] underline-offset-4 transition-colors hover:decoration-[var(--admin-accent-line)]"
+              >
+                {p.name}
+              </Link>
+            </td>
+            <td className="text-sm text-[var(--admin-fg-muted)]">{p.category?.name ?? '—'}</td>
+            <td>
               <label className="sr-only" htmlFor={`vis-${p.id}`}>
                 Visibility for {p.name}
               </label>
@@ -89,7 +105,7 @@ export function AdminProducts() {
                 onChange={(e) =>
                   run(p.id, () => setProductVisibility(p.id, e.target.value as Visibility))
                 }
-                className="cursor-pointer border border-ivory-300 bg-ivory-50 px-2 py-1.5 text-[0.6875rem] tracking-[0.1em] uppercase focus:border-charcoal-800 focus:outline-none"
+                className="admin-input cursor-pointer py-1.5 text-[0.7rem] tracking-[0.08em] uppercase"
               >
                 {VISIBILITY.map((v) => (
                   <option key={v} value={v}>
@@ -98,15 +114,21 @@ export function AdminProducts() {
                 ))}
               </select>
             </td>
-            <td className="px-5 py-4 font-light text-charcoal-400 tabular-nums">{p.image_count}</td>
-            <td className="px-5 py-4 font-light text-charcoal-400">{p.is_active ? 'Listed' : 'Hidden'}</td>
-            <td className="px-5 py-4 text-right whitespace-nowrap">
-              <span className="inline-flex gap-2">
-                <Link
-                  to={`/admin/products/${p.id}`}
-                  className="cursor-pointer border border-ivory-400 px-4 py-2 text-[0.6rem] tracking-[0.18em] text-charcoal-500 uppercase transition-colors duration-500 ease-lux hover:border-charcoal-800 hover:text-charcoal-900"
-                >
+            <td className="admin-num text-sm">{p.image_count}</td>
+            <td>
+              {p.is_active ? (
+                <Status tone="active">Listed</Status>
+              ) : (
+                <Status tone="muted">Hidden</Status>
+              )}
+            </td>
+            <td>
+              <div className="flex flex-wrap items-center gap-2">
+                <Link to={`/admin/products/${p.id}`} className="admin-btn">
                   Edit
+                </Link>
+                <Link to={`/admin/products/${p.id}#images`} className="admin-btn">
+                  Images
                 </Link>
                 <AdminButton
                   disabled={busyId === p.id}
@@ -114,22 +136,25 @@ export function AdminProducts() {
                 >
                   {p.is_active ? 'Hide' : 'List'}
                 </AdminButton>
-              </span>
+              </div>
             </td>
           </tr>
         ))}
         {!loading && rows.length === 0 && (
           <tr>
-            <td colSpan={6} className="px-5 py-14 text-center font-light text-charcoal-400">
-              No products match “{query}”.
+            <td colSpan={6} className="py-14 text-center text-sm text-[var(--admin-fg-muted)]">
+              {query ? `No products match “${query}”.` : 'No products yet.'}
             </td>
           </tr>
         )}
       </AdminTable>
 
-      <p className="mt-4 text-sm leading-relaxed font-light text-charcoal-400">
+      {/* Delete lives on the edit screen, not here. A delete button in a row
+          of a long table is one mis-click from removing a piece and its
+          photographs, and there is no undo. */}
+      <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[var(--admin-fg-muted)]">
         Hiding a piece removes it from the site for everyone, including premium clients, without
-        deleting it or its photographs.
+        deleting it or its photographs. Deleting is on the edit screen.
       </p>
     </>
   )
