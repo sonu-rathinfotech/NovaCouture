@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { Field, Textarea, FormMessage } from '@/components/ui/Field'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
@@ -61,13 +62,22 @@ export function EnquiryForm({ product }: { product: ProductWithImages }) {
 
   return (
     <>
-      <Button type="button" onClick={() => setOpen(true)} disabled={!configured} size="lg">
-        Enquire about this piece
-      </Button>
-      {!configured && (
-        <p className="mt-5 text-sm leading-relaxed font-light text-[var(--color-fg-muted)]">
-          Enquiries are not live yet — VK Jewellers has not supplied the address the enquiry
-          should be sent to.
+      {/* No button at all when there is nowhere to send the enquiry. A greyed
+          button still looks like the way to enquire, so the customer clicks it,
+          nothing happens, and they conclude the site is broken. The wording
+          gives them somewhere to go instead — and does not tell a customer
+          about our configuration, which is not their concern. */}
+      {configured ? (
+        <Button type="button" onClick={() => setOpen(true)} size="lg">
+          Enquire about this piece
+        </Button>
+      ) : (
+        <p className="text-sm leading-relaxed font-light text-[var(--color-fg-muted)]">
+          Online enquiries are not available yet.{' '}
+          <Link to="/contact" className="underline underline-offset-4 hover:opacity-80">
+            Contact VK Jewellers
+          </Link>{' '}
+          about this piece and quote its name.
         </p>
       )}
 

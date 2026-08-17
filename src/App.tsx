@@ -18,6 +18,7 @@ const CollectionPage = lazy(() =>
   import('./pages/CollectionPage').then((m) => ({ default: m.CollectionPage })),
 )
 const NotFound = lazy(() => import('./pages/NotFound').then((m) => ({ default: m.NotFound })))
+const SearchPage = lazy(() => import('./pages/SearchPage').then((m) => ({ default: m.SearchPage })))
 const AdminLayout = lazy(() =>
   import('./pages/admin/AdminLayout').then((m) => ({ default: m.AdminLayout })),
 )
@@ -65,6 +66,7 @@ export default function App() {
         <Route element={<SiteLayout />}>
           <Route index element={<Home />} />
           <Route path="collections" element={<CategoriesPage />} />
+          <Route path="search" element={<SearchPage />} />
           <Route path="c/:categorySlug" element={<CategoryPage />} />
           <Route path="p/:productSlug" element={<ProductPage />} />
           <Route path="collection/:token" element={<CollectionPage />} />

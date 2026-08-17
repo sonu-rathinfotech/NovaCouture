@@ -16,6 +16,7 @@
  */
 import { getSupabase } from '@/lib/supabase'
 import { isConfigured } from '@/lib/env'
+import { escapeLike } from '@/lib/escapeLike'
 import { applyPreview, hiddenByPreview } from '@/lib/previewTier'
 import type { Category, ProductWithImages, Tier, Visibility } from '@/types/db'
 import { categories as fxCategories, productImages as fxImages, products as fxProducts } from './fixtures'
@@ -39,7 +40,13 @@ export interface CategoryNode extends Category {
 export interface CatalogueRepo {
   listCategories(): Promise<CategoryNode[]>
   getCategory(slug: string): Promise<CategoryNode | null>
-  listProducts(opts: { categorySlug?: string; limit?: number; tier: Tier }): Promise<ProductWithImages[]>
+  listProducts(opts: {
+    categorySlug?: string
+    /** Free text typed into the header search. Matches the piece name. */
+    search?: string
+    limit?: number
+    tier: Tier
+  }): Promise<ProductWithImages[]>
   getProduct(slug: string, tier: Tier): Promise<ProductWithImages | null>
 }
 
@@ -86,15 +93,17 @@ const fixtureRepo: CatalogueRepo = {
     return sub ? { ...sub, children: [] } : null
   },
 
-  async listProducts({ categorySlug, limit, tier }) {
+  async listProducts({ categorySlug, search, limit, tier }) {
     const levels = visibleLevels(tier)
     const scope = categorySlug ? categoryScope(categorySlug) : null
     if (categorySlug && !scope) return []
+    const needle = search?.trim().toLowerCase() ?? ''
 
     const rows = fxProducts
       .filter((p) => p.is_active)
       .filter((p) => levels.includes(p.visibility))
       .filter((p) => (scope ? p.category_id !== null && scope.includes(p.category_id) : true))
+      .filter((p) => (needle ? p.name.toLowerCase().includes(needle) : true))
       .sort((a, b) => a.sort_order - b.sort_order)
       .slice(0, limit ?? undefined)
 
@@ -151,9 +160,18 @@ const supabaseRepo: CatalogueRepo = {
     return data ? { ...(data as Category), children: [] } : null
   },
 
-  async listProducts({ categorySlug, limit }) {
+  async listProducts({ categorySlug, search, limit }) {
     // No tier filter here — RLS decides. See the note at the top of this file.
+    // Searching is no exception: a premium piece whose name matches is still
+    // withheld from a guest, because the row never leaves the database.
     let query = getSupabase().from('products').select(PRODUCT_SELECT).eq('is_active', true)
+
+    const needle = search?.trim() ?? ''
+    if (needle) {
+      // Escape the characters PostgREST treats as wildcards, or a search for
+      // "%" would match the whole catalogue.
+      query = query.ilike('name', `%${escapeLike(needle)}%`)
+    }
 
     if (categorySlug) {
       const category = await supabaseRepo.getCategory(categorySlug)

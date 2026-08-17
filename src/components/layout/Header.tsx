@@ -255,7 +255,17 @@ export function Header() {
           {/* Search Bar - slides down when open */}
           {searchOpen && (
             <div className="absolute top-full left-0 right-0 bg-[var(--color-bg-elevated)] border-b border-[var(--color-border)] shadow-[var(--shadow-lg)] py-4 animate-slide-down lg:static lg:shadow-none lg:border-none lg:bg-transparent lg:py-0">
-              <form className="container flex items-center gap-3" role="search">
+              <form
+                className="container flex items-center gap-3"
+                role="search"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  const typed = searchInputRef.current?.value.trim() ?? ''
+                  if (!typed) return
+                  setSearchOpen(false)
+                  navigate(`/search?q=${encodeURIComponent(typed)}`)
+                }}
+              >
                 <label htmlFor="header-search" className="visually-hidden">
                   Search products
                 </label>
@@ -272,6 +282,12 @@ export function Header() {
                     autoComplete="off"
                   />
                 </div>
+                <button
+                  type="submit"
+                  className="px-5 py-3 rounded-lg bg-[var(--color-fg)] text-[var(--color-bg)] text-sm font-medium transition-opacity hover:opacity-90"
+                >
+                  Search
+                </button>
                 <button
                   type="button"
                   onClick={() => setSearchOpen(false)}

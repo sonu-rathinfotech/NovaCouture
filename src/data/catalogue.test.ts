@@ -114,3 +114,51 @@ describe('category scoping', () => {
     expect(await fixtureCatalogue.listProducts({ categorySlug: 'nope', tier: 'premium' })).toEqual([])
   })
 })
+
+describe('search', () => {
+  it('finds a piece by part of its name', async () => {
+    const found = await fixtureCatalogue.listProducts({ search: 'temple', tier: 'premium' })
+    expect(found.map((p) => p.slug)).toContain('meera-temple-haram')
+  })
+
+  it('ignores case and surrounding spaces', async () => {
+    const found = await fixtureCatalogue.listProducts({ search: '  TEMPLE  ', tier: 'premium' })
+    expect(found.map((p) => p.slug)).toContain('meera-temple-haram')
+  })
+
+  /**
+   * The point of the whole feature. Searching must not become a way to learn
+   * that a premium piece exists: a guest who types its exact name gets the
+   * same empty result as someone searching for something that is not there.
+   */
+  it('does not reveal a premium piece to a guest who knows its exact name', async () => {
+    const asPremium = await fixtureCatalogue.listProducts({ search: 'Padma Bridal Set', tier: 'premium' })
+    expect(asPremium.map((p) => p.slug)).toEqual(['padma-bridal-set'])
+
+    const asGuest = await fixtureCatalogue.listProducts({ search: 'Padma Bridal Set', tier: 'guest' })
+    expect(asGuest).toEqual([])
+
+    const asRegistered = await fixtureCatalogue.listProducts({ search: 'Padma Bridal Set', tier: 'registered' })
+    expect(asRegistered).toEqual([])
+  })
+
+  it('narrows within a category rather than escaping it', async () => {
+    const found = await fixtureCatalogue.listProducts({
+      categorySlug: 'necklaces',
+      search: 'temple',
+      tier: 'premium',
+    })
+    expect(found.every((p) => p.name.toLowerCase().includes('temple'))).toBe(true)
+    expect(found.map((p) => p.slug)).toContain('meera-temple-haram')
+  })
+
+  it('an empty search is not a filter', async () => {
+    const all = await fixtureCatalogue.listProducts({ tier: 'premium' })
+    const blank = await fixtureCatalogue.listProducts({ search: '   ', tier: 'premium' })
+    expect(blank.length).toBe(all.length)
+  })
+
+  it('returns nothing rather than everything when nothing matches', async () => {
+    expect(await fixtureCatalogue.listProducts({ search: 'zzzzz', tier: 'premium' })).toEqual([])
+  })
+})
