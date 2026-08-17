@@ -60,14 +60,14 @@ export function AdminLayout() {
           <div className="flex items-center gap-6">
             <Link
               to="/"
-              className="text-[0.65rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
+              className="text-[0.7rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
             >
               View site
             </Link>
             <button
               type="button"
               onClick={signOut}
-              className="cursor-pointer text-[0.65rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
+              className="cursor-pointer text-[0.7rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
             >
               Sign out
             </button>
@@ -83,7 +83,7 @@ export function AdminLayout() {
                 end={item.end}
                 className={({ isActive }) =>
                   [
-                    '-mb-px border-b-2 py-4 text-[0.65rem] font-semibold tracking-[0.16em] uppercase transition-colors duration-200',
+                    '-mb-px border-b-2 py-4 text-[0.7rem] font-semibold tracking-[0.16em] uppercase transition-colors duration-200',
                     isActive
                       ? 'border-[var(--admin-accent-line)] text-[var(--admin-fg)]'
                       : 'border-transparent text-[var(--admin-fg-muted)] hover:text-[var(--admin-fg)]',

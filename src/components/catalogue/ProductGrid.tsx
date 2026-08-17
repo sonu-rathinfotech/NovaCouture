@@ -3,7 +3,10 @@ import { ProductCard } from './ProductCard'
 import { ProductCardSkeleton } from '@/components/ui'
 
 /** Responsive grid: 2 col mobile, 3 col tablet, 4 col desktop, 5 col wide */
-const GRID_CLASSES = 'grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
+// Four columns at most. A fifth column on a wide monitor shrinks every
+// photograph, and on a catalogue whose entire content is photographs that is a
+// straight loss — the pieces are the product, not the density.
+const GRID_CLASSES = 'grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-3 xl:grid-cols-4'
 
 export function ProductGrid({
   products,

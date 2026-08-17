@@ -304,9 +304,12 @@
 .font-ui { font-family: var(--font-ui); }
 
 /* Editorial kicker: small caps label above headings. No colour here — callers
-   pair it with a text-* utility (gold on light, pale on dark sections). */
+   pair it with a text-* utility (gold on light, pale on dark sections).
+
+   12px, not 11px. Uppercase at 0.18em tracking is already hard work for the
+   eye, and this label carries the section's name. */
 .eyebrow {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;

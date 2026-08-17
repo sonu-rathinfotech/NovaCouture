@@ -42,20 +42,23 @@ export function Footer() {
       heading: 'The House of VK',
       links: [
         { label: 'Our Story', to: '/about' },
-        { label: 'Craftsmanship', to: '/about#craftsmanship' },
-        { label: 'Heritage', to: '/about#heritage' },
+        // These pointed at /about#craftsmanship and /about#heritage. Neither
+        // anchor exists on that page, so both quietly landed at the top — a
+        // link that promises a section and delivers the page it is already on.
+        // Give them their own headings on the about page, then link again.
         { label: 'Contact Us', to: '/contact' },
         { label: 'Client Portal', to: '/sign-in' },
       ],
     },
     {
+      // Five links stood here — Certification Guide, Care & Repair, Custom
+      // Orders, Appointment Booking, FAQs — and four of them pointed at pages
+      // that do not exist, on every page of the site. A footer full of 404s
+      // reads as an abandoned site, which is the opposite of what a footer is
+      // for. Restore each one as its page is actually written.
       heading: 'Client Services',
       links: [
-        { label: 'Certification Guide', to: '/certification' },
-        { label: 'Care & Repair', to: '/care' },
-        { label: 'Custom Orders', to: '/custom' },
-        { label: 'Appointment Booking', to: '/contact#appointment' },
-        { label: 'FAQs', to: '/faqs' },
+        { label: 'Contact us', to: '/contact' },
       ],
     },
     {
