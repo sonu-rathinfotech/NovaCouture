@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { useAsync } from '@/hooks/useAsync'
 import { catalogue } from '@/data/catalogue'
 import type { SVGProps } from 'react'
-import { Crown, Truck, Shield, RotateCcw, Headphones } from 'lucide-react'
 
 /* lucide dropped brand icons in v1, so the social marks are inline SVGs. */
 function InstagramIcon(props: SVGProps<SVGSVGElement>) {
@@ -11,31 +10,6 @@ function InstagramIcon(props: SVGProps<SVGSVGElement>) {
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-  )
-}
-
-function FacebookIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  )
-}
-
-function XIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  )
-}
-
-function YoutubeIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-      <path d="m10 15 5-3-5-3z" />
     </svg>
   )
 }
@@ -89,51 +63,23 @@ export function Footer() {
       links: [
         { label: 'Privacy Policy', to: '/privacy' },
         { label: 'Terms of Use', to: '/terms' },
-        { label: 'Cookie Policy', to: '/cookies' },
-        { label: 'Accessibility', to: '/accessibility' },
       ],
     },
   ]
 
-  const trustBadges = [
-    { icon: Shield, label: 'BIS Hallmarked', desc: 'Government certified purity' },
-    { icon: Crown, label: 'Lifetime Warranty', desc: 'On all craftsmanship' },
-    { icon: Truck, label: 'Insured Shipping', desc: 'Free & fully insured' },
-    { icon: RotateCcw, label: '30-Day Returns', desc: 'Hassle-free exchange' },
-    { icon: Headphones, label: 'Personal Concierge', desc: 'Dedicated support' },
-  ]
 
-  const socialLinks = [
-    { icon: InstagramIcon, href: 'https://instagram.com', label: 'Instagram' },
-    { icon: FacebookIcon, href: 'https://facebook.com', label: 'Facebook' },
-    { icon: XIcon, href: 'https://x.com', label: 'X (Twitter)' },
-    { icon: YoutubeIcon, href: 'https://youtube.com', label: 'YouTube' },
-  ]
+  // Empty until VK supplies its own handles. These pointed at instagram.com
+  // and facebook.com themselves — a "follow us" that goes to the platform's
+  // front page is worse than no icon at all.
+  const socialLinks: { icon: typeof InstagramIcon; href: string; label: string }[] = []
 
   return (
     <footer className="bg-[var(--color-fg)] text-[var(--base-50)]" role="contentinfo">
-      {/* Trust Badges Bar - Tanishq/Blue Nile style */}
-      <div className="border-b border-[var(--base-800)] py-6">
-        <div className="container">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-5 items-center">
-            {trustBadges.map((badge, i) => (
-              <div
-                key={badge.label}
-                className="flex items-center gap-3 p-3 hover:bg-[var(--base-900)] rounded-lg transition-colors animate-fade-in-up"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div className="p-2 bg-[var(--base-800)] rounded-lg">
-                  <badge.icon className="h-5 w-5 text-[var(--trust-gold)]" aria-hidden="true" />
-                </div>
-                <div className="text-left">
-                  <p className="font-medium text-sm text-white">{badge.label}</p>
-                  <p className="text-[var(--base-400)] text-xs">{badge.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* A row of trust badges stood here — BIS Hallmarked, Lifetime
+          Warranty, Insured Shipping, 30-day returns, Personal Concierge.
+          It came with the design this was adapted from. VK has never
+          said any of it, and BIS hallmarking is a legal certification.
+          Restore it only in VK's own words, claim by claim. */}
 
       {/* Main Footer Grid */}
       <div className="py-16 lg:py-24">

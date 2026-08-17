@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowRight, Share2, MessageCircle, ChevronRight } from 'lucide-react'
+import { ArrowRight, Share2, MessageCircle } from 'lucide-react'
 import { Gallery } from '@/components/catalogue/Gallery'
 import { artKindFor, artOffsetFor } from '@/components/catalogue/art'
 import { EnquiryForm } from '@/components/catalogue/EnquiryForm'
@@ -12,7 +12,6 @@ import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
 import { features } from '@/lib/env'
 import { enquiryVisibleTo } from '@/lib/enquiry'
-import type { Visibility } from '@/types/db'
 import { Badge, ButtonLink } from '@/components/ui'
 
 /**
@@ -80,15 +79,6 @@ export function ProductPage() {
   const alsoIn = (related ?? []).filter((p) => p.id !== product.id).slice(0, 4)
 
   // Visibility badge
-  const getVisibilityBadge = (visibility: Visibility) => {
-    switch (visibility) {
-      case 'public': return { variant: 'visibility-public' as const, label: 'Public' }
-      case 'login_required': return { variant: 'visibility-login' as const, label: 'Members Only' }
-      case 'premium_only': return { variant: 'visibility-premium' as const, label: 'Premium Only' }
-      default: return { variant: 'default' as const, label: 'Public' }
-    }
-  }
-  const visibility = getVisibilityBadge(product.visibility)
 
   return (
     <>
@@ -119,13 +109,13 @@ export function ProductPage() {
               <span className="text-[var(--color-fg)]" aria-current="page">{product.name}</span>
             </nav>
 
-            {/* Category & Visibility */}
-            <div className="flex flex-wrap items-center gap-3">
-              {product.category && (
+            {/* The category only. A badge saying "Premium clients only" tells
+                the customer how the gating works and nothing about the piece. */}
+            {product.category && (
+              <div>
                 <Badge variant="secondary" size="sm">{product.category.name}</Badge>
-              )}
-              <Badge variant={visibility.variant} size="sm" dot>{visibility.label}</Badge>
-            </div>
+              </div>
+            )}
 
             {/* Product Name - Tiffany editorial */}
             <h1 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight text-balance">
@@ -143,55 +133,20 @@ export function ProductPage() {
               For weight, stones or making details, please ask.
             </p>
 
-            {/* Trust Signals - Tanishq/Blue Nile */}
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Badge variant="success" size="sm" dot>BIS Hallmarked</Badge>
-              <Badge variant="default" size="sm" dot>Lifetime Warranty</Badge>
-              <Badge variant="default" size="sm" dot>Insured Shipping</Badge>
-            </div>
+            {/* Removed here: a row of "BIS Hallmarked / Lifetime Warranty /
+                Insured Shipping" badges and a Specifications panel listing
+                hallmark certification, a lifetime warranty, annual cleaning,
+                insured shipping and a 30-day exchange policy.
 
-            {/* Specifications Accordion - Blue Nile style */}
-            <details className="group border border-[var(--color-border)] rounded-xl overflow-hidden">
-              <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
-                <span className="font-medium text-[var(--color-fg)]">Specifications & Details</span>
-                <ChevronRight
-                  className="h-5 w-5 text-[var(--color-fg-muted)] transition-transform duration-200 group-open:rotate-90"
-                  aria-hidden="true"
-                />
-              </summary>
-              <div className="px-5 pb-5 border-t border-[var(--color-border)] space-y-4 text-sm">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-[var(--color-fg-muted)]">Category</p>
-                    <p className="font-medium text-[var(--color-fg)]">{product.category?.name || '—'}</p>
-                  </div>
-                  <div>
-                    <p className="text-[var(--color-fg-muted)]">Collection</p>
-                    <p className="font-medium text-[var(--color-fg)]">{parent?.name || 'Main Collection'}</p>
-                  </div>
-                  <div>
-                    <p className="text-[var(--color-fg-muted)]">Images</p>
-                    <p className="font-medium text-[var(--color-fg)]">{product.images.length} photographs</p>
-                  </div>
-                  <div>
-                    <p className="text-[var(--color-fg-muted)]">Availability</p>
-                    <p className="font-medium text-[var(--color-fg)]">
-                      {visibility.label === 'Public' ? 'Available to all' : visibility.label === 'Members Only' ? 'Registered clients only' : 'Premium clients only'}
-                    </p>
-                  </div>
-                </div>
-                <div className="pt-4 border-t border-[var(--color-border)]">
-                  <p className="text-[var(--color-fg-muted)] mb-2">Certification & Care</p>
-                  <ul className="space-y-1 text-[var(--color-fg)]">
-                    <li>• BIS Hallmark certified purity</li>
-                    <li>• Lifetime warranty on craftsmanship</li>
-                    <li>• Complimentary cleaning & inspection annually</li>
-                    <li>• Insured shipping with signature required</li>
-                    <li>• 30-day exchange policy</li>
-                  </ul>
-                </div>
-              </div>
-            </details>
+                All of it came from the UI this design was adapted from. VK has
+                never said any of it. BIS hallmarking is a legal certification
+                and the rest are contractual promises, so the site was making
+                commitments on the jeweller's behalf to real customers.
+
+                If VK does offer these, they can be stated — in VK's own words,
+                once someone there has confirmed each one. Invented copy is not
+                a placeholder to be filled in later; it reads as fact from the
+                moment it is published. */}
 
             {/* Enquiry Form - Mejuri/Aurate style */}
             {enquiryVisibleTo(tier, features.enquiryForRegistered) ? (

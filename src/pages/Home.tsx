@@ -1,4 +1,4 @@
-import { ArrowRight, Crown, ShieldCheck, Truck, RotateCcw, Headphones } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui'
 import { ProductGrid, ProductGridSkeleton } from '@/components/catalogue/ProductGrid'
 import { CategoryCard } from '@/components/catalogue/CategoryCard'
@@ -84,34 +84,11 @@ export function Home() {
         </div>
       )}
 
-      {/* Trust Badges - Tanishq/Blue Nile style */}
-      <section className="py-12 bg-[var(--color-bg-elevated)] border-y border-[var(--color-border)]">
-        <div className="container">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-5 items-center">
-            {[
-              { icon: ShieldCheck, label: 'BIS Hallmarked', desc: 'Govt. certified' },
-              { icon: Crown, label: 'Lifetime Warranty', desc: 'On craftsmanship' },
-              { icon: Truck, label: 'Insured Shipping', desc: 'Free & secure' },
-              { icon: RotateCcw, label: 'Easy Returns', desc: '30-day policy' },
-              { icon: Headphones, label: 'Personal Concierge', desc: 'Dedicated support' },
-            ].map((badge, i) => (
-              <div
-                key={badge.label}
-                className="flex items-center gap-3 p-4 hover:bg-[var(--color-bg-muted)] rounded-xl transition-colors animate-fade-in-up"
-                style={{ animationDelay: `${i * 80}ms` }}
-              >
-                <div className="p-2 rounded-lg bg-[var(--color-accent-light)]">
-                  <badge.icon className="h-5 w-5 text-[var(--color-accent)]" aria-hidden="true" />
-                </div>
-                <div>
-                  <p className="font-medium text-sm text-[var(--color-fg)]">{badge.label}</p>
-                  <p className="text-[var(--color-fg-muted)] text-xs">{badge.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* A row of trust badges stood here — BIS Hallmarked, Lifetime
+          Warranty, Insured Shipping, 30-day returns, Personal Concierge.
+          It came with the design this was adapted from. VK has never
+          said any of it, and BIS hallmarking is a legal certification.
+          Restore it only in VK's own words, claim by claim. */}
 
       {/* Collections - Tanishq/Kalyan style with editorial numbering */}
       <section className="py-20 lg:py-32 bg-[var(--color-bg)]">

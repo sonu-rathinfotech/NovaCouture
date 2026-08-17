@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ShieldCheck, Award, Truck, RotateCcw } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { HERO_PHOTO } from '@/components/catalogue/samplePhotos'
 
 /**
@@ -44,29 +44,18 @@ export function AuthLayout({
             <br />
             shown by invitation.
           </p>
+          {/* "Since 1987" was invented by the design this was adapted from.
+              Put the real founding year back once VK confirms it. */}
           <p className="mt-4 text-sm font-light tracking-widest text-[var(--base-300)] uppercase">
-            VK Jewellers — Since 1987
+            VK Jewellers
           </p>
         </div>
         
-        {/* Trust badges on image side - Tanishq style */}
-        <div className="absolute left-0 bottom-0 m-8 lg:m-12 flex flex-wrap gap-3" aria-label="Trust badges">
-          {[
-            { icon: ShieldCheck, label: 'BIS Hallmarked' },
-            { icon: Award, label: 'Lifetime Warranty' },
-            { icon: Truck, label: 'Insured Shipping' },
-            { icon: RotateCcw, label: 'Easy Returns' },
-          ].map((badge, i) => (
-            <span
-              key={badge.label}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-sm font-medium text-white animate-fade-in-up"
-              style={{ animationDelay: `${i * 150}ms` }}
-            >
-              <badge.icon className="h-4 w-4 text-[var(--trust-gold)]" aria-hidden="true" />
-              {badge.label}
-            </span>
-          ))}
-        </div>
+        {/* A row of trust badges stood here — BIS Hallmarked, Lifetime
+          Warranty, Insured Shipping, 30-day returns, Personal Concierge.
+          It came with the design this was adapted from. VK has never
+          said any of it, and BIS hallmarking is a legal certification.
+          Restore it only in VK's own words, claim by claim. */}
       </div>
 
       {/* Form Side - Clean/GIVA style */}
