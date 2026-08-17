@@ -2,8 +2,9 @@ import { ArrowRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui'
 import { ProductGrid, ProductGridSkeleton } from '@/components/catalogue/ProductGrid'
 import { LoadError } from '@/components/LoadError'
+import { HeroMedia } from '@/components/HeroMedia'
 import { CategoryCard } from '@/components/catalogue/CategoryCard'
-import { HERO_PHOTO, samplePhoto, USING_SAMPLE_PHOTOS } from '@/components/catalogue/samplePhotos'
+import { samplePhoto, USING_SAMPLE_PHOTOS } from '@/components/catalogue/samplePhotos'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -28,15 +29,7 @@ export function Home() {
           pulls the photograph up under the sticky header so the hero reads
           full-bleed edge to edge. */}
       <section className="relative -mt-18 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img
-            src={HERO_PHOTO}
-            alt=""
-            aria-hidden="true"
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-fg)]/80 via-[var(--color-fg)]/40 to-transparent" />
-        </div>
+        <HeroMedia />
         
         <div className="relative z-10 container min-h-[90vh] flex items-center lg:min-h-[100vh]">
           <div className="max-w-3xl animate-fade-in-up">
