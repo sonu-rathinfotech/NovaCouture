@@ -27,7 +27,39 @@ export function Header() {
   const navigate = useNavigate()
 
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [collectionsOpen, setCollectionsOpen] = useState(false)
+  /*
+   * Two separate reasons the Collections panel can be open, because one flag
+   * cannot express both.
+   *
+   * With a single flag, hovering set it true and then the click toggled it
+   * straight back to false — so clicking the menu closed the panel that
+   * hovering had just opened, which reads as "I cannot click it".
+   */
+  const [collectionsHovered, setCollectionsHovered] = useState(false)
+  const [collectionsPinned, setCollectionsPinned] = useState(false)
+  const collectionsOpen = collectionsHovered || collectionsPinned
+  const closeTimer = useRef<number | undefined>(undefined)
+
+  function openCollections() {
+    window.clearTimeout(closeTimer.current)
+    setCollectionsHovered(true)
+  }
+
+  /*
+   * Closing is delayed. The pointer has to travel from the trigger across to
+   * the panel, and any twitch outside the wrapper on the way fires mouseleave.
+   * Without the grace period the panel vanishes mid-journey.
+   */
+  function closeCollections() {
+    window.clearTimeout(closeTimer.current)
+    closeTimer.current = window.setTimeout(() => setCollectionsHovered(false), 180)
+  }
+
+  function dismissCollections() {
+    window.clearTimeout(closeTimer.current)
+    setCollectionsHovered(false)
+    setCollectionsPinned(false)
+  }
   const [searchOpen, setSearchOpen] = useState(false)
   const menuButton = useRef<HTMLButtonElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -35,9 +67,26 @@ export function Header() {
   // Close menus on navigation
   useEffect(() => {
     setMobileOpen(false)
-    setCollectionsOpen(false)
+    dismissCollections()
     setSearchOpen(false)
+    // dismissCollections is stable enough for this: it only touches refs and
+    // setState, both of which are stable across renders.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
+
+  // Escape closes the Collections panel. Without it a pinned panel can only be
+  // dismissed with a mouse, which strands anyone navigating by keyboard.
+  useEffect(() => {
+    if (!collectionsOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') dismissCollections()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collectionsOpen])
 
   // Body lock for mobile menu
   useEffect(() => {
@@ -93,12 +142,12 @@ export function Header() {
               {/* Collections Dropdown - Tanishq/CaratLane style */}
               <div
                 className="relative"
-                onMouseEnter={() => setCollectionsOpen(true)}
-                onMouseLeave={() => setCollectionsOpen(false)}
+                onMouseEnter={openCollections}
+                onMouseLeave={closeCollections}
               >
                 <button
                   type="button"
-                  onClick={() => setCollectionsOpen((open) => !open)}
+                  onClick={() => setCollectionsPinned((pinned) => !pinned)}
                   aria-expanded={collectionsOpen}
                   aria-haspopup="true"
                   className={`flex cursor-pointer items-center gap-1.5 text-sm font-medium tracking-[0.15em] uppercase transition-colors duration-200 ${linkTone}`}
@@ -113,9 +162,22 @@ export function Header() {
                 </button>
 
                 {collectionsOpen && nav.length > 0 && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-full max-w-4xl">
+                  /*
+                   * The width was `w-full max-w-4xl`. `w-full` is 100% of the
+                   * positioning parent — the Collections BUTTON, about 110px —
+                   * so max-w-4xl never applied and a four-column grid was
+                   * crammed into 110px. That is why the category names sat on
+                   * top of each other.
+                   *
+                   * The spacing below the trigger is padding, not margin: a
+                   * margin leaves a gap that belongs to no element, and
+                   * crossing it fires mouseleave.
+                   */
+                  <div className="absolute top-full left-1/2 w-[min(52rem,calc(100vw-3rem))] -translate-x-1/2 pt-3">
                     <div className="bg-[var(--color-bg-elevated)] border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-xl)] p-6 animate-slide-down">
-                      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                      {/* Six top-level categories: three across reads better
+                          than four-then-two. */}
+                      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                         {nav.slice(0, 8).map((c) => (
                           <Link
                             key={c.id}
