@@ -105,6 +105,66 @@ const SHAPES: Record<ArtKind, ReadonlyArray<React.ReactNode>> = {
       <circle cx="50" cy="60" r="6" fill={FILL} stroke="none" opacity=".4" />
     </>,
   ],
+  // Drawn as a single earring rather than a pair: at card size a pair reads as
+  // two unrelated blobs, and the gallery already shows several views.
+  earring: [
+    <>
+      <circle cx="50" cy="30" r="7" />
+      <path d="M50 37 L50 46" />
+      <path d="M30 46 L70 46" />
+      <path d="M30 46 Q50 84 70 46 Z" />
+      <circle cx="38" cy="60" r="2" />
+      <circle cx="50" cy="66" r="2" />
+      <circle cx="62" cy="60" r="2" />
+    </>,
+    <>
+      <circle cx="50" cy="28" r="6" />
+      <path d="M32 44 Q50 30 68 44" />
+      <path d="M32 44 Q50 78 68 44 Z" fill={FILL} fillOpacity=".14" />
+      <path d="M40 78 L40 86" />
+      <path d="M50 82 L50 92" />
+      <path d="M60 78 L60 86" />
+    </>,
+    <>
+      <circle cx="50" cy="32" r="8" />
+      <circle cx="50" cy="32" r="3" fill={FILL} stroke="none" opacity=".5" />
+      <path d="M50 40 L50 52" />
+      <ellipse cx="50" cy="66" rx="14" ry="18" />
+      <ellipse cx="50" cy="66" rx="7" ry="10" />
+    </>,
+    <>
+      <path d="M34 30 Q50 22 66 30" />
+      <path d="M34 30 L34 48" />
+      <path d="M66 30 L66 48" />
+      <path d="M34 48 Q50 88 66 48 Z" strokeDasharray="3 4" />
+      <circle cx="50" cy="62" r="5" />
+    </>,
+  ],
+  // The chain matters as much as the drop — a pendant with no chain reads as a
+  // brooch.
+  pendant: [
+    <>
+      <path d="M18 30 Q50 44 82 30" />
+      <path d="M50 44 L50 56" />
+      <path d="M50 56 L62 72 L50 88 L38 72 Z" />
+      <path d="M44 72 L56 72" />
+    </>,
+    <>
+      <path d="M16 28 Q50 46 84 28" />
+      <circle cx="50" cy="68" r="16" />
+      <circle cx="50" cy="68" r="8" fill={FILL} fillOpacity=".2" />
+    </>,
+    <>
+      <path d="M20 32 Q50 48 80 32" />
+      <path d="M50 48 L50 58" />
+      <path d="M50 58 Q34 70 50 92 Q66 70 50 58 Z" />
+    </>,
+    <>
+      <path d="M18 30 Q50 42 82 30" strokeDasharray="4 3" />
+      <circle cx="50" cy="52" r="4" />
+      <path d="M50 56 L60 74 L50 90 L40 74 Z" strokeDasharray="3 4" />
+    </>,
+  ],
   default: [
     <>
       <circle cx="50" cy="60" r="26" />

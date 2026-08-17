@@ -22,6 +22,14 @@ const BY_KIND: Record<ArtKind, string[]> = {
   bangle: ['bangle-1', 'bangle-2', 'bangle-3'],
   ring: ['ring-1', 'ring-2', 'ring-3', 'ring-4'],
   bracelet: ['bracelet-1', 'bracelet-2'],
+  // A pendant hangs on a chain, so the necklace photographs read correctly.
+  pendant: ['necklace-1', 'necklace-2'],
+  // There is no earring photograph in the sample set. Rather than show a ring
+  // beside a jhumka, these fall back to the mixed set — the line drawings are
+  // correct for earrings, so fixture mode looks right either way. Drop
+  // earring-1.jpg and earring-2.jpg into web/public/samples and list them here
+  // to fix it properly; tools/upload-samples.mjs reads the same names.
+  earring: ['necklace-1', 'necklace-2'],
   default: ['ring-1', 'necklace-1', 'bangle-1', 'bracelet-1'],
 }
 

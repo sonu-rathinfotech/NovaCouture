@@ -6,7 +6,7 @@
  * photography arrives.
  */
 
-export type ArtKind = 'necklace' | 'bangle' | 'ring' | 'bracelet' | 'default'
+export type ArtKind = 'necklace' | 'bangle' | 'ring' | 'bracelet' | 'earring' | 'pendant' | 'default'
 
 const KIND_BY_CATEGORY: Record<string, ArtKind> = {
   necklaces: 'necklace',
@@ -17,6 +17,18 @@ const KIND_BY_CATEGORY: Record<string, ArtKind> = {
   rings: 'ring',
   solitaire: 'ring',
   bracelets: 'bracelet',
+  haram: 'necklace',
+  choker: 'necklace',
+  'bangle-sets': 'bangle',
+  cocktail: 'ring',
+  tennis: 'bracelet',
+  earrings: 'earring',
+  jhumka: 'earring',
+  chandbali: 'earring',
+  studs: 'earring',
+  'pendants-chains': 'pendant',
+  pendants: 'pendant',
+  chains: 'pendant',
 }
 
 export function artKindFor(categorySlug: string | null | undefined): ArtKind {
