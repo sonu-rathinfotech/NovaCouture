@@ -3,7 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import { getSupabase } from '@/lib/supabase'
 import { isConfigured } from '@/lib/env'
 import { auth } from '@/auth'
-import { clearImageUrlCache } from '@/lib/images'
+import { setImageCacheOwner } from '@/lib/images'
 import { setMockPremium } from '@/auth/mockAuth'
 import type { Profile, Tier } from '@/types/db'
 
@@ -67,6 +67,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       .auth.getSession()
       .then(({ data }) => {
         if (!active) return
+        // No auth event fires for an existing session, so the cache would sit
+        // on 'guest' and refuse every stored URL — re-downloading everything
+        // the visitor already had.
+        setImageCacheOwner(data.session?.user?.id ?? null)
         setSession(data.session)
         setLoading(false)
       })
@@ -74,7 +78,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const { data: sub } = getSupabase().auth.onAuthStateChange((_event, next) => {
       // Entitlement may have changed, so previously signed URLs must not be
       // reused — a premium image URL would otherwise survive a sign-out.
-      clearImageUrlCache()
+      // setImageCacheOwner both clears the old account's URLs and loads any
+      // still-valid ones belonging to this one, which is what makes a reload
+      // cost no bandwidth.
+      setImageCacheOwner(next?.user?.id ?? null)
       setSession(next)
     })
 

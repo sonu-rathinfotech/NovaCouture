@@ -147,7 +147,19 @@ export async function importCatalogue(
 
       const { error: uploadError } = await supabase.storage
         .from('product-images')
-        .upload(path, file, { upsert: true, contentType: mimeFor(file.name) })
+        .upload(path, file, {
+          upsert: true,
+          contentType: mimeFor(file.name),
+          // Asks Storage to let browsers hold the bytes for a day.
+          //
+          // Measured on this project, a signed-URL response comes back with an
+          // ETag but NO cache-control, whichever way the object was uploaded.
+          // So this currently changes nothing, and the saving comes from the
+          // ETag instead: a repeat request for the same URL is answered 304 and
+          // transfers no image. Keeping the value set is free and correct, and
+          // it starts paying the day Storage honours it.
+          cacheControl: '86400',
+        })
       if (uploadError) throw new Error(`Uploading ${file.name}: ${uploadError.message}`)
 
       const { error: rowError } = await supabase.from('product_images').insert({
