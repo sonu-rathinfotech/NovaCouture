@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { AdminError, AdminHeading, AdminTable, Stat } from './AdminLayout'
+import { AUDIENCE } from './audience'
 import { useAsync } from '@/hooks/useAsync'
 import {
   getCollection,
@@ -63,6 +64,23 @@ export function AdminLinkDetail() {
         />
         <Stat label="Status" value={link?.is_active ? 'Active' : 'Disabled'} />
       </div>
+
+      {link && (
+        <p className="mb-8 max-w-[70ch] text-sm leading-relaxed text-[var(--admin-fg-muted)]">
+          <strong className="font-medium text-[var(--admin-fg)]">
+            {AUDIENCE[link.min_tier].label}.
+          </strong>{' '}
+          {AUDIENCE[link.min_tier].note}
+          {link.min_tier === 'guest' && (
+            /* A guest link records opens but has no number to attribute them
+               to, so "unique viewers" above would read 0 and look broken. */
+            <span className="mt-2 block">
+              Opens are counted, but a viewer who is not signed in cannot be identified, so unique
+              viewers only counts signed-in clients.
+            </span>
+          )}
+        </p>
+      )}
 
       <h2 className="mb-3 font-serif text-xl font-normal">Pieces opened</h2>
       {features.collectionProductViews ? (

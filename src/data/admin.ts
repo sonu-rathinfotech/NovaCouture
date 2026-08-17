@@ -11,7 +11,7 @@
  * and is not relied upon.
  */
 import { getSupabase } from '@/lib/supabase'
-import type { Category, Profile, Product, Visibility } from '@/types/db'
+import type { CollectionAudience, Category, Profile, Product, Visibility } from '@/types/db'
 
 export interface AdminProduct extends Product {
   category: Pick<Category, 'id' | 'name' | 'slug'> | null
@@ -22,6 +22,7 @@ export interface CollectionMetric {
   collection_id: string
   title: string
   token: string
+  min_tier: CollectionAudience
   is_active: boolean
   created_at: string
   opens: number
@@ -192,6 +193,7 @@ export async function createCollection(
   title: string,
   welcomeMessage: string,
   productIds: string[],
+  audience: CollectionAudience = 'premium',
 ): Promise<string> {
   const supabase = getSupabase()
 
@@ -200,6 +202,7 @@ export async function createCollection(
     .insert({
       title: title.trim(),
       welcome_message: welcomeMessage.trim() || null,
+      min_tier: audience,
     })
     .select('id, token')
     .single()
@@ -433,10 +436,11 @@ export async function getCollection(id: string): Promise<{
   token: string
   is_active: boolean
   welcome_message: string | null
+  min_tier: CollectionAudience
 } | null> {
   const { data, error } = await getSupabase()
     .from('collections')
-    .select('id, title, token, is_active, welcome_message')
+    .select('id, title, token, is_active, welcome_message, min_tier')
     .eq('id', id)
     .maybeSingle()
   if (error) throw error

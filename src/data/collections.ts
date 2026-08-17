@@ -2,9 +2,10 @@
  * Curated collection links (scope §G).
  *
  * Access rule, and the reason this file is separate from catalogue.ts: the
- * token alone grants nothing. The recipient must be signed in AND premium. A
- * forwarded link therefore leaks nothing, which is the whole point of sending
- * one to a client.
+ * token alone grants nothing by default. Each link carries its own audience —
+ * premium (the default), any signed-in client, or anyone holding it — and the
+ * database decides, never this file. A premium link that is forwarded on
+ * therefore leaks nothing, which is the whole point of sending one.
  *
  * Denial is deliberately uniform. A guest, a non-premium user, an inactive
  * link and a token that never existed all produce exactly the same result —
@@ -13,7 +14,7 @@
  */
 import { getSupabase } from '@/lib/supabase'
 import { isConfigured } from '@/lib/env'
-import type { ProductWithImages, Tier } from '@/types/db'
+import type { CollectionAudience, ProductWithImages, Tier } from '@/types/db'
 import { categories as fxCategories, productImages as fxImages, products as fxProducts } from './fixtures'
 
 export interface CollectionView {
@@ -33,6 +34,19 @@ export interface CollectionsRepo {
 
 const DENIED: CollectionResult = { status: 'denied' }
 
+/**
+ * Mirrors public.collection_allows() for fixture mode only.
+ *
+ * Against a real database this is never consulted — the RPC decides and this
+ * file does not second-guess it. Two copies of an access rule is a liability,
+ * so this one exists purely so the offline fixtures behave believably.
+ */
+export function audienceAdmits(audience: CollectionAudience, tier: Tier): boolean {
+  if (audience === 'guest') return true
+  if (audience === 'registered') return tier === 'registered' || tier === 'premium'
+  return tier === 'premium'
+}
+
 // -----------------------------------------------------------------------------
 // Fixtures
 // -----------------------------------------------------------------------------
@@ -40,6 +54,7 @@ const DENIED: CollectionResult = { status: 'denied' }
 /** Mirrors the collection seeded in supabase/seed.sql. */
 const FIXTURE_COLLECTION = {
   token: 'seed-token-diwali-preview-2026',
+  minTier: 'premium' as CollectionAudience,
   title: 'Diwali Preview 2026',
   welcomeMessage: 'Welcome. A private selection, chosen for you.',
   productSlugs: ['padma-bridal-set', 'heritage-polki-suite', 'meera-temple-haram'],
@@ -59,9 +74,9 @@ function hydrate(slug: string): ProductWithImages | null {
 
 const fixtureRepo: CollectionsRepo = {
   async open(token, tier) {
-    // Premium check first, before the token is even looked at — so timing and
+    // Audience check first, before the token is even looked at — so timing and
     // response are identical whether or not the link is real.
-    if (tier !== 'premium') return DENIED
+    if (!audienceAdmits(FIXTURE_COLLECTION.minTier, tier)) return DENIED
     if (token !== FIXTURE_COLLECTION.token) return DENIED
 
     const products = FIXTURE_COLLECTION.productSlugs
@@ -95,39 +110,74 @@ interface CollectionRow {
   product_id: string
   product_name: string
   product_slug: string
+  visibility: string
+  category_name: string | null
+  category_slug: string | null
+  sort_order: number
+  image_id: string | null
+  image_path: string | null
+  image_alt: string | null
+  image_position: number | null
 }
 
 const supabaseRepo: CollectionsRepo = {
   async open(token) {
     // No tier check here — public.get_collection() raises access_denied for
-    // anyone who is not signed in and premium. The rule lives in one place.
+    // anyone the link's audience does not admit. The rule lives in one place.
     const { data, error } = await getSupabase().rpc('get_collection', { p_token: token })
 
     if (error || !data || (data as CollectionRow[]).length === 0) return DENIED
 
     const rows = data as CollectionRow[]
-    const productIds = rows.map((r) => r.product_id)
 
-    const { data: products } = await getSupabase()
-      .from('products')
-      .select(
-        `id, name, slug, category_id, visibility, is_active, sort_order, created_at, updated_at,
-         images:product_images (id, product_id, storage_path, sort_order, alt),
-         category:categories (id, name, slug)`,
-      )
-      .in('id', productIds)
+    // One row per product per photograph, in the admin's chosen order. The
+    // products are NOT re-read through ordinary RLS afterwards: a link shared
+    // with a registered client may hold a premium piece, and RLS would drop it
+    // from a collection chosen for them without saying so.
+    const byId = new Map<string, ProductWithImages>()
 
-    const byId = new Map(
-      ((products ?? []) as unknown as ProductWithImages[]).map((p) => [p.id, p]),
-    )
+    for (const row of rows) {
+      let product = byId.get(row.product_id)
+
+      if (!product) {
+        product = {
+          id: row.product_id,
+          name: row.product_name,
+          slug: row.product_slug,
+          category_id: null,
+          visibility: row.visibility as ProductWithImages['visibility'],
+          is_active: true,
+          sort_order: row.sort_order,
+          // Not returned by the RPC and not shown anywhere in a collection.
+          created_at: '',
+          updated_at: '',
+          images: [],
+          category: row.category_slug
+            ? { id: '', name: row.category_name ?? '', slug: row.category_slug }
+            : null,
+        } as ProductWithImages
+        byId.set(row.product_id, product)
+      }
+
+      // Left-joined: a piece whose photographs are not uploaded yet still
+      // appears, rather than shortening the selection the admin made.
+      if (row.image_id && row.image_path) {
+        product.images.push({
+          id: row.image_id,
+          product_id: row.product_id,
+          storage_path: row.image_path,
+          sort_order: row.image_position ?? 0,
+          alt: row.image_alt ?? row.product_name,
+        })
+      }
+    }
 
     return {
       status: 'ok',
       collection: {
         title: rows[0].title,
         welcomeMessage: rows[0].welcome_message,
-        // Preserve the admin's chosen order, which the RPC already applied.
-        products: rows.map((r) => byId.get(r.product_id)).filter((p): p is ProductWithImages => !!p),
+        products: [...byId.values()],
       },
     }
   },

@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AdminButton, AdminError, AdminHeading } from './AdminLayout'
 import { useAsync } from '@/hooks/useAsync'
 import { createCollection, listAllProducts } from '@/data/admin'
+import { AUDIENCE, AUDIENCE_ORDER } from './audience'
+import type { CollectionAudience } from '@/types/db'
 
 const VISIBILITY_LABEL: Record<string, string> = {
   public: 'Public',
@@ -23,6 +25,7 @@ export function AdminLinkNew() {
   const [title, setTitle] = useState('')
   const [welcome, setWelcome] = useState('')
   const [picked, setPicked] = useState<string[]>([])
+  const [audience, setAudience] = useState<CollectionAudience>('premium')
   const [query, setQuery] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -64,7 +67,7 @@ export function AdminLinkNew() {
     setBusy(true)
     setError(null)
     try {
-      setToken(await createCollection(title, welcome, picked))
+      setToken(await createCollection(title, welcome, picked, audience))
     } catch (e) {
       setError((e as Error).message || 'The link could not be created.')
     } finally {
@@ -74,20 +77,40 @@ export function AdminLinkNew() {
 
   if (token) {
     const url = `${window.location.origin}/collection/${token}`
+    const chosen = AUDIENCE[audience]
+
+    // Links are sent on WhatsApp, which is the whole delivery mechanism for
+    // this business. Opening the share sheet with the message already written
+    // saves the admin retyping it into the phone.
+    const message = `${title}
+
+${welcome.trim() || 'A selection chosen for you.'}
+
+${url}`
+
     return (
       <>
         <AdminHeading title="Link created" note="Send this to the client. It does not expire." />
-        <div className="border border-ivory-300 bg-ivory-50 p-6">
+        <div className="admin-panel p-6">
           <p className="font-mono text-sm break-all">{url}</p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <AdminButton onClick={() => navigator.clipboard.writeText(url)}>Copy link</AdminButton>
+            <AdminButton tone="primary" onClick={() => navigator.clipboard.writeText(url)}>
+              Copy link
+            </AdminButton>
+            <a
+              className="admin-btn"
+              href={`https://wa.me/?text=${encodeURIComponent(message)}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Send on WhatsApp
+            </a>
             <AdminButton onClick={() => navigate('/admin/links')}>Done</AdminButton>
           </div>
         </div>
-        <p className="mt-4 max-w-[70ch] text-sm leading-relaxed font-light text-charcoal-400">
-          Only a signed-in premium client can open this. Anyone else — including someone the
-          recipient forwards it to — sees the same “not available” message, so the link reveals
-          nothing on its own.
+        <p className="mt-4 max-w-[70ch] text-sm leading-relaxed text-[var(--admin-fg-muted)]">
+          <strong className="font-medium text-[var(--admin-fg)]">{chosen.label}.</strong>{' '}
+          {chosen.note}
         </p>
       </>
     )
@@ -127,6 +150,36 @@ export function AdminLinkNew() {
               className="w-full resize-y border border-ivory-300 bg-ivory-50 px-3 py-2 text-sm focus:border-charcoal-800 focus:outline-none"
             />
           </label>
+
+          <fieldset className="mb-5">
+            <legend className="mb-2 block text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">
+              Who can open it
+            </legend>
+            <div className="border border-ivory-300 bg-ivory-50">
+              {AUDIENCE_ORDER.map((value) => (
+                <label
+                  key={value}
+                  className={`flex cursor-pointer gap-3 border-b border-ivory-300 p-3.5 last:border-b-0 ${
+                    audience === value ? 'bg-ivory-200/60' : ''
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="audience"
+                    checked={audience === value}
+                    onChange={() => setAudience(value)}
+                    className="mt-1 size-4 shrink-0 cursor-pointer accent-charcoal-800"
+                  />
+                  <span>
+                    <span className="block text-sm font-medium">{AUDIENCE[value].label}</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-charcoal-400">
+                      {AUDIENCE[value].note}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           <div className="border border-ivory-300 bg-ivory-50">
             <div className="border-b border-ivory-300 px-4 py-3 text-[0.6rem] tracking-[0.2em] text-charcoal-400 uppercase">

@@ -60,12 +60,21 @@ export interface ProductImage {
   alt: string
 }
 
+/**
+ * Who a curated link opens for. Mirrors collections.min_tier.
+ *
+ * 'guest' publishes the pieces in that one link to anyone it reaches — chosen
+ * per link, deliberately, and it touches nothing outside the link.
+ */
+export type CollectionAudience = 'guest' | 'registered' | 'premium'
+
 export interface Collection {
   id: string
   title: string
   /** Unguessable link token. Never expires — is_active is the kill switch. */
   token: string
   welcome_message: string | null
+  min_tier: CollectionAudience
   is_active: boolean
   created_at: string
 }

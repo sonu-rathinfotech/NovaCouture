@@ -10,6 +10,7 @@ import {
 } from './AdminLayout'
 import { useAsync } from '@/hooks/useAsync'
 import { listCollectionMetrics, setCollectionActive } from '@/data/admin'
+import { AUDIENCE } from './audience'
 
 const DATE = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
@@ -46,7 +47,7 @@ export function AdminLinks() {
     <>
       <AdminHeading
         title="Collection Links"
-        note="Curated selections sent to premium clients. Opens and unique viewers are counted by mobile number."
+        note="Curated selections sent to clients. Each link carries its own audience. Opens and unique viewers are counted by mobile number."
         actions={
           <AdminLinkButton to="/admin/links/new" tone="primary">
             + New Collection
@@ -55,7 +56,7 @@ export function AdminLinks() {
       />
       <AdminError error={error} />
 
-      <AdminTable columns={['Collection', 'Opens', 'Viewers', 'Created', 'Status', 'Actions']}>
+      <AdminTable columns={['Collection', 'Audience', 'Opens', 'Viewers', 'Created', 'Status', 'Actions']}>
         {rows.map((link) => (
           <tr key={link.collection_id}>
             <td>
@@ -68,6 +69,11 @@ export function AdminLinks() {
               <div className="mt-1 font-mono text-[0.7rem] break-all text-[var(--admin-fg-subtle)]">
                 /collection/{link.token}
               </div>
+            </td>
+            <td>
+              <Status tone={link.min_tier === 'premium' ? 'premium' : 'default'}>
+                {AUDIENCE[link.min_tier].short}
+              </Status>
             </td>
             <td className="admin-num text-sm">{link.opens}</td>
             <td className="admin-num text-sm">{link.unique_viewers}</td>
@@ -102,7 +108,7 @@ export function AdminLinks() {
         ))}
         {!loading && rows.length === 0 && (
           <tr>
-            <td colSpan={6} className="py-14 text-center text-sm text-[var(--admin-fg-muted)]">
+            <td colSpan={7} className="py-14 text-center text-sm text-[var(--admin-fg-muted)]">
               No collections yet.
             </td>
           </tr>
@@ -113,7 +119,9 @@ export function AdminLinks() {
           way to withdraw one. Worth stating plainly on the screen. */}
       <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[var(--admin-fg-muted)]">
         Links do not expire. Disabling one is the only way to withdraw it — a disabled link shows
-        the same “not available” message as an unknown one, so the recipient learns nothing.
+        the same “not available” message as an unknown one, so the recipient learns nothing. A
+        public link is the only kind that opens without signing in; the pieces inside it are
+        viewable by anyone it reaches until it is disabled.
       </p>
     </>
   )
