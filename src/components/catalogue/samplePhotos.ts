@@ -24,14 +24,21 @@ const BY_KIND: Record<ArtKind, string[]> = {
   bracelet: ['bracelet-1', 'bracelet-2'],
   // A pendant hangs on a chain, so the necklace photographs read correctly.
   pendant: ['necklace-1', 'necklace-2'],
-  // There is no earring photograph in the sample set. Rather than show a ring
-  // beside a jhumka, these fall back to the mixed set — the line drawings are
-  // correct for earrings, so fixture mode looks right either way. Drop
-  // earring-1.jpg and earring-2.jpg into web/public/samples and list them here
-  // to fix it properly; tools/upload-samples.mjs reads the same names.
-  earring: ['necklace-1', 'necklace-2'],
+  // 1 jhumka, 2 gold studs, 3 rose-gold drops — one per sub-category.
+  earring: ['earring-1', 'earring-2', 'earring-3'],
   default: ['ring-1', 'necklace-1', 'bangle-1', 'bracelet-1'],
 }
+
+/*
+ * Provenance, so these can be traced or replaced:
+ *   earring-1  unsplash photo-1714733831162-0a6e849141be  (jhumka, white cloth)
+ *   earring-2  unsplash photo-1708220040828-9ab1673681d3  (gold studs, plinth)
+ *   earring-3  unsplash photo-1701777892740-88419a701472  (rose-gold drops)
+ *
+ * Unsplash licence: free for commercial use. Licensed stock — Getty, Shutterstock
+ * and the like — must never be used here, licensed or not, because these files
+ * ship inside a real jeweller's website.
+ */
 
 /** Lifestyle shot, used for the homepage hero. */
 export const HERO_PHOTO = '/samples/hero.jpg'
