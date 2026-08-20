@@ -34,6 +34,9 @@ const BY_KIND: Record<ArtKind, string[]> = {
  *   earring-1  unsplash photo-1714733831162-0a6e849141be  (jhumka, white cloth)
  *   earring-2  unsplash photo-1708220040828-9ab1673681d3  (gold studs, plinth)
  *   earring-3  unsplash photo-1701777892740-88419a701472  (rose-gold drops)
+ *   hero       unsplash photo-1719862056514-0cdacd9142b5  (Cleveland Museum of
+ *              Art, diamond necklace on black; cropped to 2400x1350 at
+ *              fp-y=0.62 so the left of the frame is empty for the headline)
  *
  * Unsplash licence: free for commercial use. Licensed stock — Getty, Shutterstock
  * and the like — must never be used here, licensed or not, because these files

@@ -129,8 +129,9 @@ export function HeroMedia() {
         />
       )}
 
-      {/* Above both, so the headline keeps its contrast whichever is showing. */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-fg)]/80 via-[var(--color-fg)]/40 to-transparent" />
+      {/* Above both, so the headline keeps its contrast whichever is showing —
+          and whichever photograph or video is behind it. See .hero-scrim. */}
+      <div className="hero-scrim absolute inset-0" />
     </div>
   )
 }

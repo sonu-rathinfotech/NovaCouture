@@ -315,6 +315,49 @@
   text-transform: uppercase;
 }
 
+/* ---- hero scrim ---------------------------------------------------------
+   The darkening between the hero photograph and the hero text.
+
+   This is not decoration, it is what makes the words legible, so it is built
+   from measured numbers rather than judged by eye. It previously faded from
+   80% to nothing across the width, and the body copy — which runs to about
+   half the width — ended up over the bright part of the photograph at roughly
+   2.3:1. Unreadable, and it was live.
+
+   The worst a photograph can present is a white highlight. Against white, an
+   overlay of #12100c has to reach about 0.70 before #e5e5e5 body text clears
+   4.5:1 (measured: 0.65 gives 4.70:1, 0.70 gives 5.65:1). So the alpha is held
+   at or above 0.72 across the whole text column and only then allowed to fall
+   away.
+
+   Holding it high for half the width is the cost of never having to check the
+   contrast again when the photograph is replaced — including when VK sends
+   their own, which is the point at which nobody will be measuring.
+   ------------------------------------------------------------------------- */
+.hero-scrim {
+  background: linear-gradient(
+    to right,
+    rgba(18, 16, 12, 0.9) 0%,
+    rgba(18, 16, 12, 0.86) 30%,
+    rgba(18, 16, 12, 0.72) 48%,
+    rgba(18, 16, 12, 0.34) 70%,
+    rgba(18, 16, 12, 0.06) 100%
+  );
+}
+
+/* On a narrow screen the text runs the full width, so a left-to-right fade
+   leaves the end of every line unprotected. Darken evenly instead. */
+@media (max-width: 1023px) {
+  .hero-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(18, 16, 12, 0.78) 0%,
+      rgba(18, 16, 12, 0.82) 55%,
+      rgba(18, 16, 12, 0.88) 100%
+    );
+  }
+}
+
 /* Focus visible */
 :focus-visible {
   outline: 2px solid var(--color-focus);
