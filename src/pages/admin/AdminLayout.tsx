@@ -44,7 +44,22 @@ export function AdminLayout() {
   // Re-check whenever the session changes — signing in from another tab, or a
   // token refresh, should not leave a stale verdict.
   useEffect(() => {
-    const { data } = getSupabase().auth.onAuthStateChange(() => setReload((n) => n + 1))
+    /*
+     * Re-check only when the account actually changes.
+     *
+     * onAuthStateChange also fires on a token refresh, which happens every time
+     * the tab regains focus. Bumping the counter on every event meant a fresh
+     * is_admin() round trip each time the admin came back to the tab, to
+     * confirm something that cannot change while they sit there.
+     */
+    let current: string | null = null
+
+    const { data } = getSupabase().auth.onAuthStateChange((_event, session) => {
+      const next = session?.user?.id ?? null
+      if (next === current) return
+      current = next
+      setReload((n) => n + 1)
+    })
     return () => data.subscription.unsubscribe()
   }, [])
 

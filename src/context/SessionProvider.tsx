@@ -110,7 +110,19 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     return () => {
       active = false
     }
-  }, [session])
+    /*
+     * Keyed on the user id, NOT on the session object.
+     *
+     * Supabase hands back a fresh session object every time it re-checks the
+     * token, which it does whenever the tab regains focus. Depending on the
+     * object meant this effect saw a "change" on every tab switch and re-read
+     * the profile — an API call each time, for a row that had not changed.
+     *
+     * The profile belongs to a person, so the person's id is the dependency.
+     */
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user?.id])
 
   const setPreviewTier = useCallback(
     (tier: Tier) => {
