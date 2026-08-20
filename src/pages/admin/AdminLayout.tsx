@@ -1,16 +1,29 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
+import {
+  LayoutDashboard,
+  Gem,
+  FolderTree,
+  Users,
+  Link2,
+  Upload,
+  ExternalLink,
+  LogOut,
+  Menu,
+  X,
+} from 'lucide-react'
 import { useAsync } from '@/hooks/useAsync'
 import { checkIsAdmin } from '@/data/admin'
 import { getSupabase } from '@/lib/supabase'
 import { AdminSignIn } from './AdminSignIn'
 
 const NAV = [
-  { to: '/admin', label: 'Dashboard', end: true },
-  { to: '/admin/products', label: 'Products' },
-  { to: '/admin/categories', label: 'Categories' },
-  { to: '/admin/users', label: 'Users' },
-  { to: '/admin/links', label: 'Collection Links' },
+  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/admin/products', label: 'Products', icon: Gem },
+  { to: '/admin/categories', label: 'Categories', icon: FolderTree },
+  { to: '/admin/users', label: 'Clients', icon: Users },
+  { to: '/admin/links', label: 'Collection Links', icon: Link2 },
+  { to: '/admin/bulk-upload', label: 'Bulk Upload', icon: Upload },
 ]
 
 /**
@@ -24,6 +37,8 @@ const NAV = [
 export function AdminLayout() {
   const navigate = useNavigate()
   const [reload, setReload] = useState(0)
+  const [navOpen, setNavOpen] = useState(false)
+  const location = useLocation()
   const { data: isAdmin, loading } = useAsync(() => checkIsAdmin(), [reload])
 
   // Re-check whenever the session changes — signing in from another tab, or a
@@ -32,6 +47,12 @@ export function AdminLayout() {
     const { data } = getSupabase().auth.onAuthStateChange(() => setReload((n) => n + 1))
     return () => data.subscription.unsubscribe()
   }, [])
+
+  // On a phone the sidebar covers the page, so it has to close once a section
+  // has been chosen.
+  useEffect(() => {
+    setNavOpen(false)
+  }, [location.pathname])
 
   if (loading) {
     return (
@@ -50,56 +71,87 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="admin-root min-h-screen">
-      <header className="border-b border-[var(--admin-border)] bg-[var(--admin-surface)]">
-        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-4 px-6 py-5">
-          <Link to="/admin" className="flex items-baseline gap-2.5">
-            <span className="admin-title text-xl tracking-[0.2em]">VK</span>
+    <div className="admin-root min-h-screen lg:flex">
+      {/* Mobile bar. The sidebar is off-canvas below lg, because a fixed
+          240px rail on a phone leaves nothing for the table. */}
+      <div className="flex items-center justify-between border-b border-[var(--admin-border)] bg-[var(--admin-surface)] px-4 py-3 lg:hidden">
+        <Link to="/admin" className="flex items-baseline gap-2">
+          <span className="admin-mark">VK</span>
+          <span className="admin-label">Management</span>
+        </Link>
+        <button
+          type="button"
+          onClick={() => setNavOpen(true)}
+          className="admin-icon-btn"
+          aria-label="Open menu"
+        >
+          <Menu size={18} strokeWidth={1.75} />
+        </button>
+      </div>
+
+      {navOpen && (
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setNavOpen(false)}
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+        />
+      )}
+
+      <aside
+        className={`admin-sidebar ${navOpen ? 'is-open' : ''}`}
+        aria-label="Admin sections"
+      >
+        <div className="flex items-center justify-between px-5 pt-6 pb-7">
+          <Link to="/admin" className="flex items-baseline gap-2">
+            <span className="admin-mark">VK</span>
             <span className="admin-label">Management</span>
           </Link>
-          <div className="flex items-center gap-6">
-            <Link
-              to="/"
-              className="text-[0.7rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
-            >
-              View site
-            </Link>
-            <button
-              type="button"
-              onClick={signOut}
-              className="cursor-pointer text-[0.7rem] font-semibold tracking-[0.16em] text-[var(--admin-fg-muted)] uppercase transition-colors hover:text-[var(--admin-fg)]"
-            >
-              Sign out
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setNavOpen(false)}
+            className="admin-icon-btn lg:hidden"
+            aria-label="Close menu"
+          >
+            <X size={18} strokeWidth={1.75} />
+          </button>
         </div>
 
-        <nav aria-label="Admin sections" className="border-t border-[var(--admin-border)]">
-          <div className="mx-auto flex max-w-[1280px] flex-wrap gap-8 px-6">
-            {NAV.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  [
-                    '-mb-px border-b-2 py-4 text-[0.7rem] font-semibold tracking-[0.16em] uppercase transition-colors duration-200',
-                    isActive
-                      ? 'border-[var(--admin-accent-line)] text-[var(--admin-fg)]'
-                      : 'border-transparent text-[var(--admin-fg-muted)] hover:text-[var(--admin-fg)]',
-                  ].join(' ')
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </div>
+        <nav className="flex-1 px-3">
+          {NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `admin-nav-link ${isActive ? 'is-active' : ''}`
+              }
+            >
+              <item.icon size={16} strokeWidth={1.75} aria-hidden="true" />
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
-      </header>
 
-      <div className="mx-auto max-w-[1280px] px-6 py-10">
-        <Outlet />
-      </div>
+        {/* Leaving the panel and ending the session are not navigation, so they
+            sit apart from it rather than as two more items in the list. */}
+        <div className="border-t border-[var(--admin-border)] px-3 py-4">
+          <a href="/" className="admin-nav-link">
+            <ExternalLink size={16} strokeWidth={1.75} aria-hidden="true" />
+            View site
+          </a>
+          <button type="button" onClick={signOut} className="admin-nav-link w-full">
+            <LogOut size={16} strokeWidth={1.75} aria-hidden="true" />
+            Sign out
+          </button>
+        </div>
+      </aside>
+
+      <main className="min-w-0 flex-1">
+        <div className="mx-auto max-w-[1400px] px-5 py-7 lg:px-8 lg:py-8">
+          <Outlet />
+        </div>
+      </main>
     </div>
   )
 }
@@ -118,16 +170,19 @@ export function AdminHeading({
   actions?: ReactNode
 }) {
   return (
-    <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-      <div>
-        <h1 className="admin-title text-4xl">{title}</h1>
-        {note && (
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--admin-fg-muted)]">
-            {note}
-          </p>
-        )}
+    /* A portal page header: the title, the actions, and a rule under both.
+       It was a 4xl serif masthead with a paragraph beneath, which spent a
+       quarter of the screen before the first row of data. */
+    <div className="mb-6 border-b border-[var(--admin-border)] pb-4">
+      <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
+        <h1 className="admin-title text-xl">{title}</h1>
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-3">{actions}</div>}
+      {note && (
+        <p className="mt-2 max-w-3xl text-[0.8125rem] leading-relaxed text-[var(--admin-fg-muted)]">
+          {note}
+        </p>
+      )}
     </div>
   )
 }
@@ -164,10 +219,10 @@ export function Stat({
   sub?: string
 }) {
   return (
-    <div className="admin-panel px-6 py-6">
+    <div className="admin-panel px-4 py-4">
       <div className="admin-label">{label}</div>
-      <div className="admin-stat-value mt-3">{value}</div>
-      {sub && <div className="mt-2 text-xs text-[var(--admin-fg-muted)]">{sub}</div>}
+      <div className="admin-stat-value mt-2">{value}</div>
+      {sub && <div className="mt-1.5 text-xs text-[var(--admin-fg-muted)]">{sub}</div>}
     </div>
   )
 }

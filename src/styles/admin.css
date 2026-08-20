@@ -1,13 +1,22 @@
 /**
- * Admin panel refinements.
+ * Admin panel.
  *
- * Scoped to `.admin-root` rather than changed globally: the brief covers the
- * management system, and the storefront was not asked for. The same champagne
- * would suit it — see the note on the accent below.
+ * Scoped to `.admin-root`; the storefront is untouched.
  *
- * The direction is unchanged — luxury, minimal, editorial. What changes is
- * legibility: several tones sat below 4.5:1 and read as faint rather than
- * quiet.
+ * ── The direction, and why it changed ────────────────────────────────────────
+ * This began as an extension of the storefront — serif headings, generous
+ * spacing, editorial restraint — and read as another page of the website rather
+ * than as a tool. It is a management portal: someone works in it for an hour at
+ * a time, scanning tables and clicking Edit.
+ *
+ * So: sidebar navigation, sans-serif throughout, compact rows, and enough
+ * density that a screenful is a useful number of products. What stays is VK's
+ * identity — the champagne accent, the warm ground, square corners and hairline
+ * rules. It should look like a tool built for a jeweller, not like a jeweller's
+ * website and not like every other dashboard.
+ *
+ * Contrast values below are measured, not guessed. Several tones previously sat
+ * under 4.5:1 and read as faint rather than quiet.
  */
 
 .admin-root {
@@ -62,12 +71,24 @@
 }
 
 /* ---- typography ---------------------------------------------------------
-   Serif for page headings, sans for everything operational. Unchanged; only
-   weight and colour are firmed up. */
+   Sans throughout. The serif page headings were the single strongest signal
+   that this was a website; a portal heading is a label on a screen, not a
+   masthead. The serif survives in one place only — the VK mark — which is
+   enough to say whose panel this is. */
 .admin-root .admin-title {
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
+  font-weight: 600;
   color: var(--admin-fg);
   letter-spacing: -0.01em;
+}
+
+/* The one piece of the storefront's voice kept in the panel. */
+.admin-root .admin-mark {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--admin-fg);
 }
 
 /* Small caps label used for section kickers and table headers. */
@@ -92,20 +113,26 @@
 .admin-root .admin-table thead th {
   background: var(--admin-surface-muted);
   border-bottom: 1px solid var(--admin-border-strong);
-  color: var(--admin-fg);
+  color: var(--admin-fg-muted);
   font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: left;
-  padding: 0.875rem 1.25rem;
+  padding: 0.625rem 1rem;
   white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
+/* Rows are for scanning. The old 1rem padding fitted about seven products on a
+   laptop screen; this fits twice that without crowding. */
 .admin-root .admin-table tbody td {
   border-bottom: 1px solid var(--admin-border);
-  padding: 1rem 1.25rem;
+  padding: 0.625rem 1rem;
   vertical-align: middle;
+  font-size: 0.875rem;
 }
 
 .admin-root .admin-table tbody tr:last-child td {
@@ -240,12 +267,15 @@
   border: 1px solid var(--admin-border);
 }
 
+/* A figure to be read at a glance, not a display headline. */
 .admin-root .admin-stat-value {
-  font-family: var(--font-display);
-  font-size: 2.25rem;
-  line-height: 1.1;
+  font-family: var(--font-ui);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.15;
   color: var(--admin-fg);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 .admin-root a:focus-visible,
@@ -254,4 +284,102 @@
 .admin-root select:focus-visible {
   outline: 2px solid var(--admin-accent-line);
   outline-offset: 2px;
+}
+
+
+/* ---- sidebar ------------------------------------------------------------
+   A fixed rail is what makes a screen read as a portal: every section is
+   visible at once and the current one is obvious without reading. Below lg it
+   slides in over the page, because 240px of a phone's width belongs to the
+   table.
+   ------------------------------------------------------------------------- */
+.admin-root .admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 50;
+  display: flex;
+  width: 15rem;
+  flex-direction: column;
+  background: var(--admin-surface);
+  border-right: 1px solid var(--admin-border);
+  transform: translateX(-100%);
+  /* Moved off-screen is not the same as gone. Without visibility the links stay
+     in the tab order, so a keyboard user tabs into a menu they cannot see. The
+     delay lets the slide finish before it is hidden. */
+  visibility: hidden;
+  transition:
+    transform 200ms ease,
+    visibility 0s linear 200ms;
+}
+
+.admin-root .admin-sidebar.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 200ms ease,
+    visibility 0s;
+}
+
+@media (min-width: 1024px) {
+  .admin-root .admin-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    flex-shrink: 0;
+    transform: none;
+    visibility: visible;
+  }
+}
+
+.admin-root .admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.125rem;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--admin-fg-muted);
+  background: none;
+  border: 0;
+  text-align: left;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.admin-root .admin-nav-link:hover {
+  background: var(--admin-surface-muted);
+  color: var(--admin-fg);
+}
+
+/* The champagne wash plus a solid left edge. A filled block would shout, and
+   colour alone would not survive being printed or seen by someone who cannot
+   distinguish it. */
+.admin-root .admin-nav-link.is-active {
+  background: var(--admin-accent-wash);
+  color: var(--admin-fg);
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--admin-accent);
+}
+
+.admin-root .admin-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--admin-fg-muted);
+  background: none;
+  border: 1px solid var(--admin-border-strong);
+  transition:
+    color 150ms ease,
+    border-color 150ms ease;
+}
+
+.admin-root .admin-icon-btn:hover {
+  color: var(--admin-fg);
+  border-color: var(--admin-fg);
 }
