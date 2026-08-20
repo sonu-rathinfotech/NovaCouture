@@ -33,7 +33,7 @@ export function LoadError({
     <div className="mx-auto max-w-[46ch] py-20 text-center">
       <span className="eyebrow text-[var(--color-accent)]">Not available</span>
 
-      <h2 className="mt-4 font-display text-[var(--text-h2)] text-[var(--color-fg)]">
+      <h2 className="mt-4 font-display text-[length:var(--text-h2)] text-[var(--color-fg)]">
         We could not load {what}
       </h2>
 

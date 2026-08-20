@@ -69,9 +69,9 @@ export function AuthLayout({
 
           {/* Form Header */}
           <p className="eyebrow mb-3 text-[var(--color-accent)]">{eyebrow}</p>
-          <h1 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight">{title}</h1>
+          <h1 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight">{title}</h1>
           {intro && (
-            <p className="mt-4 text-[var(--text-body-lg)] leading-relaxed text-[var(--color-fg-muted)]">{intro}</p>
+            <p className="mt-4 text-[length:var(--text-body-lg)] leading-relaxed text-[var(--color-fg-muted)]">{intro}</p>
           )}
 
           {/* Form Content */}

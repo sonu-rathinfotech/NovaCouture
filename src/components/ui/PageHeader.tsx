@@ -69,13 +69,13 @@ export function PageHeader({
       {eyebrow && (
         <p className="eyebrow mb-3 text-[var(--color-accent)]">{eyebrow}</p>
       )}
-      <h1 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight mb-3">
+      <h1 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight mb-3">
         {title}
       </h1>
       {description && (
         <p
           className={[
-            'text-[var(--text-body-lg)] text-[var(--color-fg-muted)] max-w-2xl mb-4',
+            'text-[length:var(--text-body-lg)] text-[var(--color-fg-muted)] max-w-2xl mb-4',
             centered ? 'mx-auto' : '',
           ].join(' ')}
         >

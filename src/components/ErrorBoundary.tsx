@@ -72,7 +72,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
             {this.state.staleBuild ? 'Updated' : 'Something went wrong'}
           </span>
 
-          <h1 className="mt-4 font-display text-[var(--text-h1)] text-[var(--color-fg)]">
+          <h1 className="mt-4 font-display text-[length:var(--text-h1)] text-[var(--color-fg)]">
             {this.state.staleBuild ? 'The site has been updated' : 'This page did not load'}
           </h1>
 

@@ -18,14 +18,14 @@ export function StaticPage({ slug }: { slug: StaticPageSlug }) {
     <article className="container max-w-[760px] py-16 lg:py-24">
       <header className="mb-12 text-center">
         <span className="eyebrow text-[var(--color-accent)]">{isLegal ? 'Legal' : 'Information'}</span>
-        <h1 className="mt-4 font-display text-[var(--text-h1)] text-[var(--color-fg)]">{page.title}</h1>
+        <h1 className="mt-4 font-display text-[length:var(--text-h1)] text-[var(--color-fg)]">{page.title}</h1>
         {page.updated && (
           <p className="mt-3 text-sm font-light text-[var(--color-fg-muted)]">
             Last updated <Text value={page.updated} />
           </p>
         )}
         {page.intro && (
-          <p className="mx-auto mt-5 max-w-[58ch] text-[var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)]">
+          <p className="mx-auto mt-5 max-w-[58ch] text-[length:var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)]">
             <Text value={page.intro} />
           </p>
         )}
@@ -47,10 +47,10 @@ export function StaticPage({ slug }: { slug: StaticPageSlug }) {
       {page.sections.map((section, i) => (
         <section key={i} className="mb-10">
           {section.heading && (
-            <h2 className="mb-4 font-display text-[var(--text-h3)] text-[var(--color-fg)]">{section.heading}</h2>
+            <h2 className="mb-4 font-display text-[length:var(--text-h3)] text-[var(--color-fg)]">{section.heading}</h2>
           )}
           {section.paragraphs.map((paragraph, j) => (
-            <p key={j} className="mb-4 text-[var(--text-body)] leading-relaxed font-light text-[var(--color-fg-muted)]">
+            <p key={j} className="mb-4 text-[length:var(--text-body)] leading-relaxed font-light text-[var(--color-fg-muted)]">
               <Text value={paragraph} />
             </p>
           ))}
@@ -59,7 +59,7 @@ export function StaticPage({ slug }: { slug: StaticPageSlug }) {
               {section.list.map((item, j) => (
                 <li
                   key={j}
-                  className="flex gap-3 text-[var(--text-body)] leading-relaxed font-light text-[var(--color-fg-muted)]"
+                  className="flex gap-3 text-[length:var(--text-body)] leading-relaxed font-light text-[var(--color-fg-muted)]"
                 >
                   <span aria-hidden="true" className="text-[var(--color-accent)] flex-shrink-0">·</span>
                   <span>

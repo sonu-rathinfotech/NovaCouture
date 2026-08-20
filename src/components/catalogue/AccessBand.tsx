@@ -19,7 +19,7 @@ export function AccessBand({ tier }: { tier: Tier }) {
       <p className="eyebrow mb-4 text-[var(--color-accent)]">
         {isGuest ? 'Registered access' : 'Premium access'}
       </p>
-      <h2 className="text-balance font-display text-[var(--text-h3)] text-[var(--color-fg)]">
+      <h2 className="text-balance font-display text-[length:var(--text-h3)] text-[var(--color-fg)]">
         {isGuest
           ? 'The full archive is reserved for clients'
           : 'Selected pieces are shown to premium clients'}

@@ -100,12 +100,12 @@ function CollectionDenied() {
         <p className="eyebrow mb-4 text-[var(--trust-gold)] tracking-widest">Private link</p>
 
         {/* Headline */}
-        <h1 className="mb-4 text-center font-display text-[var(--text-h1)] lg:text-[var(--text-display)] font-light text-[var(--color-fg)] tracking-tight">
+        <h1 className="mb-4 text-center font-display text-[length:var(--text-h1)] lg:text-[length:var(--text-display)] font-light text-[var(--color-fg)] tracking-tight">
           This collection is not available
         </h1>
 
         {/* Subtext */}
-        <p className="mb-10 mx-auto max-w-lg text-[var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)] text-center">
+        <p className="mb-10 mx-auto max-w-lg text-[length:var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)] text-center">
           Curated collections are reserved for premium clients of VK Jewellers.
           <br />
           <span className="font-medium text-[var(--color-fg)]">If this link was sent to you, sign in with the number it was sent to.</span>

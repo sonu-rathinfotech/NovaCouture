@@ -108,7 +108,7 @@ export function CategoryPage() {
                   ? children.map((c) => c.name).join(' · ')
                   : 'From the catalogue'}
               </p>
-              <h1 className="font-display text-[var(--text-display)] font-medium tracking-tight text-white">
+              <h1 className="font-display text-[length:var(--text-display)] font-medium tracking-tight text-white">
                 {category?.name}
               </h1>
             </div>
@@ -127,7 +127,7 @@ export function CategoryPage() {
               Back to {parent.name}
             </Link>
             <p className="eyebrow mb-2 text-[var(--color-accent)]">{parent.name}</p>
-            <h1 className="font-display text-[var(--text-h1)] tracking-tight text-[var(--color-fg)]">
+            <h1 className="font-display text-[length:var(--text-h1)] tracking-tight text-[var(--color-fg)]">
               {category?.name}
             </h1>
             <p className="mt-4 max-w-xl leading-relaxed text-[var(--color-fg-muted)]">

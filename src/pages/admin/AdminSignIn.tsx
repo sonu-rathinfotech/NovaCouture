@@ -80,10 +80,10 @@ export function AdminSignIn({ onSignedIn }: { onSignedIn?: () => void }) {
 
           {/* Form Header */}
           <p className="eyebrow mb-3 text-[var(--color-accent)]">Private access</p>
-          <h1 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight">
+          <h1 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight">
             Sign in to manage the catalogue
           </h1>
-          <p className="mt-4 text-[var(--text-body-lg)] leading-relaxed text-[var(--color-fg-muted)]">
+          <p className="mt-4 text-[length:var(--text-body-lg)] leading-relaxed text-[var(--color-fg-muted)]">
             Only authorised administrators can access this area.
           </p>
 

@@ -38,7 +38,7 @@ export function SearchPage() {
     <section className="container py-16 lg:py-20">
       <header className="mb-12">
         <span className="eyebrow text-[var(--color-accent)]">Search</span>
-        <h1 className="mt-3 font-display text-[var(--text-h1)] text-[var(--color-fg)]">
+        <h1 className="mt-3 font-display text-[length:var(--text-h1)] text-[var(--color-fg)]">
           {query ? `“${query}”` : 'Search the catalogue'}
         </h1>
         {query && !loading && (
@@ -69,12 +69,12 @@ export function SearchPage() {
           </div>
 
           {/* Headline */}
-          <h2 className="mb-4 font-display text-[var(--text-h2)] font-medium text-[var(--color-fg)] tracking-tight">
+          <h2 className="mb-4 font-display text-[length:var(--text-h2)] font-medium text-[var(--color-fg)] tracking-tight">
             Nothing matches &ldquo;{query}&rdquo;
           </h2>
 
           {/* Subtext - editorial tone */}
-          <p className="mb-10 mx-auto max-w-lg text-[var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)]">
+          <p className="mb-10 mx-auto max-w-lg text-[length:var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)]">
             The piece you&apos;re looking for may be reserved for clients, or the name might differ.
             <br />
             <span className="font-medium text-[var(--color-fg)]">Try a shorter word, or explore the collections.</span>

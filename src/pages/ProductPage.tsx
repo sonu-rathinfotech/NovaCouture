@@ -132,7 +132,7 @@ export function ProductPage() {
             )}
 
             {/* Product Name - Tiffany editorial */}
-            <h1 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight text-balance">
+            <h1 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight text-balance">
               {product.name}
             </h1>
 
@@ -140,7 +140,7 @@ export function ProductPage() {
             <hr className="h-px bg-gradient-to-r from-[var(--color-accent)] to-transparent w-16" />
 
             {/* Description */}
-            <p className="text-[var(--text-body-lg)] leading-relaxed text-[var(--color-fg-muted)] max-w-[42ch]">
+            <p className="text-[length:var(--text-body-lg)] leading-relaxed text-[var(--color-fg-muted)] max-w-[42ch]">
               {product.images.length === 1
                 ? 'One photograph of this piece.'
                 : `${product.images.length} photographs of this piece.`}{' '}
@@ -223,7 +223,7 @@ export function ProductPage() {
             <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
                 <p className="eyebrow mb-3 text-[var(--color-accent)]">You may also consider</p>
-                <h2 className="font-display text-[var(--text-h2)] text-[var(--color-fg)]">
+                <h2 className="font-display text-[length:var(--text-h2)] text-[var(--color-fg)]">
                   From the {product.category?.name} collection
                 </h2>
               </div>

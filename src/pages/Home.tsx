@@ -36,10 +36,10 @@ export function Home() {
             <p className="eyebrow mb-6 text-[var(--trust-gold)] tracking-widest">
               № 01 — Private Catalogue
             </p>
-            <h1 className="font-display text-[var(--text-display-lg)] font-medium text-white leading-tight tracking-tight text-balance">
+            <h1 className="font-display text-[length:var(--text-display-lg)] font-medium text-white leading-tight tracking-tight text-balance">
               Pieces made to be inherited.
             </h1>
-            <p className="mt-8 text-[var(--text-body-lg)] leading-relaxed text-[var(--base-200)] max-w-xl">
+            <p className="mt-8 text-[length:var(--text-body-lg)] leading-relaxed text-[var(--base-200)] max-w-xl">
               A private catalogue of fine gold and stone work, shown by registered access.
               Each piece carries a legacy of craftsmanship.
             </p>
@@ -90,7 +90,7 @@ export function Home() {
           <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <p className="eyebrow mb-3 text-[var(--color-accent)]">№ 02 — Collections</p>
-              <h2 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight">Curated by category</h2>
+              <h2 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight">Curated by category</h2>
             </div>
             {cats[0] && (
               <ButtonLink
@@ -138,10 +138,10 @@ export function Home() {
             </div>
             <div>
               <p className="eyebrow mb-3 text-[var(--warm-700)]">№ 03 — The House of VK</p>
-              <h2 className="font-display text-[var(--text-h1)] text-[var(--warm-900)] tracking-tight">
+              <h2 className="font-display text-[length:var(--text-h1)] text-[var(--warm-900)] tracking-tight">
                 Shown by invitation, not by sale.
               </h2>
-              <div className="mt-8 space-y-5 text-[var(--text-body-lg)] leading-relaxed text-[var(--warm-600)]">
+              <div className="mt-8 space-y-5 text-[length:var(--text-body-lg)] leading-relaxed text-[var(--warm-600)]">
                 <p>
                   This is a catalogue, not a shop. Pieces are shown here so clients can see the
                   current work; nothing is sold through the site and no prices are listed.
@@ -167,10 +167,10 @@ export function Home() {
         <div className="container">
           <div className="mb-16 text-center max-w-2xl mx-auto">
             <p className="eyebrow mb-3 text-[var(--color-accent)]">№ 04 — Selected</p>
-            <h2 className="font-display text-[var(--text-h1)] text-[var(--color-fg)] tracking-tight">
+            <h2 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight">
               From the collection
             </h2>
-            <p className="mt-4 text-[var(--text-body-lg)] text-[var(--color-fg-muted)]">
+            <p className="mt-4 text-[length:var(--text-body-lg)] text-[var(--color-fg-muted)]">
               {products && !loading
                 ? `${products.length} ${products.length === 1 ? 'piece' : 'pieces'} shown. Browse a category for the full listing.`
                 : 'Browse a category for the full listing.'}
@@ -206,12 +206,12 @@ export function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
-            <h2 className="font-display text-[var(--text-h1)] text-white tracking-tight max-w-2xl mx-auto">
+            <h2 className="font-display text-[length:var(--text-h1)] text-white tracking-tight max-w-2xl mx-auto">
               {tier === 'guest'
                 ? 'The full archive is reserved for clients'
                 : 'Selected pieces are shown to premium clients'}
             </h2>
-            <p className="mx-auto mt-6 max-w-lg text-[var(--text-body-lg)] leading-relaxed text-[var(--base-300)]">
+            <p className="mx-auto mt-6 max-w-lg text-[length:var(--text-body-lg)] leading-relaxed text-[var(--base-300)]">
               {tier === 'guest'
                 ? 'Sign in with your registered number to view the wider catalogue.'
                 : 'Premium access is arranged by VK Jewellers. Speak to us to have it added to your account.'}

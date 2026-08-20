@@ -51,12 +51,12 @@ export function NotFound() {
         </div>
 
         {/* Headline */}
-        <h1 className="mb-6 text-center font-display text-[var(--text-h1)] lg:text-[var(--text-display)] font-medium text-[var(--color-fg)] tracking-tight text-balance max-w-2xl">
+        <h1 className="mb-6 text-center font-display text-[length:var(--text-h1)] lg:text-[length:var(--text-display)] font-medium text-[var(--color-fg)] tracking-tight text-balance max-w-2xl">
           This piece cannot be found
         </h1>
 
         {/* Subtext - Editorial tone */}
-        <p className="mb-12 mx-auto max-w-lg text-[var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)] text-center">
+        <p className="mb-12 mx-auto max-w-lg text-[length:var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)] text-center">
           The page you&apos;re looking for may have been moved, renamed, or the piece may no longer be in the catalogue.
           <br />
           <span className="font-medium text-[var(--color-fg)]">Nothing is lost — only waiting to be rediscovered.</span>
