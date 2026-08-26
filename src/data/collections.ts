@@ -118,6 +118,8 @@ interface CollectionRow {
   image_path: string | null
   image_alt: string | null
   image_position: number | null
+  is_available: boolean
+  weight_grams: number | null
 }
 
 const supabaseRepo: CollectionsRepo = {
@@ -147,6 +149,8 @@ const supabaseRepo: CollectionsRepo = {
           category_id: null,
           visibility: row.visibility as ProductWithImages['visibility'],
           is_active: true,
+          is_available: row.is_available,
+          weight_grams: row.weight_grams,
           sort_order: row.sort_order,
           // Not returned by the RPC and not shown anywhere in a collection.
           created_at: '',

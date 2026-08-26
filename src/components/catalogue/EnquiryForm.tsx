@@ -75,7 +75,7 @@ export function EnquiryForm({ product }: { product: ProductWithImages }) {
         <p className="text-sm leading-relaxed font-light text-[var(--color-fg-muted)]">
           Online enquiries are not available yet.{' '}
           <Link to="/contact" className="underline underline-offset-4 hover:opacity-80">
-            Contact VK Jewellers
+            Contact Nova Couture
           </Link>{' '}
           about this piece and quote its name.
         </p>
@@ -129,7 +129,7 @@ export function EnquiryForm({ product }: { product: ProductWithImages }) {
           />
 
           <p className="mb-6 text-sm leading-relaxed font-light text-[var(--color-fg-muted)]">
-            Sending opens a pre-filled email to VK Jewellers from your own mail application.
+            Sending opens a pre-filled email to Nova Couture from your own mail application.
           </p>
 
           <div className="flex flex-wrap gap-3">

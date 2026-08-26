@@ -47,7 +47,7 @@ const TTL_SECONDS = 3600
 /** Re-sign this far ahead of expiry rather than at it. */
 const REFRESH_MARGIN_MS = 60_000
 
-const STORE_KEY = 'vk.imageUrls.v1'
+const STORE_KEY = 'nova.imageUrls.v1'
 
 interface CacheEntry {
   url: string

@@ -121,6 +121,8 @@ export async function importCatalogue(
           visibility: product.visibility ?? 'premium_only',
           sort_order: product.sortOrder ?? 100,
           is_active: true,
+          is_available: product.isAvailable,
+          weight_grams: product.weightGrams,
         },
         { onConflict: 'slug' },
       )

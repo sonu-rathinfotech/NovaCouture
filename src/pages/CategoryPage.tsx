@@ -20,17 +20,20 @@ import type { ProductWithImages } from '@/types/db'
  *
  * ── On filters ──────────────────────────────────────────────────────────────
  * An earlier version carried a Metal / Occasion / Karat filter panel. It was
- * removed rather than repaired: none of those fields exist on a product. The
- * signed scope defines a product as a name and a gallery — no price, no
- * description, no attributes — so there is nothing to filter on, and the
- * controls could never have done anything. A control that does nothing is
- * worse than no control: a client picks "22KT", the grid does not change, and
- * they conclude the site is broken.
+ * removed rather than repaired: none of those fields exist on a product. A
+ * control that does nothing is worse than no control — a client picks "22KT",
+ * the grid does not change, and they conclude the site is broken.
  *
  * What is offered instead is real: browse by sub-category, and sort by fields
- * the catalogue actually has. If VK wants filtering by metal or karat, those
- * become columns on `products` and a change request — the importer and the
- * admin form would both need them too.
+ * the catalogue actually has. If Nova Couture wants filtering by metal or
+ * karat, those become columns on `products` and a change request — the
+ * importer and the admin form would both need them too.
+ *
+ * `weight_grams` (migration 0010) is the first attribute the catalogue does
+ * carry, so it is the first thing that COULD be sorted by. Deliberately it is
+ * not, yet: it is null on most pieces, and a "heaviest first" sort that
+ * silently buried everything unweighed at the bottom would misrepresent the
+ * catalogue. Worth revisiting once most pieces have been weighed.
  * ────────────────────────────────────────────────────────────────────────────
  */
 
@@ -69,10 +72,17 @@ export function CategoryPage() {
     () => catalogue.listProducts({ categorySlug, tier }),
     [categorySlug, tier],
   )
+  // Blurred stand-ins for what this tier may not open. A failure here is not
+  // worth an error state — the page is still complete without the teasers.
+  const { data: lockedTiles } = useAsync(
+    () => catalogue.listLocked({ categorySlug, tier }),
+    [categorySlug, tier],
+  )
 
   const [sortBy, setSortBy] = useState<Sort>('featured')
 
   const shown = useMemo(() => sortProducts(products ?? [], sortBy), [products, sortBy])
+  const locked = lockedTiles ?? []
 
   // A failed request is not a missing category — see the note in ProductPage.
   if (categoryError) return <LoadError what="this collection" />
@@ -161,6 +171,9 @@ export function CategoryPage() {
         <div className="mb-8 flex flex-col gap-4 border-t border-[var(--color-border)] pt-8 md:flex-row md:items-center md:justify-between">
           <p className="eyebrow text-[var(--color-accent)]">
             {count} {count === 1 ? 'piece' : 'pieces'}
+            {locked.length > 0 && (
+              <span className="text-[var(--color-fg-muted)]"> · {locked.length} reserved</span>
+            )}
           </p>
 
           <div className="relative">
@@ -190,8 +203,8 @@ export function CategoryPage() {
           <LoadError what="these pieces" />
         ) : loading ? (
           <ProductGridSkeleton />
-        ) : count > 0 ? (
-          <ProductGrid products={shown} />
+        ) : count > 0 || locked.length > 0 ? (
+          <ProductGrid products={shown} locked={locked} tier={tier} />
         ) : (
           <EmptyState
             title="Nothing listed here yet"

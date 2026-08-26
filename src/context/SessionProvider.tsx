@@ -25,7 +25,7 @@ export interface SessionState {
 // eslint-disable-next-line react-refresh/only-export-components
 export const SessionContext = createContext<SessionState | null>(null)
 
-const PREVIEW_KEY = 'vk:preview-tier'
+const PREVIEW_KEY = 'nova:preview-tier'
 
 function readPreviewTier(): Tier {
   if (typeof window === 'undefined') return 'guest'

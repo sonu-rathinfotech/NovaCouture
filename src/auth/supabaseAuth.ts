@@ -47,7 +47,7 @@ export const supabaseAuth: AuthAdapter = {
     return {
       ok: false,
       error:
-        'Registration is not open yet. Access is arranged by VK Jewellers while the WhatsApp sign-in is being set up.',
+        'Registration is not open yet. Access is arranged by Nova Couture while the WhatsApp sign-in is being set up.',
     }
   },
 

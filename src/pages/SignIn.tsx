@@ -25,7 +25,7 @@ export function SignIn() {
 function RegisterFooter() {
   return (
     <p className="text-sm font-light text-[var(--color-fg-muted)]">
-      New to VK Jewellers?{' '}
+      New to Nova Couture?{' '}
       <Link
         to="/register"
         className="text-[var(--color-accent)] underline underline-offset-4 transition-colors hover:text-[var(--color-accent-hover)]"
@@ -71,7 +71,7 @@ function CredentialSignIn() {
   return (
     <AuthLayout
       eyebrow="Private access"
-      title="Welcome to VK Jewellers"
+      title="Welcome to Nova Couture"
       intro="Access your private jewellery catalogue."
       footer={<RegisterFooter />}
     >
@@ -109,8 +109,8 @@ function CredentialSignIn() {
       <div className="mt-8 p-4 bg-[var(--color-bg-muted)] border-l-4 border-[var(--color-accent)] rounded-r-lg">
         <p className="text-sm leading-relaxed text-[var(--color-fg-muted)]">
           <strong className="font-medium text-[var(--color-fg)]">Temporary sign-in.</strong> WhatsApp
-          one-time codes replace this once the Business API is connected. Access is arranged by VK
-          Jewellers in the meantime.
+          one-time codes replace this once the Business API is connected. Access is arranged by Nova
+          Couture in the meantime.
         </p>
       </div>
     </AuthLayout>
@@ -194,7 +194,7 @@ function OtpSignIn() {
   return (
     <AuthLayout
       eyebrow="Private access"
-      title={step === 'mobile' ? 'Welcome to VK Jewellers' : 'Enter your code'}
+      title={step === 'mobile' ? 'Welcome to Nova Couture' : 'Enter your code'}
       intro={
         step === 'mobile'
           ? 'Access your private jewellery catalogue.'

@@ -27,7 +27,7 @@ export function AccessBand({ tier }: { tier: Tier }) {
       <p className="mx-auto mt-5 mb-9 max-w-lg text-base leading-relaxed font-light text-[var(--color-fg-muted)]">
         {isGuest
           ? 'Sign in with your registered number to view the wider catalogue.'
-          : 'Premium access is arranged by VK Jewellers. Speak to us to have it added to your account.'}
+          : 'Premium access is arranged by Nova Couture. Speak to us to have it added to your account.'}
       </p>
       <ButtonLink to={isGuest ? '/sign-in' : '/contact'} size="lg">
         {isGuest ? 'Sign in' : 'Contact us'}

@@ -91,7 +91,7 @@ export function AdminLayout() {
           240px rail on a phone leaves nothing for the table. */}
       <div className="flex items-center justify-between border-b border-[var(--admin-border)] bg-[var(--admin-surface)] px-4 py-3 lg:hidden">
         <Link to="/admin" className="flex items-baseline gap-2">
-          <span className="admin-mark">VK</span>
+          <span className="admin-mark">Nova</span>
           <span className="admin-label">Management</span>
         </Link>
         <button
@@ -119,7 +119,7 @@ export function AdminLayout() {
       >
         <div className="flex items-center justify-between px-5 pt-6 pb-7">
           <Link to="/admin" className="flex items-baseline gap-2">
-            <span className="admin-mark">VK</span>
+            <span className="admin-mark">Nova</span>
             <span className="admin-label">Management</span>
           </Link>
           <button

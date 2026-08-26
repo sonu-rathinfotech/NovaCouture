@@ -13,6 +13,7 @@ import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
 import { features } from '@/lib/env'
 import { enquiryVisibleTo } from '@/lib/enquiry'
+import { formatWeight } from '@/lib/weight'
 import { Badge, ButtonLink } from '@/components/ui'
 
 /**
@@ -78,6 +79,7 @@ export function ProductPage() {
     : undefined
 
   const shareUrl = typeof window === 'undefined' ? '' : window.location.href
+  const weight = formatWeight(product.weight_grams)
 
   async function onCopyLink() {
     try {
@@ -124,10 +126,17 @@ export function ProductPage() {
             </nav>
 
             {/* The category only. A badge saying "Premium clients only" tells
-                the customer how the gating works and nothing about the piece. */}
-            {product.category && (
-              <div>
-                <Badge variant="secondary" size="sm">{product.category.name}</Badge>
+                the customer how the gating works and nothing about the piece.
+                Availability is different: it is a fact about the piece, and the
+                client needs it before they enquire. */}
+            {(product.category || !product.is_available) && (
+              <div className="flex flex-wrap items-center gap-2">
+                {product.category && (
+                  <Badge variant="secondary" size="sm">{product.category.name}</Badge>
+                )}
+                {!product.is_available && (
+                  <Badge variant="default" size="sm">Currently Unavailable</Badge>
+                )}
               </div>
             )}
 
@@ -139,25 +148,40 @@ export function ProductPage() {
             {/* Divider */}
             <hr className="h-px bg-gradient-to-r from-[var(--color-accent)] to-transparent w-16" />
 
-            {/* Description */}
+            {/* Description. The closing sentence has to track what is actually
+                recorded: once a weight is shown, still asking the client to
+                enquire about "weight, stones or making details" reads as though
+                the figure above it were not an answer. */}
             <p className="text-[length:var(--text-body-lg)] leading-relaxed text-[var(--color-fg-muted)] max-w-[42ch]">
               {product.images.length === 1
                 ? 'One photograph of this piece.'
                 : `${product.images.length} photographs of this piece.`}{' '}
-              For weight, stones or making details, please ask.
+              {weight ? 'For stones or making details, please ask.' : 'For weight, stones or making details, please ask.'}
             </p>
+
+            {/* The catalogue's first real attribute (migration 0010). Rendered
+                only when recorded — a "Weight —" row would read as though the
+                piece weighed nothing. */}
+            {weight && (
+              <dl className="flex items-baseline gap-3 border-t border-[var(--color-border)] pt-4">
+                <dt className="text-[0.7rem] font-light tracking-[0.15em] text-[var(--color-fg-muted)] uppercase">
+                  Weight
+                </dt>
+                <dd className="font-display text-lg text-[var(--color-fg)]">{weight}</dd>
+              </dl>
+            )}
 
             {/* Removed here: a row of "BIS Hallmarked / Lifetime Warranty /
                 Insured Shipping" badges and a Specifications panel listing
                 hallmark certification, a lifetime warranty, annual cleaning,
                 insured shipping and a 30-day exchange policy.
 
-                All of it came from the UI this design was adapted from. VK has
+                All of it came from the UI this design was adapted from. Nova Couture has
                 never said any of it. BIS hallmarking is a legal certification
                 and the rest are contractual promises, so the site was making
                 commitments on the jeweller's behalf to real customers.
 
-                If VK does offer these, they can be stated — in VK's own words,
+                If Nova Couture does offer these, they can be stated — in Nova Couture's own words,
                 once someone there has confirmed each one. Invented copy is not
                 a placeholder to be filled in later; it reads as fact from the
                 moment it is published. */}

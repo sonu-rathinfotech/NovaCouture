@@ -3,11 +3,11 @@ import type { Tier } from '@/types/db'
 /**
  * Enquiry mailto builder (scope §D).
  *
- * On submit the enquiry opens a pre-filled email to a VK Jewellers address.
+ * On submit the enquiry opens a pre-filled email to a Nova Couture address.
  * There is no server involved, which is what the signed scope specifies.
  *
  * Known limitation, stated plainly for the client: mailto: depends on the
- * visitor having a mail client configured, and leaves VK with no record of the
+ * visitor having a mail client configured, and leaves Nova Couture with no record of the
  * enquiry unless the visitor actually sends it. Reliable capture would mean
  * storing the enquiry and sending server-side — a change request, not a bug.
  */

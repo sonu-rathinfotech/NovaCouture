@@ -5,7 +5,7 @@ import { applyPreview, hiddenByPreview, currentPreviewTier, exitPreviewUrl } fro
 // file, stand up the two properties the module actually reads.
 function at(search: string) {
   ;(globalThis as unknown as { window: unknown }).window = {
-    location: { search, href: `https://vk.example/catalogue${search}` },
+    location: { search, href: `https://nova.example/catalogue${search}` },
   }
 }
 afterEach(() => {

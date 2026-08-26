@@ -109,7 +109,7 @@ describe('buildXlsx', () => {
     const blob = buildXlsx(rows, 'Clients')
     const bytes = Buffer.from(await blob.arrayBuffer())
     try {
-      writeFileSync('F:/tmp/vk-clients-test.xlsx', bytes)
+      writeFileSync('F:/tmp/nova-clients-test.xlsx', bytes)
     } catch {
       // Only a convenience for opening the file by hand; not the assertion.
     }

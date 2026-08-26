@@ -10,7 +10,7 @@
  * a time, scanning tables and clicking Edit.
  *
  * So: sidebar navigation, sans-serif throughout, compact rows, and enough
- * density that a screenful is a useful number of products. What stays is VK's
+ * density that a screenful is a useful number of products. What stays is Nova Couture's
  * identity — the champagne accent, the warm ground, square corners and hairline
  * rules. It should look like a tool built for a jeweller, not like a jeweller's
  * website and not like every other dashboard.
@@ -73,7 +73,7 @@
 /* ---- typography ---------------------------------------------------------
    Sans throughout. The serif page headings were the single strongest signal
    that this was a website; a portal heading is a label on a screen, not a
-   masthead. The serif survives in one place only — the VK mark — which is
+   masthead. The serif survives in one place only — the Nova Couture mark — which is
    enough to say whose panel this is. */
 .admin-root .admin-title {
   font-family: var(--font-ui);

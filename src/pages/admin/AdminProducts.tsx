@@ -9,7 +9,7 @@ import {
   Status,
 } from './AdminLayout'
 import { useAsync } from '@/hooks/useAsync'
-import { listAllProducts, setProductActive, setProductVisibility } from '@/data/admin'
+import { listAllProducts, setProductAvailable, setProductVisibility } from '@/data/admin'
 import { VISIBILITY, type Visibility } from '@/types/db'
 
 const LABEL: Record<Visibility, string> = {
@@ -115,12 +115,18 @@ export function AdminProducts() {
               </select>
             </td>
             <td className="admin-num text-sm">{p.image_count}</td>
+            {/* Two independent states, so both are shown. A piece can be
+                listed and unavailable, which is the ordinary case this column
+                exists for; showing only one would hide the other. */}
             <td>
-              {p.is_active ? (
-                <Status tone="active">Listed</Status>
-              ) : (
-                <Status tone="muted">Hidden</Status>
-              )}
+              <div className="flex flex-col items-start gap-1">
+                {p.is_active ? (
+                  <Status tone="active">Listed</Status>
+                ) : (
+                  <Status tone="muted">Hidden</Status>
+                )}
+                {!p.is_available && <Status tone="muted">Unavailable</Status>}
+              </div>
             </td>
             <td>
               <div className="flex flex-wrap items-center gap-2">
@@ -130,11 +136,14 @@ export function AdminProducts() {
                 <Link to={`/admin/products/${p.id}#images`} className="admin-btn">
                   Images
                 </Link>
+                {/* Availability is the everyday switch, so it is the one in
+                    reach. Hiding a piece outright is rarer and more drastic,
+                    and now lives on the edit screen beside Delete. */}
                 <AdminButton
                   disabled={busyId === p.id}
-                  onClick={() => run(p.id, () => setProductActive(p.id, !p.is_active))}
+                  onClick={() => run(p.id, () => setProductAvailable(p.id, !p.is_available))}
                 >
-                  {p.is_active ? 'Hide' : 'List'}
+                  {p.is_available ? 'Mark Unavailable' : 'Mark Available'}
                 </AdminButton>
               </div>
             </td>

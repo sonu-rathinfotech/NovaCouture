@@ -4,14 +4,14 @@ import { buildEnquiryMailto, enquiryVisibleTo } from './enquiry'
 /**
  * mailto encoding is easy to get subtly wrong, and the failure mode is silent:
  * the visitor's mail client opens with a body truncated at the first bad
- * character, and VK receives an enquiry missing the mobile number.
+ * character, and Nova Couture receives an enquiry missing the mobile number.
  */
 
 const BASE = {
   name: 'Anjali Rao',
   mobile: '+919876543210',
   productName: 'Rivière Tennis Line',
-  productUrl: 'https://vkjewellers.example/p/riviere-tennis-line',
+  productUrl: 'https://novacouture.example/p/riviere-tennis-line',
 }
 
 /** Decode a mailto header back to what the mail client would show. */
@@ -28,8 +28,8 @@ describe('buildEnquiryMailto', () => {
   })
 
   it('addresses the mail to the configured enquiry inbox', () => {
-    const { href } = buildEnquiryMailto('enquiries@vkjewellers.example', BASE)
-    expect(href!.startsWith('mailto:enquiries%40vkjewellers.example?')).toBe(true)
+    const { href } = buildEnquiryMailto('enquiries@novacouture.example', BASE)
+    expect(href!.startsWith('mailto:enquiries%40novacouture.example?')).toBe(true)
   })
 
   it('names the product in the subject', () => {
@@ -106,7 +106,7 @@ describe('enquiryVisibleTo', () => {
 
   it('shows it to registered users only when the flag is on', () => {
     // Open client question — the scope says "to be decided later", so the
-    // default must stay off until VK Jewellers decides.
+    // default must stay off until Nova Couture decides.
     expect(enquiryVisibleTo('registered', false)).toBe(false)
     expect(enquiryVisibleTo('registered', true)).toBe(true)
   })

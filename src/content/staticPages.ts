@@ -8,7 +8,7 @@
  * The Privacy Policy and Terms are DRAFTS. They describe accurately what the
  * platform actually does — which is the part a developer can write — but they
  * are legal documents and have not been reviewed by anyone qualified to
- * approve them. `DRAFT_NOTICE` renders a visible banner until VK Jewellers
+ * approve them. `DRAFT_NOTICE` renders a visible banner until Nova Couture
  * signs them off; set `approved: true` on a page to remove it.
  *
  * Anything in [[double brackets]] is a fact nobody has supplied yet. It renders
@@ -39,19 +39,19 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
     title: 'About',
     approved: false,
     intro:
-      'VK Jewellers keeps a private catalogue of fine gold and stone work, shown to registered clients.',
+      'Nova Couture keeps a private catalogue of fine gold and stone work, shown to registered clients.',
     sections: [
       {
         paragraphs: [
-          '[[VK Jewellers to supply: a short history of the house — when it was founded, by whom, and where it works from. Two or three paragraphs is plenty.]]',
-          '[[VK Jewellers to supply: what the house is known for — temple work, bridal sets, particular stones or techniques.]]',
+          '[[Nova Couture to supply: a short history of the house — when it was founded, by whom, and where it works from. Two or three paragraphs is plenty.]]',
+          '[[Nova Couture to supply: what the house is known for — temple work, bridal sets, particular stones or techniques.]]',
         ],
       },
       {
         heading: 'How the catalogue works',
         paragraphs: [
           'This is a catalogue, not a shop. Pieces are shown here so clients can see the current work; nothing is sold through the site and no prices are listed.',
-          'Some pieces are shown to everyone. A wider selection is shown to registered clients, and certain pieces are reserved for premium clients. Access is arranged by VK Jewellers directly.',
+          'Some pieces are shown to everyone. A wider selection is shown to registered clients, and certain pieces are reserved for premium clients. Access is arranged by Nova Couture directly.',
         ],
       },
     ],
@@ -65,18 +65,18 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
       {
         heading: 'The showroom',
         paragraphs: [
-          '[[VK Jewellers to supply: full postal address.]]',
-          '[[VK Jewellers to supply: opening hours.]]',
+          '[[Nova Couture to supply: full postal address.]]',
+          '[[Nova Couture to supply: opening hours.]]',
         ],
       },
       {
         heading: 'By telephone or message',
-        paragraphs: ['[[VK Jewellers to supply: telephone and WhatsApp number.]]'],
+        paragraphs: ['[[Nova Couture to supply: telephone and WhatsApp number.]]'],
       },
       {
         heading: 'By email',
         paragraphs: [
-          '[[VK Jewellers to supply: the email address enquiries should reach. This is the same address the enquiry button on a product uses, so it must be one that is actually monitored.]]',
+          '[[Nova Couture to supply: the email address enquiries should reach. This is the same address the enquiry button on a product uses, so it must be one that is actually monitored.]]',
         ],
       },
     ],
@@ -87,12 +87,12 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
     approved: false,
     updated: '[[date of approval]]',
     intro:
-      'This policy explains what VK Jewellers collects when you register for the catalogue, why, and what you can ask us to do about it.',
+      'This policy explains what Nova Couture collects when you register for the catalogue, why, and what you can ask us to do about it.',
     sections: [
       {
         heading: 'Who is responsible',
         paragraphs: [
-          '[[VK Jewellers to supply: registered business name, address, and the name or role of the person handling privacy questions.]]',
+          '[[Nova Couture to supply: registered business name, address, and the name or role of the person handling privacy questions.]]',
         ],
       },
       {
@@ -122,28 +122,28 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
         heading: 'Where it is stored',
         paragraphs: [
           '[[Confirm before publishing: the database is currently hosted in Tokyo, Japan (AWS ap-northeast-1). If the platform moves to an Indian region before launch, change this sentence. Stating the wrong country is worse than stating none.]]',
-          'Your details are held in a managed database with access restricted to VK Jewellers. Photographs are stored privately and are served only to accounts entitled to view them.',
+          'Your details are held in a managed database with access restricted to Nova Couture. Photographs are stored privately and are served only to accounts entitled to view them.',
         ],
       },
       {
         heading: 'Who we share it with',
         paragraphs: [
           'We do not sell your details and we do not share them with anyone for marketing. They are handled by the companies that run our hosting and database on our behalf, and by nobody else.',
-          '[[VK Jewellers to confirm: whether any other party — an agency, a CRM, an accountant — is given access to the client list. If so it must be named here.]]',
+          '[[Nova Couture to confirm: whether any other party — an agency, a CRM, an accountant — is given access to the client list. If so it must be named here.]]',
         ],
       },
       {
         heading: 'How long we keep it',
         paragraphs: [
           'We keep your details for as long as your account exists. If you ask us to close it, we delete your name, number and company from the catalogue.',
-          '[[VK Jewellers to confirm: whether records are kept for any period after an account is closed, for accounting or other reasons.]]',
+          '[[Nova Couture to confirm: whether records are kept for any period after an account is closed, for accounting or other reasons.]]',
         ],
       },
       {
         heading: 'Your rights',
         paragraphs: [
           'Under the Digital Personal Data Protection Act, 2023, you may ask us to show you the details we hold about you, correct anything wrong, or delete your account. You may also withdraw your consent at any time, which means closing your account.',
-          'To do any of these, contact us using the details on the Contact page. [[VK Jewellers to confirm: how quickly requests will be answered, and who is responsible for them.]]',
+          'To do any of these, contact us using the details on the Contact page. [[Nova Couture to confirm: how quickly requests will be answered, and who is responsible for them.]]',
         ],
       },
       {
@@ -165,19 +165,19 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
     title: 'Terms of Use',
     approved: false,
     updated: '[[date of approval]]',
-    intro: 'These terms cover the use of the VK Jewellers online catalogue.',
+    intro: 'These terms cover the use of the Nova Couture online catalogue.',
     sections: [
       {
         heading: 'The catalogue is for viewing',
         paragraphs: [
-          'This site shows pieces from the VK Jewellers catalogue. It is not a shop. Nothing is offered for sale through the site, no prices are shown, and no order can be placed here. Anything shown is subject to availability, and a piece appearing here is not an offer to sell it.',
+          'This site shows pieces from the Nova Couture catalogue. It is not a shop. Nothing is offered for sale through the site, no prices are shown, and no order can be placed here. Anything shown is subject to availability, and a piece appearing here is not an offer to sell it.',
         ],
       },
       {
         heading: 'Accounts and access',
         paragraphs: [
-          'Access is arranged by VK Jewellers. One account belongs to one mobile number, and it is for the person it was issued to — please do not share your sign-in with anyone else.',
-          'Some pieces are shown only to premium clients. Premium access is granted by VK Jewellers at its discretion, and may be changed or withdrawn.',
+          'Access is arranged by Nova Couture. One account belongs to one mobile number, and it is for the person it was issued to — please do not share your sign-in with anyone else.',
+          'Some pieces are shown only to premium clients. Premium access is granted by Nova Couture at its discretion, and may be changed or withdrawn.',
           'We may suspend or close an account that is shared, misused, or used to copy the catalogue.',
         ],
       },
@@ -190,7 +190,7 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
       {
         heading: 'Photographs and designs',
         paragraphs: [
-          'The photographs, designs and text on this site belong to VK Jewellers. You may look at them. You may not copy, download, reproduce or republish them, and you may not use them to have pieces made elsewhere.',
+          'The photographs, designs and text on this site belong to Nova Couture. You may look at them. You may not copy, download, reproduce or republish them, and you may not use them to have pieces made elsewhere.',
           'The designs shown are the work of the house, and copying them is not permitted.',
         ],
       },
@@ -209,7 +209,7 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
       {
         heading: 'Governing law',
         paragraphs: [
-          '[[VK Jewellers to confirm: these terms are governed by the laws of India, with courts at (city) having jurisdiction. The city must be confirmed.]]',
+          '[[Nova Couture to confirm: these terms are governed by the laws of India, with courts at (city) having jurisdiction. The city must be confirmed.]]',
         ],
       },
       {

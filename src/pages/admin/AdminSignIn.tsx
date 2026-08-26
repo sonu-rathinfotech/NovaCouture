@@ -61,7 +61,7 @@ export function AdminSignIn({ onSignedIn }: { onSignedIn?: () => void }) {
           <p className="font-display text-3xl lg:text-4xl leading-tight text-white max-w-lg">
             Catalogue management
             <br />
-            <span className="font-light">for VK Jewellers</span>
+            <span className="font-light">for Nova Couture</span>
           </p>
           <p className="mt-4 text-sm font-light tracking-widest text-[var(--base-300)] uppercase">
             Private access only
@@ -73,8 +73,8 @@ export function AdminSignIn({ onSignedIn }: { onSignedIn?: () => void }) {
       <div className="flex items-center justify-center px-6 py-16 lg:p-20">
         <div className="w-full max-w-md animate-fade-in">
           {/* Logo */}
-          <div className="mb-10 flex items-baseline gap-2" role="img" aria-label="VK Jewellers Admin">
-            <span className="font-display text-2xl font-medium text-[var(--color-fg)] tracking-tight">VK</span>
+          <div className="mb-10 flex items-baseline gap-2" role="img" aria-label="Nova Couture Admin">
+            <span className="font-display text-2xl font-medium text-[var(--color-fg)] tracking-tight">Nova</span>
             <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--color-fg-muted)] uppercase">Admin</span>
           </div>
 

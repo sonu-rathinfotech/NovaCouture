@@ -12,6 +12,10 @@ declare module '@shared/import-validate.mjs' {
     subCategory: string | null
     visibility: 'public' | 'login_required' | 'premium_only' | undefined
     sortOrder: number | null
+    /** Grams, or null when the column is blank. See migration 0010. */
+    weightGrams: number | null
+    /** Defaults to true when the column is absent or blank. */
+    isAvailable: boolean
   }
 
   export interface SheetResult {
@@ -33,6 +37,7 @@ declare module '@shared/import-validate.mjs' {
 
   export const REQUIRED_COLUMNS: string[]
   export const OPTIONAL_COLUMNS: string[]
+  export const AVAILABLE: Map<string, boolean>
   export const IMAGE_EXTENSIONS: Set<string>
   export const MIN_IMAGE_EDGE: number
   export const MAX_IMAGE_BYTES: number

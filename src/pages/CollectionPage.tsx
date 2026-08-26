@@ -106,7 +106,7 @@ function CollectionDenied() {
 
         {/* Subtext */}
         <p className="mb-10 mx-auto max-w-lg text-[length:var(--text-body-lg)] leading-relaxed font-light text-[var(--color-fg-muted)] text-center">
-          Curated collections are reserved for premium clients of VK Jewellers.
+          Curated collections are reserved for premium clients of Nova Couture.
           <br />
           <span className="font-medium text-[var(--color-fg)]">If this link was sent to you, sign in with the number it was sent to.</span>
         </p>

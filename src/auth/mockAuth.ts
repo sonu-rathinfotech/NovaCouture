@@ -16,9 +16,9 @@ import type { Profile } from '@/types/db'
  * unconfigured.
  */
 
-const ACCOUNTS_KEY = 'vk:mock-accounts'
-const SESSION_KEY = 'vk:mock-session'
-const PENDING_KEY = 'vk:mock-otp'
+const ACCOUNTS_KEY = 'nova:mock-accounts'
+const SESSION_KEY = 'nova:mock-session'
+const PENDING_KEY = 'nova:mock-otp'
 
 /** Fixed code, shown on screen. A real adapter never reveals the code. */
 const DEV_CODE = '123456'

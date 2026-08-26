@@ -4,8 +4,11 @@ import { artKindFor, artOffsetFor } from './art'
 import { GalleryImage } from './GalleryImage'
 
 /**
- * Product card: photograph, category, name. No price, description or stock —
- * there is none (scope §1).
+ * Product card: photograph, category, name, and a Currently Unavailable mark
+ * when the piece carries one. No price and no description — there is none
+ * (scope §1). Weight is recorded but shown on the product page only: a grid is
+ * read as a set of photographs, and a figure under every third card turns it
+ * into a spreadsheet.
  *
  * ── Three things removed from an earlier version, and why ───────────────────
  *
@@ -61,6 +64,18 @@ export function ProductCard({
           {second && (
             <div className="absolute inset-0 opacity-0 transition-all duration-700 ease-out group-hover:scale-[1.03] group-hover:opacity-100">
               <GalleryImage image={second} kind={kind} index={offset + 1} />
+            </div>
+          )}
+
+          {/* A mark, not a veil: the piece is still shown in full, because an
+              unavailable piece is still the work a client came to look at and
+              may well ask to have made again. Dimming the photograph would
+              treat it as a dead listing. */}
+          {!product.is_available && (
+            <div className="absolute inset-x-0 bottom-0 bg-[var(--color-fg)]/75 px-3 py-2 backdrop-blur-[2px]">
+              <p className="text-center text-[0.6rem] font-light tracking-[0.18em] text-white uppercase">
+                Currently Unavailable
+              </p>
             </div>
           )}
         </div>

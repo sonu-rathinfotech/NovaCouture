@@ -45,26 +45,26 @@ export function AuthLayout({
             shown by invitation.
           </p>
           {/* "Since 1987" was invented by the design this was adapted from.
-              Put the real founding year back once VK confirms it. */}
+              Put the real founding year back once Nova Couture confirms it. */}
           <p className="mt-4 text-sm font-light tracking-widest text-[var(--base-300)] uppercase">
-            VK Jewellers
+            Nova Couture
           </p>
         </div>
         
         {/* A row of trust badges stood here — BIS Hallmarked, Lifetime
           Warranty, Insured Shipping, 30-day returns, Personal Concierge.
-          It came with the design this was adapted from. VK has never
+          It came with the design this was adapted from. Nova Couture has never
           said any of it, and BIS hallmarking is a legal certification.
-          Restore it only in VK's own words, claim by claim. */}
+          Restore it only in Nova Couture's own words, claim by claim. */}
       </div>
 
       {/* Form Side - Clean/GIVA style */}
       <div className="flex items-center justify-center px-6 py-16 lg:p-20">
         <div className="w-full max-w-md animate-fade-in">
           {/* Logo */}
-          <Link to="/" className="mb-10 flex items-baseline gap-2" aria-label="VK Jewellers, home">
-            <span className="font-display text-2xl font-medium text-[var(--color-fg)] tracking-tight">VK</span>
-            <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--color-fg-muted)] uppercase">Jewellers</span>
+          <Link to="/" className="mb-10 flex items-baseline gap-2" aria-label="Nova Couture, home">
+            <span className="font-display text-2xl font-medium text-[var(--color-fg)] tracking-tight">Nova</span>
+            <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--color-fg-muted)] uppercase">Couture</span>
           </Link>
 
           {/* Form Header */}

@@ -102,12 +102,12 @@ export function AdminLinkDetail() {
         </AdminTable>
       ) : (
         // Marked "(optional)" in the scope, and it records a named client's
-        // browsing — so it stays off until VK Jewellers asks for it and the
+        // browsing — so it stays off until Nova Couture asks for it and the
         // Privacy Policy describes it.
         <p className="border border-ivory-300 bg-ivory-50 px-5 py-4 text-sm leading-relaxed font-light text-charcoal-400">
           Recording which pieces a client opens is switched off. It is optional in the agreed
-          scope, and it tracks a named client's browsing — so it needs a decision from VK
-          Jewellers and a line in the Privacy Policy before it is turned on. Enable it with{' '}
+          scope, and it tracks a named client's browsing — so it needs a decision from Nova
+          Couture and a line in the Privacy Policy before it is turned on. Enable it with{' '}
           <code className="bg-ivory-200 px-1.5 py-0.5">VITE_FEATURE_COLLECTION_PRODUCT_VIEWS=true</code>.
         </p>
       )}

@@ -26,7 +26,7 @@ export const env = {
   supabaseUrl: supabaseUrl || 'http://localhost:54321',
   supabaseAnonKey: supabaseAnonKey || 'anon-key-not-set',
 
-  /** VK Jewellers enquiry inbox. Scope §D — mailto delivery. */
+  /** Nova Couture enquiry inbox. Scope §D — mailto delivery. */
   enquiryEmail: import.meta.env.VITE_ENQUIRY_EMAIL ?? '',
 } as const
 
@@ -48,7 +48,7 @@ export const features = {
   /**
    * Scope §G marks per-product view tracking in curated links as "(optional)".
    * Default OFF: it records which pieces a named client looked at, which is a
-   * decision for VK Jewellers to take deliberately — and the Privacy Policy
+   * decision for Nova Couture to take deliberately — and the Privacy Policy
    * has to describe it before it is switched on.
    */
   collectionProductViews: flag(import.meta.env.VITE_FEATURE_COLLECTION_PRODUCT_VIEWS),

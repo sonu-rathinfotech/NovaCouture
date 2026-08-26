@@ -104,7 +104,7 @@ export function Register() {
       <form onSubmit={onSubmit} noValidate>
         {authMode === 'unavailable' && (
           <FormMessage tone="error">
-            Self-registration is not open yet. VK Jewellers arranges access while the WhatsApp
+            Self-registration is not open yet. Nova Couture arranges access while the WhatsApp
             sign-in is being set up.
           </FormMessage>
         )}
@@ -137,7 +137,7 @@ export function Register() {
               <Link to="/privacy" className="text-[var(--color-accent)] underline underline-offset-4">
                 Privacy Policy
               </Link>{' '}
-              and consent to VK Jewellers storing these details.
+              and consent to Nova Couture storing these details.
             </>
           }
         />

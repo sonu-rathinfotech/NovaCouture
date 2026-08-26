@@ -23,10 +23,10 @@ shows the still photograph, which is the design, not a fallback.
   23 of the clips on one page. The pieces in those clips do not exist and
   often have impossible details. For a real jeweller that misrepresents
   the craft, which is worse than a plain photograph.
-- **Licensed stock** (Getty, Shutterstock). These files ship inside VK's
-  website, and VK is who receives the letter.
+- **Licensed stock** (Getty, Shutterstock). These files ship inside Nova Couture's
+  website, and Nova Couture is who receives the letter.
 - **A recognisable face**, unless the clip is clearly model-released. It
-  reads as a VK campaign.
+  reads as a Nova Couture campaign.
 
 ## Where to look
 
@@ -38,5 +38,5 @@ Free for commercial use, no attribution required:
 
 ## Best of all
 
-VK filming 10 seconds of their own stock on a phone, on a plain cloth, in
+Nova Couture filming 10 seconds of their own stock on a phone, on a plain cloth, in
 daylight. It will beat any stock clip, because it is actually theirs.

@@ -11,6 +11,7 @@
  * and is not relied upon.
  */
 import { getSupabase } from '@/lib/supabase'
+import { makeBlurPreview } from '@/lib/blurPreview'
 import type { CollectionAudience, Category, Profile, Product, Visibility } from '@/types/db'
 
 export interface AdminProduct extends Product {
@@ -65,6 +66,19 @@ export async function setProductVisibility(id: string, visibility: Visibility): 
 
 export async function setProductActive(id: string, is_active: boolean): Promise<void> {
   const { error } = await getSupabase().from('products').update({ is_active }).eq('id', id)
+  if (error) throw error
+}
+
+/**
+ * Marks a piece Currently Unavailable, or back.
+ *
+ * Not the same switch as setProductActive, and the difference matters at the
+ * keyboard: this one leaves the piece listed, openable and enquirable, and only
+ * marks it. Taking a piece off the site entirely is still is_active. See
+ * migration 0010.
+ */
+export async function setProductAvailable(id: string, is_available: boolean): Promise<void> {
+  const { error } = await getSupabase().from('products').update({ is_available }).eq('id', id)
   if (error) throw error
 }
 
@@ -284,6 +298,7 @@ export async function createProduct(input: {
   name: string
   categoryId: string | null
   visibility: Visibility
+  weightGrams?: number | null
 }): Promise<string> {
   const { data, error } = await getSupabase()
     .from('products')
@@ -293,6 +308,7 @@ export async function createProduct(input: {
       category_id: input.categoryId,
       visibility: input.visibility,
       is_active: true,
+      weight_grams: input.weightGrams ?? null,
       sort_order: 100,
     })
     .select('id')
@@ -303,7 +319,12 @@ export async function createProduct(input: {
 
 export async function updateProduct(
   id: string,
-  input: { name: string; categoryId: string | null; visibility: Visibility },
+  input: {
+    name: string
+    categoryId: string | null
+    visibility: Visibility
+    weightGrams?: number | null
+  },
 ): Promise<void> {
   const { error } = await getSupabase()
     .from('products')
@@ -311,6 +332,9 @@ export async function updateProduct(
       name: input.name.trim(),
       category_id: input.categoryId,
       visibility: input.visibility,
+      // Explicit null, not undefined: clearing the field has to be able to
+      // erase a wrong weight, and undefined would silently leave it in place.
+      weight_grams: input.weightGrams ?? null,
     })
     .eq('id', id)
   if (error) throw error
@@ -348,6 +372,17 @@ export async function uploadProductImage(
     alt: `${productName} — view ${position}`,
   })
   if (error) throw error
+
+  // The locked teaser tile shows the first image only, so that is the one that
+  // needs a preview. Best-effort: a failure here leaves blur_preview null and
+  // the tile falls back to decorative artwork, which is not worth failing an
+  // otherwise good upload over. tools/generate-blur-previews.mjs fills gaps.
+  if (position === 1) {
+    const preview = await makeBlurPreview(file)
+    if (preview) {
+      await supabase.from('products').update({ blur_preview: preview }).eq('id', productId)
+    }
+  }
 }
 
 export async function deleteProductImage(image: AdminProductImage): Promise<void> {

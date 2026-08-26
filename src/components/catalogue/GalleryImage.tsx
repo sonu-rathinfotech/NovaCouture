@@ -13,7 +13,7 @@ import { isPlaceholderPath, resolveImageUrl } from '@/lib/images'
  *   products/…  real upload     → short-lived signed URL from the private
  *                                 bucket (audit §1, migration 0002)
  *
- * Nothing changes here when VK's photographs arrive; only the rows do.
+ * Nothing changes here when Nova Couture's photographs arrive; only the rows do.
  *
  * Copy deterrents (scope §E) are applied here: right-click and drag are
  * blocked. They are deliberately limited to pointer interactions, so keyboard
@@ -92,7 +92,7 @@ export function GalleryImage({
           in CSS, which comes off with one devtools click (DESIGN.md §8). */}
       {placeholder && (
         <span className="pointer-events-none absolute right-3 bottom-2.5 font-display text-[0.6875rem] tracking-[0.2em] text-white/70 mix-blend-difference select-none">
-          VK
+          Nova
         </span>
       )}
     </>

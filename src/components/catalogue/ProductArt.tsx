@@ -2,7 +2,7 @@
  * Placeholder artwork for fixture products.
  *
  * The client has not supplied photography yet, and inventing stock photos of
- * jewellery that VK does not sell would misrepresent the catalogue. Line art
+ * jewellery that Nova Couture does not sell would misrepresent the catalogue. Line art
  * keeps the layout, spacing and aspect ratio honest while making it obvious at
  * a glance that the imagery is not final.
  *

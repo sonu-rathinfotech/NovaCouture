@@ -128,12 +128,12 @@ export function Header() {
         <div className="container">
           <div className="flex h-18 items-center justify-between gap-4">
             {/* Logo / Wordmark - Tiffany-inspired editorial style */}
-            <Link to="/" className="flex items-baseline gap-2 shrink-0" aria-label="VK Jewellers, home">
+            <Link to="/" className="flex items-baseline gap-2 shrink-0" aria-label="Nova Couture, home">
               <span className="font-display text-xl font-medium text-[var(--color-fg)] tracking-tight transition-colors duration-500">
-                VK
+                Nova
               </span>
               <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--color-fg-muted)] uppercase transition-colors duration-500">
-                Jewellers
+                Couture
               </span>
             </Link>
 
@@ -374,7 +374,7 @@ export function Header() {
           />
           <div className="absolute inset-y-0 right-0 w-full max-w-sm bg-[var(--color-bg-elevated)] shadow-[var(--shadow-2xl)] animate-slide-down overflow-y-auto">
             <div className="flex h-18 items-center justify-between border-b border-[var(--color-border)] px-6">
-              <span className="font-display text-xl font-medium text-[var(--color-fg)]">VK Jewellers</span>
+              <span className="font-display text-xl font-medium text-[var(--color-fg)]">Nova Couture</span>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}

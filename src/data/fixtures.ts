@@ -65,6 +65,8 @@ function product(
   slug: string,
   category_id: string,
   visibility: Product['visibility'],
+  /** Weight and availability are optional so the list below stays readable. */
+  extra: { weightGrams?: number; isAvailable?: boolean } = {},
 ): Product {
   return {
     id: `33333333-3333-4333-8333-${String(n).padStart(12, '0')}`,
@@ -73,6 +75,11 @@ function product(
     category_id,
     visibility,
     is_active: true,
+    is_available: extra.isAvailable ?? true,
+    // Left null on most rows on purpose: weight is often not known when a
+    // piece is photographed, so "not recorded" is the common case and the
+    // screens have to look right in it.
+    weight_grams: extra.weightGrams ?? null,
     sort_order: n,
     created_at: now,
     updated_at: now,
@@ -81,15 +88,15 @@ function product(
 
 export const products: Product[] = [
   // --- public: visible to everyone ---
-  product(1, 'Meera Temple Haram', 'meera-temple-haram', CAT.temple, 'public'),
-  product(2, 'Kanchi Broad Kada', 'kanchi-broad-kada', CAT.kada, 'public'),
-  product(3, 'Rivière Tennis Line', 'riviere-tennis-line', CAT.bracelets, 'public'),
+  product(1, 'Meera Temple Haram', 'meera-temple-haram', CAT.temple, 'public', { weightGrams: 84.32 }),
+  product(2, 'Kanchi Broad Kada', 'kanchi-broad-kada', CAT.kada, 'public', { weightGrams: 46.5 }),
+  product(3, 'Rivière Tennis Line', 'riviere-tennis-line', CAT.bracelets, 'public', { weightGrams: 12.08, isAvailable: false }),
   product(8, 'Lakshmi Kasu Malai', 'lakshmi-kasu-malai', CAT.temple, 'public'),
   product(9, 'Paisley Cuff Kada', 'paisley-cuff-kada', CAT.kada, 'public'),
-  product(10, 'Half-Eternity Band', 'half-eternity-band', CAT.rings, 'public'),
+  product(10, 'Half-Eternity Band', 'half-eternity-band', CAT.rings, 'public', { weightGrams: 3.9 }),
   product(15, 'Ananta Jhumka', 'ananta-jhumka', CAT.jhumka, 'public'),
   product(16, 'Peacock Chandbali', 'peacock-chandbali', CAT.chandbali, 'public'),
-  product(17, 'Kundan Stud Pair', 'kundan-stud-pair', CAT.studs, 'public'),
+  product(17, 'Kundan Stud Pair', 'kundan-stud-pair', CAT.studs, 'public', { isAvailable: false }),
   product(18, 'Rope Chain 22K', 'rope-chain-22k', CAT.chains, 'public'),
   product(19, 'Lotus Pendant', 'lotus-pendant', CAT.pendants, 'public'),
   product(20, 'Beaded Mani Haram', 'beaded-mani-haram', CAT.haram, 'public'),

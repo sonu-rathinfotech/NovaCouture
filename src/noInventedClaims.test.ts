@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 /**
- * Nothing may claim something about VK Jewellers that VK has not said.
+ * Nothing may claim something about Nova Couture that Nova Couture has not said.
  *
  * This is not hypothetical tidiness. Adapting an existing jewellery UI brought
  * in, and published to real customers: BIS hallmark certification (a legal
@@ -15,7 +15,7 @@ import { join, resolve } from 'node:path'
  * port, in files nobody was reviewing for factual accuracy. The next port can
  * do the same. So the check is mechanical.
  *
- * If VK does offer any of this, say so — in their words, once someone there has
+ * If Nova Couture does offer any of this, say so — in their words, once someone there has
  * confirmed that specific claim, and then add it to ALLOWED with a note naming
  * who confirmed it and when.
  */
@@ -28,10 +28,10 @@ const FORBIDDEN: { pattern: RegExp; why: string }[] = [
   { pattern: /personal concierge/i, why: 'a service promise' },
   { pattern: /since 19\d\d/i, why: 'a founding date' },
   { pattern: /hallmark certified/i, why: 'a certification claim' },
-  { pattern: /https:\/\/(www\.)?(instagram|facebook|youtube|x)\.com['"]/i, why: 'a social link that is not VK own' },
+  { pattern: /https:\/\/(www\.)?(instagram|facebook|youtube|x)\.com['"]/i, why: 'a social link that is not Nova Couture own' },
 ]
 
-/** Claims VK has confirmed. Add here, with who confirmed it and when. */
+/** Claims Nova Couture has confirmed. Add here, with who confirmed it and when. */
 const ALLOWED: RegExp[] = []
 
 function sourceFiles(dir: string, found: string[] = []): string[] {
@@ -55,7 +55,7 @@ function stripComments(source: string): string[] {
   return withoutBlocks.split('\n').map((line) => line.replace(/\/\/.*$/, ''))
 }
 
-describe('the site makes no claim VK has not made', () => {
+describe('the site makes no claim Nova Couture has not made', () => {
   const files = sourceFiles(resolve(__dirname))
 
   it('finds source files to check', () => {

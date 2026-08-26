@@ -8,7 +8,7 @@ import { normaliseMobile } from '@/lib/mobile'
  * Add a client by hand (scope §F).
  *
  * Needed because self-registration is closed until WhatsApp OTP is live —
- * without this, VK cannot onboard anybody at all.
+ * without this, Nova Couture cannot onboard anybody at all.
  */
 export function AddClientModal({
   open,

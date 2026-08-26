@@ -8,6 +8,7 @@ import {
   type ImportProduct,
 } from '@shared/import-validate.mjs'
 import { importCatalogue, type ImportProgress } from '@/data/bulkImport'
+import { formatWeight } from '@/lib/weight'
 
 /**
  * Bulk upload (scope §H).
@@ -21,11 +22,17 @@ import { importCatalogue, type ImportProgress } from '@/data/bulkImport'
  * import on someone's real catalogue is a bad way to discover a typo in row 40.
  */
 
+/*
+ * weight_grams and available are optional, and the sample rows show all three
+ * shapes on purpose: a weight given, a weight left blank because the piece has
+ * not been weighed, and a piece marked unavailable. Blank weight stores null
+ * and shows nothing on the site; a blank `available` means available.
+ */
 const TEMPLATE = [
-  'sku,name,category,sub_category,visibility,sort_order',
-  'VK-NK-0001,Meera Temple Haram,Necklaces,Temple,Public,1',
-  'VK-NK-0002,Anjali Layered Chain,Necklaces,,Registered,2',
-  'VK-BG-0001,Kanchi Broad Kada,Bangles,Kada,Premium,3',
+  'sku,name,category,sub_category,visibility,sort_order,weight_grams,available',
+  'NC-NK-0001,Meera Temple Haram,Necklaces,Temple,Public,1,84.32,Yes',
+  'NC-NK-0002,Anjali Layered Chain,Necklaces,,Registered,2,,Yes',
+  'NC-BG-0001,Kanchi Broad Kada,Bangles,Kada,Premium,3,46.5,No',
 ].join('\r\n')
 
 type Stage = 'idle' | 'checking' | 'ready' | 'importing' | 'done'
@@ -48,7 +55,7 @@ export function AdminBulkUpload() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'vk-products-template.csv'
+    a.download = 'nova-products-template.csv'
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -227,7 +234,13 @@ export function AdminBulkUpload() {
             </p>
           )}
 
-          <AdminTable columns={['SKU', 'Name', 'Category', 'Visibility', 'Images']}>
+          {/* Weight and availability are shown here because this preview is
+              the last point before the write. A wrong decimal or a stray "No"
+              is far cheaper to catch on this screen than to find later on a
+              piece a client is looking at. */}
+          <AdminTable
+            columns={['SKU', 'Name', 'Category', 'Visibility', 'Weight', 'Available', 'Images']}
+          >
             {products.map((p) => (
               <tr key={p.sku}>
                 <td className="admin-num text-sm">{p.sku}</td>
@@ -242,6 +255,16 @@ export function AdminBulkUpload() {
                     <Status>{p.visibility === 'public' ? 'Public' : 'Login Required'}</Status>
                   )}
                 </td>
+                <td className="admin-num text-sm text-[var(--admin-fg-muted)]">
+                  {formatWeight(p.weightGrams) ?? 'Not recorded'}
+                </td>
+                <td>
+                  {p.isAvailable ? (
+                    <span className="text-sm text-[var(--admin-fg-muted)]">Yes</span>
+                  ) : (
+                    <Status tone="muted">Unavailable</Status>
+                  )}
+                </td>
                 <td className="admin-num text-sm">
                   {images.filter((f) => f.name.startsWith(`${p.sku}_`)).length}
                 </td>
@@ -253,7 +276,7 @@ export function AdminBulkUpload() {
 
       {stage === 'done' && (
         <p className="mt-6 text-sm leading-relaxed text-[var(--admin-fg)]">
-          Import complete. Photographs carry the VK Jewellers watermark once the logo is supplied —
+          Import complete. Photographs carry the Nova Couture watermark once the logo is supplied —
           until then they are stored exactly as uploaded.
         </p>
       )}

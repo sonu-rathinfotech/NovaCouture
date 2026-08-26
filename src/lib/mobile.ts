@@ -10,7 +10,7 @@
  * Normalisation therefore happens here, once, and nowhere else.
  */
 
-/** India. Change here if VK ever registers clients from other countries. */
+/** India. Change here if Nova Couture ever registers clients from other countries. */
 const DEFAULT_COUNTRY_CODE = '91'
 const DEFAULT_NATIONAL_LENGTH = 10
 

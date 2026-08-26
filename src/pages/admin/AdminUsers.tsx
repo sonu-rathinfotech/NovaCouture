@@ -50,7 +50,7 @@ export function AdminUsers() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `vk-clients-${new Date().toISOString().slice(0, 10)}.xlsx`
+    a.download = `nova-clients-${new Date().toISOString().slice(0, 10)}.xlsx`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -137,7 +137,7 @@ export function AdminUsers() {
 
       <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[var(--admin-fg-muted)]">
         The export is an Excel file containing personal data — name, mobile number and consent
-        date. Treat it the way the Privacy Policy says VK will.
+        date. Treat it the way the Privacy Policy says Nova Couture will.
       </p>
 
       <AddClientModal

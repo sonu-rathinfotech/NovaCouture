@@ -11,7 +11,7 @@ const read = (file: string) => readFileSync(resolve(__dirname, file), 'utf8')
  * Client sign-in switches to WhatsApp codes the moment VITE_FEATURE_OTP_LOGIN
  * is turned on. If the admin panel ever went through that same adapter, then
  * administering the site would depend on the WhatsApp provider being up — and
- * a rejected message template would lock VK out of the one screen they need in
+ * a rejected message template would lock Nova Couture out of the one screen they need in
  * order to fix it.
  *
  * It does not today: the panel calls Supabase's password sign-in directly.

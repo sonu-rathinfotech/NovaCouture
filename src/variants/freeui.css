@@ -1,4 +1,4 @@
-/* VK JEWELLERS — FREEUI DESIGN SYSTEM
+/* NOVA COUTURE — FREEUI DESIGN SYSTEM
  * Synthesized from 10 reference sites:
  * Indian: Tanishq, GIVA, CaratLane, BlueStone, Kalyan Jewellers
  * Foreign: Blue Nile, Tiffany & Co., Mejuri, Aurate, Ana Luisa
@@ -331,7 +331,7 @@
    away.
 
    Holding it high for half the width is the cost of never having to check the
-   contrast again when the photograph is replaced — including when VK sends
+   contrast again when the photograph is replaced — including when Nova Couture sends
    their own, which is the point at which nobody will be measuring.
    ------------------------------------------------------------------------- */
 .hero-scrim {
@@ -454,7 +454,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Playfair Display, serif' font-size='18' font-weight='500' fill='white' fill-opacity='0.08'%3EVK JEWELLERS%3C/text%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Playfair Display, serif' font-size='18' font-weight='500' fill='white' fill-opacity='0.08'%3ENOVA COUTURE%3C/text%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 200px 60px;
   pointer-events: none;

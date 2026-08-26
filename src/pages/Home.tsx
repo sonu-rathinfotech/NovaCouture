@@ -18,7 +18,15 @@ export function Home() {
     () => catalogue.listProducts({ tier, limit: 8 }),
     [tier],
   )
+  // Four blurred tiles at most here. The homepage is a taste of the catalogue,
+  // not an inventory of what is being withheld — that belongs on a category
+  // page, where the visitor went looking for the whole set.
+  const { data: lockedTiles } = useAsync(
+    () => catalogue.listLocked({ tier, limit: 4 }),
+    [tier],
+  )
 
+  const locked = lockedTiles ?? []
   const cats = categories ?? []
   const featured = cats.slice(0, 3)
   const secondary = cats.slice(3)
@@ -73,16 +81,16 @@ export function Home() {
       {USING_SAMPLE_PHOTOS && (
         <div className="border-b border-[var(--color-border)] bg-[var(--color-bg-muted)]/50 px-6 py-3">
           <p className="container text-center text-sm tracking-[0.1em] uppercase text-[var(--color-fg-muted)]">
-            Photography shown is for design purposes only — not VK Jewellers pieces
+            Photography shown is for design purposes only — not Nova Couture pieces
           </p>
         </div>
       )}
 
       {/* A row of trust badges stood here — BIS Hallmarked, Lifetime
           Warranty, Insured Shipping, 30-day returns, Personal Concierge.
-          It came with the design this was adapted from. VK has never
+          It came with the design this was adapted from. Nova Couture has never
           said any of it, and BIS hallmarking is a legal certification.
-          Restore it only in VK's own words, claim by claim. */}
+          Restore it only in Nova Couture's own words, claim by claim. */}
 
       {/* Collections - Tanishq/Kalyan style with editorial numbering */}
       <section className="py-20 lg:py-32 bg-[var(--color-bg)]">
@@ -137,7 +145,7 @@ export function Home() {
               />
             </div>
             <div>
-              <p className="eyebrow mb-3 text-[var(--warm-700)]">№ 03 — The House of VK</p>
+              <p className="eyebrow mb-3 text-[var(--warm-700)]">№ 03 — The House of Nova</p>
               <h2 className="font-display text-[length:var(--text-h1)] text-[var(--warm-900)] tracking-tight">
                 Shown by invitation, not by sale.
               </h2>
@@ -148,7 +156,7 @@ export function Home() {
                 </p>
                 <p>
                   A wider selection is shown to registered clients, and certain pieces are reserved
-                  for premium clients. Access is arranged by VK Jewellers directly.
+                  for premium clients. Access is arranged by Nova Couture directly.
                 </p>
               </div>
               <div className="mt-10">
@@ -177,14 +185,14 @@ export function Home() {
             </p>
           </div>
 
-          {/* An empty grid would read as "VK has nothing", which is a worse lie
+          {/* An empty grid would read as "Nova Couture has nothing", which is a worse lie
               than admitting the catalogue could not be reached. */}
           {error ? (
             <LoadError what="the catalogue" />
           ) : loading ? (
             <ProductGridSkeleton />
           ) : (
-            <ProductGrid products={products ?? []} />
+            <ProductGrid products={products ?? []} locked={locked} tier={tier} />
           )}
         </div>
       </section>
@@ -214,7 +222,7 @@ export function Home() {
             <p className="mx-auto mt-6 max-w-lg text-[length:var(--text-body-lg)] leading-relaxed text-[var(--base-300)]">
               {tier === 'guest'
                 ? 'Sign in with your registered number to view the wider catalogue.'
-                : 'Premium access is arranged by VK Jewellers. Speak to us to have it added to your account.'}
+                : 'Premium access is arranged by Nova Couture. Speak to us to have it added to your account.'}
             </p>
             <div className="mt-10">
               <ButtonLink

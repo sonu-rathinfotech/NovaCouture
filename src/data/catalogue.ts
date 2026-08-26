@@ -17,8 +17,8 @@
 import { getSupabase } from '@/lib/supabase'
 import { isConfigured } from '@/lib/env'
 import { escapeLike } from '@/lib/escapeLike'
-import { applyPreview, hiddenByPreview } from '@/lib/previewTier'
-import type { Category, ProductWithImages, Tier, Visibility } from '@/types/db'
+import { applyPreview, currentPreviewTier, hiddenByPreview } from '@/lib/previewTier'
+import type { Category, LockedTile, ProductWithImages, Tier, Visibility } from '@/types/db'
 import { categories as fxCategories, productImages as fxImages, products as fxProducts } from './fixtures'
 
 /** Mirrors public.visible_levels() in the migration. Keep the two in step. */
@@ -48,6 +48,40 @@ export interface CatalogueRepo {
     tier: Tier
   }): Promise<ProductWithImages[]>
   getProduct(slug: string, tier: Tier): Promise<ProductWithImages | null>
+  /**
+   * The pieces this tier may NOT open, as anonymous blurred tiles.
+   *
+   * ── Why this is a separate call, and not a flag on listProducts ──────────
+   * listProducts is the entitlement boundary and the access-matrix test holds
+   * it to exactly that: a forbidden row must never appear in its result. A
+   * tile from here carries no id, name or image, so nothing that comes back
+   * can be opened — keeping the two apart is what makes both statements
+   * checkable at a glance.
+   *
+   * ── Why there is no `search` option ─────────────────────────────────────
+   * Because there must not be one. Blurred tiles appear when browsing a
+   * category, where the set is already "everything filed here". Returning them
+   * for a typed query would turn the search box into an oracle: type a guessed
+   * name, and a tile appearing tells you the guess was right. Pages that
+   * search must not call this.
+   * ────────────────────────────────────────────────────────────────────────
+   */
+  listLocked(opts: { categorySlug?: string; limit?: number; tier: Tier }): Promise<LockedTile[]>
+}
+
+/** Shared by both repositories, so the tiles look the same either way. */
+function lockedTile(
+  index: number,
+  visibility: Visibility,
+  category: Pick<Category, 'id' | 'name' | 'slug'> | null,
+  blurPreview: string | null = null,
+): LockedTile {
+  return {
+    key: `locked-${index}`,
+    requires: visibility === 'premium_only' ? 'premium_only' : 'login_required',
+    category,
+    blurPreview,
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -126,6 +160,22 @@ const fixtureRepo: CatalogueRepo = {
       category: fxCategories.find((c) => c.id === p.category_id) ?? null,
     }
   },
+
+  async listLocked({ categorySlug, limit, tier }) {
+    const levels = visibleLevels(tier)
+    const scope = categorySlug ? categoryScope(categorySlug) : null
+    if (categorySlug && !scope) return []
+
+    return fxProducts
+      .filter((p) => p.is_active)
+      .filter((p) => !levels.includes(p.visibility))
+      .filter((p) => (scope ? p.category_id !== null && scope.includes(p.category_id) : true))
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .slice(0, limit ?? undefined)
+      .map((p, i) =>
+        lockedTile(i, p.visibility, fxCategories.find((c) => c.id === p.category_id) ?? null),
+      )
+  },
 }
 
 // -----------------------------------------------------------------------------
@@ -198,6 +248,78 @@ const supabaseRepo: CatalogueRepo = {
     const product = (data as unknown as ProductWithImages) ?? null
     if (product && hiddenByPreview(product.visibility)) return null
     return product
+  },
+
+  async listLocked({ categorySlug, limit }) {
+    /*
+     * "View as client" comes first. The function below answers for whoever is
+     * actually signed in — for an admin previewing as a guest that is premium,
+     * so it would report nothing withheld and the preview would show no locked
+     * tiles at all. Previewing is exactly when someone needs to see them, so
+     * the tiles are derived from the rows RLS already returned instead.
+     */
+    const preview = currentPreviewTier()
+    if (preview) {
+      let query = getSupabase()
+        .from('products')
+        .select('visibility, sort_order, blur_preview, category:categories (id, name, slug)')
+        .eq('is_active', true)
+
+      if (categorySlug) {
+        const category = await supabaseRepo.getCategory(categorySlug)
+        if (!category) return []
+        query = query.in('category_id', [category.id, ...category.children.map((c) => c.id)])
+      }
+
+      const { data, error } = await query.order('sort_order')
+      if (error) throw error
+
+      const allowed = visibleLevels(preview)
+      type PreviewRow = {
+        visibility: Visibility
+        blur_preview: string | null
+        category: Pick<Category, 'id' | 'name' | 'slug'> | null
+      }
+      return ((data ?? []) as unknown as PreviewRow[])
+        .filter((row) => !allowed.includes(row.visibility))
+        .slice(0, limit ?? undefined)
+        .map((row, i) => lockedTile(i, row.visibility, row.category, row.blur_preview))
+    }
+
+    /*
+     * RLS means the withheld rows never leave the database, so this cannot be
+     * a select on `products` — the client would get an empty list. It goes
+     * through public.locked_teasers() (migration 0008), a security-definer
+     * function whose entire result is a visibility level and a category name.
+     *
+     * As with listProducts, no tier is sent: the function derives it from
+     * public.visible_levels(), the same source the policies use. Asking for
+     * someone else's tier is therefore not expressible.
+     */
+    const { data, error } = await getSupabase().rpc('locked_teasers', {
+      p_category_slug: categorySlug ?? null,
+    })
+    if (error) throw error
+
+    type Row = {
+      visibility: Visibility
+      category_id: string | null
+      category_name: string | null
+      category_slug: string | null
+      blur_preview: string | null
+    }
+    return ((data ?? []) as Row[])
+      .slice(0, limit ?? undefined)
+      .map((row, i) =>
+        lockedTile(
+          i,
+          row.visibility,
+          row.category_id && row.category_name && row.category_slug
+            ? { id: row.category_id, name: row.category_name, slug: row.category_slug }
+            : null,
+          row.blur_preview,
+        ),
+      )
   },
 }
 

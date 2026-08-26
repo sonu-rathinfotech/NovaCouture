@@ -9,7 +9,7 @@ import { catalogue } from '@/data/catalogue'
  * Every collection, in one place (the "Jewellery" tab).
  *
  * The header menu only ever shows the first few categories; this is the page
- * that has to hold all of them however many VK ends up with.
+ * that has to hold all of them however many Nova Couture ends up with.
  */
 export function CategoriesPage() {
   usePageTitle('Jewellery Collections')

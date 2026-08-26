@@ -39,7 +39,7 @@ export function Footer() {
       ],
     },
     {
-      heading: 'The House of VK',
+      heading: 'The House of Nova',
       links: [
         { label: 'Our Story', to: '/about' },
         // These pointed at /about#craftsmanship and /about#heritage. Neither
@@ -71,7 +71,7 @@ export function Footer() {
   ]
 
 
-  // Empty until VK supplies its own handles. These pointed at instagram.com
+  // Empty until Nova Couture supplies its own handles. These pointed at instagram.com
   // and facebook.com themselves — a "follow us" that goes to the platform's
   // front page is worse than no icon at all.
   const socialLinks: { icon: typeof InstagramIcon; href: string; label: string }[] = []
@@ -80,9 +80,9 @@ export function Footer() {
     <footer className="bg-[var(--color-fg)] text-[var(--base-50)]" role="contentinfo">
       {/* A row of trust badges stood here — BIS Hallmarked, Lifetime
           Warranty, Insured Shipping, 30-day returns, Personal Concierge.
-          It came with the design this was adapted from. VK has never
+          It came with the design this was adapted from. Nova Couture has never
           said any of it, and BIS hallmarking is a legal certification.
-          Restore it only in VK's own words, claim by claim. */}
+          Restore it only in Nova Couture's own words, claim by claim. */}
 
       {/* Main Footer Grid */}
       <div className="py-16 lg:py-24">
@@ -90,9 +90,9 @@ export function Footer() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
             {/* Brand Column */}
             <div className="lg:col-span-1 max-w-xs">
-              <Link to="/" className="flex items-baseline gap-2 mb-6" aria-label="VK Jewellers, home">
-                <span className="font-display text-2xl font-medium text-white tracking-tight">VK</span>
-                <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--base-400)] uppercase">Jewellers</span>
+              <Link to="/" className="flex items-baseline gap-2 mb-6" aria-label="Nova Couture, home">
+                <span className="font-display text-2xl font-medium text-white tracking-tight">Nova</span>
+                <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--base-400)] uppercase">Couture</span>
               </Link>
               <p className="text-[var(--base-400)] text-sm leading-relaxed mb-6 max-w-[38ch]">
                 A private catalogue of fine gold and stone work, shown to registered clients.
@@ -145,7 +145,7 @@ export function Footer() {
         <div className="container">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="text-[var(--base-500)] text-sm">
-              © {new Date().getFullYear()} VK Jewellers. All rights reserved.
+              © {new Date().getFullYear()} Nova Couture. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-[var(--base-500)] text-sm">
               <span>Display only — no online sale</span>

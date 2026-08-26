@@ -1,5 +1,6 @@
-import type { ProductWithImages } from '@/types/db'
+import type { LockedTile, ProductWithImages, Tier } from '@/types/db'
 import { ProductCard } from './ProductCard'
+import { LockedCard } from './LockedCard'
 import { ProductCardSkeleton } from '@/components/ui'
 
 /** Responsive grid: 2 col mobile, 3 col tablet, 4 col desktop, 5 col wide */
@@ -11,16 +12,28 @@ const GRID_CLASSES = 'grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-3 xl:grid-col
 export function ProductGrid({
   products,
   onOpen,
+  locked = [],
+  tier = 'guest',
 }: {
   products: ProductWithImages[]
   onOpen?: (product: ProductWithImages) => void
+  /**
+   * Blurred stand-ins for pieces this viewer may not open. They come last, so
+   * a grid still opens with what the visitor can actually look at.
+   */
+  locked?: LockedTile[]
+  /** Decides where a locked tile sends the visitor. See LockedCard. */
+  tier?: Tier
 }) {
-  if (!products.length) return null
+  if (!products.length && !locked.length) return null
 
   return (
     <div className={GRID_CLASSES} role="list">
       {products.map((p, i) => (
         <ProductCard key={p.id} product={p} eager={i < 6} index={i} onOpen={onOpen} />
+      ))}
+      {locked.map((tile, i) => (
+        <LockedCard key={tile.key} tile={tile} tier={tier} index={products.length + i} />
       ))}
     </div>
   )
