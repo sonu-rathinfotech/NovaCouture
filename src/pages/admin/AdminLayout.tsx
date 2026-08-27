@@ -7,6 +7,8 @@ import {
   Users,
   Link2,
   Upload,
+  ReceiptText,
+  Settings,
   ExternalLink,
   LogOut,
   Menu,
@@ -21,9 +23,11 @@ const NAV = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/admin/products', label: 'Products', icon: Gem },
   { to: '/admin/categories', label: 'Categories', icon: FolderTree },
+  { to: '/admin/orders', label: 'Orders', icon: ReceiptText },
   { to: '/admin/users', label: 'Clients', icon: Users },
   { to: '/admin/links', label: 'Collection Links', icon: Link2 },
   { to: '/admin/bulk-upload', label: 'Bulk Upload', icon: Upload },
+  { to: '/admin/settings', label: 'Company Details', icon: Settings },
 ]
 
 /**

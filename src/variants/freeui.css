@@ -488,4 +488,45 @@
 @media print {
   .no-print { display: none !important; }
   .print-only { display: block !important; }
+
+  /* A proforma invoice is printed, or saved as PDF through the browser's own
+     print dialog — that is the whole delivery mechanism, so these rules are
+     the document's layout rather than a nicety.
+
+     Black on white, unconditionally. The site's dark themes are set with
+     custom properties and a `data-theme` attribute, and a viewer who happens
+     to be in dark mode must not print an invoice in white-on-charcoal that
+     empties a toner cartridge and photocopies badly. */
+  .invoice-sheet,
+  .invoice-sheet * {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  .invoice-sheet {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    font-size: 11pt;
+  }
+
+  .invoice-sheet table { border-collapse: collapse !important; }
+
+  .invoice-sheet th,
+  .invoice-sheet td {
+    border-color: #999 !important;
+    /* A line split across a page break turns one order into two half-lines. */
+    break-inside: avoid;
+  }
+
+  .invoice-sheet thead { display: table-header-group; }
+
+  /* Bank details and the buyer's address must not be orphaned onto a second
+     page away from the pieces they belong to. */
+  .invoice-keep-together { break-inside: avoid; }
+
+  @page {
+    margin: 16mm;
+  }
 }

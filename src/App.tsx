@@ -50,6 +50,25 @@ const AdminLinkDetail = lazy(() =>
   import('./pages/admin/AdminLinkDetail').then((m) => ({ default: m.AdminLinkDetail })),
 )
 
+// Ordering: reached only by a signed-in client who has chosen pieces, so it
+// has no business in the first paint.
+const OrderDraftPage = lazy(() =>
+  import('./pages/OrderDraftPage').then((m) => ({ default: m.OrderDraftPage })),
+)
+const MyOrders = lazy(() => import('./pages/MyOrders').then((m) => ({ default: m.MyOrders })))
+const OrderDetail = lazy(() =>
+  import('./pages/OrderDetail').then((m) => ({ default: m.OrderDetail })),
+)
+const AdminOrders = lazy(() =>
+  import('./pages/admin/AdminOrders').then((m) => ({ default: m.AdminOrders })),
+)
+const AdminOrderDetail = lazy(() =>
+  import('./pages/admin/AdminOrderDetail').then((m) => ({ default: m.AdminOrderDetail })),
+)
+const AdminCompanySettings = lazy(() =>
+  import('./pages/admin/AdminCompanySettings').then((m) => ({ default: m.AdminCompanySettings })),
+)
+
 /** Shown for the brief moment a lazily-loaded route is being fetched. */
 function RouteFallback() {
   return (
@@ -70,6 +89,9 @@ export default function App() {
           <Route path="c/:categorySlug" element={<CategoryPage />} />
           <Route path="p/:productSlug" element={<ProductPage />} />
           <Route path="collection/:token" element={<CollectionPage />} />
+          <Route path="order" element={<OrderDraftPage />} />
+          <Route path="orders" element={<MyOrders />} />
+          <Route path="orders/:orderId" element={<OrderDetail />} />
           <Route path="about" element={<StaticPage slug="about" />} />
           <Route path="contact" element={<StaticPage slug="contact" />} />
           <Route path="privacy" element={<StaticPage slug="privacy" />} />
@@ -96,6 +118,9 @@ export default function App() {
           <Route path="links" element={<AdminLinks />} />
           <Route path="links/new" element={<AdminLinkNew />} />
           <Route path="links/:collectionId" element={<AdminLinkDetail />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:orderId" element={<AdminOrderDetail />} />
+          <Route path="settings" element={<AdminCompanySettings />} />
         </Route>
       </Routes>
     </Suspense>

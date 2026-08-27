@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, X, ChevronDown, Crown, User, LogOut } from 'lucide-react'
+import { Menu, X, ChevronDown, Crown, User, LogOut, ShoppingBag, ReceiptText } from 'lucide-react'
 import { useSession } from '@/hooks/useSession'
+import { useOrderDraft } from '@/hooks/useOrderDraft'
 import { useAsync } from '@/hooks/useAsync'
 import { catalogue } from '@/data/catalogue'
 import { samplePhoto } from '@/components/catalogue/samplePhotos'
@@ -22,6 +23,7 @@ import { ButtonLink } from '@/components/ui'
 
 export function Header() {
   const { tier, profile, signOut } = useSession()
+  const { count: orderCount } = useOrderDraft()
   const { data: categories } = useAsync(() => catalogue.listCategories(), [])
   const location = useLocation()
   const navigate = useNavigate()
@@ -285,6 +287,23 @@ export function Header() {
                           <p className="px-4 py-2 text-sm font-medium text-[var(--color-fg)]">{profile.name}</p>
                         )}
                         <p className="px-4 py-1 text-xs text-[var(--color-fg-muted)] capitalize">{tier} access</p>
+                        <hr className="my-2 border-[var(--color-border)]" />
+                        <Link
+                          to="/order"
+                          onClick={() => setMobileOpen(false)}
+                          className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-[var(--color-fg)] hover:bg-[var(--color-bg-muted)]"
+                        >
+                          <ShoppingBag className="h-4 w-4" />
+                          Your order{orderCount > 0 ? ` (${orderCount})` : ''}
+                        </Link>
+                        <Link
+                          to="/orders"
+                          onClick={() => setMobileOpen(false)}
+                          className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-[var(--color-fg)] hover:bg-[var(--color-bg-muted)]"
+                        >
+                          <ReceiptText className="h-4 w-4" />
+                          Past orders
+                        </Link>
                         <hr className="my-2 border-[var(--color-border)]" />
                         <button
                           type="button"

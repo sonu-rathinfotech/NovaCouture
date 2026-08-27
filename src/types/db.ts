@@ -21,6 +21,10 @@ export interface Profile {
   company: string | null
   email: string | null
   is_premium: boolean
+  /** Printed on a proforma invoice. Not collected at registration — asked for
+   *  the first time a client places an order. See migration 0012. */
+  billing_address: string | null
+  gst_number: string | null
   consent_at: string | null
   /** Forward-compatibility hatch: new registration fields land here
    *  without a migration. See scope §B. */
@@ -143,4 +147,82 @@ export interface LockedTile {
    * The card falls back to decorative artwork.
    */
   blurPreview: string | null
+}
+
+// -----------------------------------------------------------------------------
+// Orders and proforma invoices (migration 0012)
+// -----------------------------------------------------------------------------
+
+/** submitted → issued, or submitted → cancelled. Nothing goes backwards. */
+export type OrderStatus = 'submitted' | 'issued' | 'cancelled'
+
+/** Seller details printed on an invoice. Every field starts null — none had
+ *  been supplied when this was built, and a blank is the only honest
+ *  alternative to an invented GST number or bank account. */
+export interface CompanySettings {
+  legal_name: string | null
+  address: string | null
+  phone: string | null
+  email: string | null
+  gst_number: string | null
+  bank_name: string | null
+  bank_account_name: string | null
+  bank_account_number: string | null
+  bank_ifsc: string | null
+  bank_branch: string | null
+  updated_at: string
+}
+
+/** The buyer's details as they stood when the invoice was issued. */
+export interface BuyerSnapshot {
+  name: string | null
+  company: string | null
+  mobile: string | null
+  email: string | null
+  billing_address: string | null
+  gst_number: string | null
+}
+
+export interface OrderItem {
+  id: string
+  order_id: string
+  /** Null once a piece has been deleted. `product_name` is what renders. */
+  product_id: string | null
+  /** Copied from the piece at issue, so a later rename cannot rewrite an
+   *  invoice a client is already holding. Null until issued. */
+  product_name: string | null
+  quantity: number
+  sort_order: number
+}
+
+export interface Order {
+  id: string
+  profile_id: string
+  /** Assigned by the database, e.g. NC-2026-0001. Never by the browser. */
+  order_number: string
+  status: OrderStatus
+  notes: string | null
+  /**
+   * Filled at issue, and the ONLY source the invoice reads. Null on a
+   * submitted order, which has nothing to preserve yet.
+   */
+  buyer_snapshot: BuyerSnapshot | null
+  seller_snapshot: CompanySettings | null
+  issued_at: string | null
+  cancel_reason: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** An order with its lines, as the order and invoice screens consume it. */
+export interface OrderWithItems extends Order {
+  items: OrderItem[]
+  /** Joined live for the admin list. Not what an issued invoice renders. */
+  profile?: Pick<Profile, 'name' | 'company' | 'mobile'> | null
+}
+
+/** One line of a basket being assembled in the browser, before submission. */
+export interface DraftLine {
+  productId: string
+  quantity: number
 }

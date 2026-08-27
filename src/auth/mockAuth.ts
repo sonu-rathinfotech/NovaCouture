@@ -72,6 +72,8 @@ export const mockAuth: AuthAdapter = {
       company: input.company?.trim() || null,
       email: input.email?.trim() || null,
       is_premium: false,
+      billing_address: null,
+      gst_number: null,
       consent_at: new Date().toISOString(),
       extra: input.extra ?? {},
       created_at: new Date().toISOString(),

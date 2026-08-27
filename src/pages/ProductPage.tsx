@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowRight, Share2, MessageCircle } from 'lucide-react'
+import { ArrowRight, Share2, MessageCircle, Plus } from 'lucide-react'
 import { Gallery } from '@/components/catalogue/Gallery'
 import { artKindFor, artOffsetFor } from '@/components/catalogue/art'
 import { EnquiryForm } from '@/components/catalogue/EnquiryForm'
@@ -14,7 +14,9 @@ import { catalogue } from '@/data/catalogue'
 import { features } from '@/lib/env'
 import { enquiryVisibleTo } from '@/lib/enquiry'
 import { formatWeight } from '@/lib/weight'
-import { Badge, ButtonLink } from '@/components/ui'
+import { Badge, Button, ButtonLink } from '@/components/ui'
+import { useOrderDraft } from '@/hooks/useOrderDraft'
+import { ordersAvailable } from '@/data/orders'
 
 /**
  * Product Page - New Design System
@@ -31,6 +33,7 @@ import { Badge, ButtonLink } from '@/components/ui'
 export function ProductPage() {
   const [copied, setCopied] = useState(false)
   const { productSlug = '' } = useParams()
+  const { add, remove, has } = useOrderDraft()
   const { tier } = useSession()
 
   const { data: product, loading, error } = useAsync(
@@ -80,6 +83,7 @@ export function ProductPage() {
 
   const shareUrl = typeof window === 'undefined' ? '' : window.location.href
   const weight = formatWeight(product.weight_grams)
+  const inOrder = has(product.id)
 
   async function onCopyLink() {
     try {
@@ -185,6 +189,41 @@ export function ProductPage() {
                 once someone there has confirmed each one. Invented copy is not
                 a placeholder to be filled in later; it reads as fact from the
                 moment it is published. */}
+
+            {/* Ordering sits above the enquiry, not instead of it. An enquiry
+                asks a question about one piece; an order says how many of
+                several are wanted. A retailer placing a Diwali order and a
+                client asking whether a haram can be made lighter are doing
+                different things, and neither replaces the other. */}
+            {tier !== 'guest' && ordersAvailable && (
+              <div className="flex flex-wrap items-center gap-3">
+                {inOrder ? (
+                  <>
+                    <ButtonLink to="/order" variant="primary" size="lg">
+                      In your order — review
+                    </ButtonLink>
+                    <button
+                      type="button"
+                      onClick={() => remove(product.id)}
+                      className="cursor-pointer text-sm text-[var(--color-fg-muted)] underline underline-offset-4 transition-colors hover:text-[var(--color-fg)]"
+                    >
+                      Remove
+                    </button>
+                  </>
+                ) : (
+                  <Button variant="primary" size="lg" onClick={() => add(product.id)}>
+                    <Plus size={16} strokeWidth={2} className="mr-2" />
+                    Add to order
+                  </Button>
+                )}
+                {!product.is_available && (
+                  <p className="w-full text-sm text-[var(--color-fg-muted)]">
+                    This piece is currently unavailable. You can still add it — we will confirm
+                    whether it can be made.
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Enquiry Form - Mejuri/Aurate style */}
             {enquiryVisibleTo(tier, features.enquiryForRegistered) ? (
