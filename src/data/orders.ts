@@ -9,7 +9,7 @@ import type {
 } from '@/types/db'
 
 /**
- * Order requests and proforma invoices (migration 0012).
+ * Order requests and quotations (migration 0012).
  *
  * ── Why there is no fixture repository here ─────────────────────────────────
  * Every other data module has one, because the catalogue had to be reviewable
@@ -67,7 +67,7 @@ function sortItems(orders: OrderWithItems[]): OrderWithItems[] {
 }
 
 /**
- * Creates the order, its lines, then its proforma.
+ * Creates the order, its lines, then its quotation.
  *
  * Two round trips rather than one, because the line policy checks entitlement
  * against the order row — which has to exist first. If the lines fail, the
@@ -111,7 +111,7 @@ export async function submitOrder(lines: DraftLine[], notes: string): Promise<Or
   }
 
   /*
-   * The proforma is produced as soon as the order exists, so the client leaves
+   * The quotation is produced as soon as the order exists, so the client leaves
    * with a document rather than a promise of one.
    *
    * Best effort on purpose. If the company legal name or GSTIN is still blank,
@@ -173,7 +173,7 @@ export async function listAllOrders(): Promise<OrderWithItems[]> {
 }
 
 /**
- * Issues the proforma invoice.
+ * Issues the quotation.
  *
  * One RPC, not three updates from here, because the snapshots and the status
  * change have to land together — an order marked issued with no seller details

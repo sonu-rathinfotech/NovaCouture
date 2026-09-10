@@ -3,7 +3,7 @@ import { Printer } from 'lucide-react'
 import { Badge, Button } from '@/components/ui'
 import { LoadError } from '@/components/LoadError'
 import { NotFound } from './NotFound'
-import { ProformaInvoice } from '@/components/orders/ProformaInvoice'
+import { Quotation } from '@/components/orders/Quotation'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -14,8 +14,8 @@ import { getOrder, ordersAvailable } from '@/data/orders'
  * One order, from the client's side.
  *
  * Before it is issued this shows what they asked for. After, it shows the
- * proforma invoice — the same component the admin sees, reading the same
- * snapshots, so the two can never disagree about what was issued.
+ * quotation -- the same component the admin sees, reading the same snapshots,
+ * so the two can never disagree about what was issued.
  */
 export function OrderDetail() {
   const { orderId = '' } = useParams()
@@ -94,8 +94,8 @@ export function OrderDetail() {
 
         {order.status === 'submitted' && (
           <p className="mt-6 max-w-[56ch] leading-relaxed text-[var(--color-fg-muted)]">
-            We have your order. Your proforma invoice is being prepared and will appear here
-            shortly. Nothing is committed until we come back to you.
+            We have your order. Your quotation is being prepared and will appear here shortly.
+            Nothing is committed until we come back to you.
           </p>
         )}
 
@@ -110,7 +110,7 @@ export function OrderDetail() {
       </div>
 
       {issued ? (
-        <ProformaInvoice order={order} />
+        <Quotation order={order} />
       ) : (
         <ul className="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
           {order.items.map((item, i) => (

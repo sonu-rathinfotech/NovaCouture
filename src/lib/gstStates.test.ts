@@ -3,7 +3,7 @@ import { GST_STATES, looksLikeGstin, stateForCode, stateFromGstin } from './gstS
 
 /**
  * The state code and the GSTIN have to agree, because place of supply on the
- * proforma is derived from them. A mismatch is not cosmetic: it is the buyer's
+ * quotation is derived from them. A mismatch is not cosmetic: it is the buyer's
  * accounts department reconciling a document against the wrong state.
  */
 describe('GST state list', () => {

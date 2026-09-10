@@ -486,10 +486,10 @@
    PRINT
    ========================================================================== */
 /* ==========================================================================
-   INVOICE COLOUR
+   QUOTATION COLOUR
    ==========================================================================
-   The proforma is the one printed thing this platform produces, and the first
-   one printed came back flat black. These three tokens carry the house gold
+   The quotation is the one printed thing this platform produces, and the
+   first one printed came back flat black. These three tokens carry the house gold
    onto paper. They are defined here, outside the print block, so the screen
    and the printout are the same document.
 
@@ -497,25 +497,25 @@
    colour when it prints -- without it the gold rules and the title silently
    go grey. */
 :root {
-  --invoice-accent: #a8823f;
-  --invoice-ink: #1c1917;
-  --invoice-band: #faf6ee;
+  --quotation-accent: #a8823f;
+  --quotation-ink: #1c1917;
+  --quotation-band: #faf6ee;
 }
 
 /* The sheet is always a light document, whatever theme the viewer is in.
-   An invoice rendered white-on-charcoal is unreadable once printed and
+   A quotation rendered white-on-charcoal is unreadable once printed and
    unrecognisable as a business document on screen. */
-.invoice-sheet {
+.quotation-sheet {
   --color-bg-elevated: #ffffff;
-  --color-fg: var(--invoice-ink);
+  --color-fg: var(--quotation-ink);
   --color-fg-muted: #57534e;
   --color-border: #e0d9cc;
   background: #ffffff;
-  color: var(--invoice-ink);
+  color: var(--quotation-ink);
 }
 
-.invoice-sheet,
-.invoice-sheet * {
+.quotation-sheet,
+.quotation-sheet * {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
@@ -530,18 +530,18 @@
   /*
    * Everything that is not the sheet.
    *
-   * The first printed proforma carried the admin sidebar wordmark, the "All
+   * The first printed copy carried the admin sidebar wordmark, the "All
    * orders" link, the Print button and the page's own heading onto the paper,
    * because only a couple of elements were marked no-print. Rather than chase
    * each one, the whole document is hidden and the sheet alone is put back --
-   * so a screen added later cannot leak its chrome into a client's invoice.
+   * so a screen added later cannot leak its chrome into a client's quotation.
    */
   body * { visibility: hidden !important; }
 
-  .invoice-sheet,
-  .invoice-sheet * { visibility: visible !important; }
+  .quotation-sheet,
+  .quotation-sheet * { visibility: visible !important; }
 
-  .invoice-sheet {
+  .quotation-sheet {
     position: absolute !important;
     inset: 0 auto auto 0;
     width: 100% !important;
@@ -558,19 +558,19 @@
     font-size: 10.5pt;
   }
 
-  .invoice-sheet table { border-collapse: collapse !important; }
+  .quotation-sheet table { border-collapse: collapse !important; }
 
-  .invoice-sheet th,
-  .invoice-sheet td {
+  .quotation-sheet th,
+  .quotation-sheet td {
     /* A line split across a page break turns one order into two half-lines. */
     break-inside: avoid;
   }
 
-  .invoice-sheet thead { display: table-header-group; }
+  .quotation-sheet thead { display: table-header-group; }
 
   /* Bank details, the declaration and the signature must not be orphaned onto
      a second page away from the pieces they belong to. */
-  .invoice-keep-together { break-inside: avoid; }
+  .quotation-keep-together { break-inside: avoid; }
 
   /*
    * Zero, deliberately.

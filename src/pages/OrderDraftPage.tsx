@@ -140,7 +140,7 @@ export function OrderDraftPage() {
           {count} {count === 1 ? 'piece' : 'pieces'}
         </h1>
         <p className="mt-4 max-w-[52ch] leading-relaxed text-[var(--color-fg-muted)]">
-          Sending this creates your proforma invoice straight away, listing the pieces and
+          Sending this creates your quotation straight away, listing the pieces, weights and
           quantities. It carries no prices and is not a demand for payment.
         </p>
       </header>
@@ -251,7 +251,7 @@ export function OrderDraftPage() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-6">
             <h2 className="mb-1 font-display text-xl text-[var(--color-fg)]">Billing details</h2>
             <p className="mb-5 text-sm leading-relaxed text-[var(--color-fg-muted)]">
-              These print on the proforma invoice. We keep them for your next order.
+              These print on the quotation. We keep them for your next order.
             </p>
 
             <Textarea

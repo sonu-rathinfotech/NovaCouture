@@ -21,7 +21,7 @@ export interface Profile {
   company: string | null
   email: string | null
   is_premium: boolean
-  /** Printed on a proforma invoice. Not collected at registration — asked for
+  /** Printed on a quotation. Not collected at registration — asked for
    *  the first time a client places an order. See migration 0012. */
   billing_address: string | null
   gst_number: string | null
@@ -154,13 +154,13 @@ export interface LockedTile {
 }
 
 // -----------------------------------------------------------------------------
-// Orders and proforma invoices (migration 0012)
+// Orders and quotations (migration 0012)
 // -----------------------------------------------------------------------------
 
 /** submitted → issued, or submitted → cancelled. Nothing goes backwards. */
 export type OrderStatus = 'submitted' | 'issued' | 'cancelled'
 
-/** Seller details printed on an invoice. Every field starts null — none had
+/** Seller details printed on a quotation. Every field starts null — none had
  *  been supplied when this was built, and a blank is the only honest
  *  alternative to an invented GST number or bank account. */
 export interface CompanySettings {
@@ -185,7 +185,7 @@ export interface CompanySettings {
   updated_at: string
 }
 
-/** The buyer's details as they stood when the invoice was issued. */
+/** The buyer's details as they stood when the quotation was issued. */
 export interface BuyerSnapshot {
   name: string | null
   company: string | null

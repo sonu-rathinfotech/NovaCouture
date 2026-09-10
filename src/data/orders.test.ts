@@ -5,7 +5,7 @@ import type { CompanySettings } from '@/types/db'
 /**
  * The gate on issuing an invoice.
  *
- * This is the check that stops a proforma going out with a blank bank account
+ * This is the check that stops a quotation going out with a blank bank account
  * or GST number — a document a retailer may pay against. The database enforces
  * it too, inside public.issue_order() (migration 0012); this copy exists so the
  * admin sees the reason before clicking rather than as an error afterwards.
@@ -47,7 +47,7 @@ describe('missingCompanyDetails', () => {
 
   it('blocks on a missing GSTIN alone', () => {
     // The identifying block is the whole point of the document. Without it
-    // there is nothing an accounts department can file the proforma against.
+    // there is nothing an accounts department can file the quotation against.
     expect(missingCompanyDetails({ ...COMPLETE, gst_number: null })).toEqual(['GST number'])
   })
 

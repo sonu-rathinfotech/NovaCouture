@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { AdminButton, AdminError, AdminHeading, AdminTable, Status } from './AdminLayout'
-import { ProformaInvoice } from '@/components/orders/ProformaInvoice'
+import { Quotation } from '@/components/orders/Quotation'
 import { useAsync } from '@/hooks/useAsync'
 import { listAllProducts } from '@/data/admin'
 import {
@@ -16,7 +16,7 @@ import {
  * One order, from the admin's side: what was asked for, and the two things
  * that can be done about it.
  *
- * Most orders arrive already issued: the proforma is produced the moment the
+ * Most orders arrive already issued: the quotation is produced the moment the
  * client sends the order. One lands here still 'submitted' only when the
  * company name or GSTIN was blank at the time, so the Issue button is a
  * recovery path rather than the normal one.
@@ -85,7 +85,7 @@ export function AdminOrderDetail() {
                   disabled={busy || missing.length > 0}
                   onClick={() => run(() => issueOrder(order.id))}
                 >
-                  {busy ? 'Issuing…' : 'Issue proforma invoice'}
+                  {busy ? 'Issuing…' : 'Issue quotation'}
                 </AdminButton>
                 <AdminButton tone="danger" disabled={busy} onClick={() => setCancelling(true)}>
                   Cancel order
@@ -104,7 +104,7 @@ export function AdminOrderDetail() {
         <div className="no-print mb-6 border border-[var(--admin-border-strong)] bg-[var(--admin-bg-muted)] p-5">
           <p className="admin-label mb-2">Cannot issue yet</p>
           <p className="text-sm leading-relaxed text-[var(--admin-fg-muted)]">
-            A proforma has to carry the company name and GSTIN to be of any use, so issuing is
+            A quotation has to carry the company name and GSTIN to be of any use, so issuing is
             blocked until these are filled in: <strong>{missing.join(', ')}</strong>.{' '}
             <Link to="/admin/settings" className="underline underline-offset-4">
               Company details
@@ -157,7 +157,7 @@ export function AdminOrderDetail() {
         <>
           {/* The client's note is correspondence, not part of the document, so
               it was taken off the sheet. It still has to reach you, so it sits
-              beside the invoice and does not print. */}
+              beside the quotation and does not print. */}
           {order.notes && (
             <div className="no-print mb-6 border border-[var(--admin-border)] p-5">
               <p className="admin-label mb-2">Client's notes</p>
@@ -166,7 +166,7 @@ export function AdminOrderDetail() {
               </p>
             </div>
           )}
-          <ProformaInvoice order={order} />
+          <Quotation order={order} />
         </>
       ) : (
         <>

@@ -54,7 +54,7 @@ export function MyOrders() {
       ) : rows.length === 0 ? (
         <EmptyState
           title="No orders yet"
-          message="Choose pieces from the catalogue and send them to us. Each order gets a proforma invoice you can print."
+          message="Choose pieces from the catalogue and send them to us. Each order gets a quotation you can print."
           action={{ label: 'Browse the collections', href: '/collections', variant: 'primary' }}
         />
       ) : (

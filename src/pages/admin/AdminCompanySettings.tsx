@@ -5,7 +5,7 @@ import { getCompanySettings, missingCompanyDetails, updateCompanySettings } from
 import type { CompanySettings } from '@/types/db'
 
 /**
- * The seller's details, as printed on every proforma invoice.
+ * The seller's details, as printed on every quotation.
  *
  * ── Why this is a screen and not a constant in the code ─────────────────────
  * None of it had been supplied when the ordering feature was built — the
@@ -33,7 +33,7 @@ const GST_FIELDS: { key: Key; label: string; help?: string; area?: boolean }[] =
   { key: 'state', label: 'State' },
   { key: 'state_code', label: 'State code', help: 'The first two digits of the GSTIN. 27 is Maharashtra.' },
   { key: 'default_hsn_code', label: 'Default HSN code', help: '7113 is articles of jewellery of precious metal. Used for any piece with no HSN of its own.' },
-  { key: 'invoice_declaration', label: 'Declaration', area: true, help: 'Printed at the foot of every proforma. It is what stops the document being read as a tax invoice.' },
+  { key: 'invoice_declaration', label: 'Declaration', area: true, help: 'Printed at the foot of every quotation. It is what stops the document being read as a tax invoice.' },
 ]
 
 const BANK_FIELDS: { key: Key; label: string }[] = [
@@ -93,7 +93,7 @@ export function AdminCompanySettings() {
     <>
       <AdminHeading
         title="Company details"
-        note="Printed on every proforma invoice. An issued invoice keeps a copy of these as they were on the day, so correcting something here never rewrites a document a client already holds."
+        note="Printed on every quotation. An issued invoice keeps a copy of these as they were on the day, so correcting something here never rewrites a document a client already holds."
       />
       <AdminError error={error} />
 
@@ -102,7 +102,7 @@ export function AdminCompanySettings() {
           <p className="admin-label mb-2">Invoices cannot be issued yet</p>
           <p className="text-sm leading-relaxed text-[var(--admin-fg-muted)]">
             Still needed: <strong>{missing.join(', ')}</strong>. Until these are filled in, a new
-            order will not produce its proforma automatically and the Issue button stays disabled.
+            order will not produce its quotation automatically and the Issue button stays disabled.
           </p>
         </div>
       )}
@@ -163,7 +163,7 @@ export function AdminCompanySettings() {
         <div className="admin-panel p-6">
           <p className="admin-label mb-2">Bank details</p>
           <p className="mb-4 text-sm leading-relaxed text-[var(--admin-fg-muted)]">
-            Optional. The proforma states no amounts, so nothing is payable against it and these do
+            Optional. The quotation states no amounts, so nothing is payable against it and these do
             not block issuing. They print only when filled in. If you do fill them in, check the
             account number and IFSC character by character.
           </p>

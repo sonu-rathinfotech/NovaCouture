@@ -2,7 +2,7 @@ import type { OrderWithItems } from '@/types/db'
 import { formatWeight } from '@/lib/weight'
 
 /**
- * The printed document, laid out as a GST proforma invoice.
+ * The printed document: a quotation, laid out with the GST identifying block.
  *
  * Rendered for the client and for the admin from this one component, so there
  * is a single layout to keep correct.
@@ -14,9 +14,15 @@ import { formatWeight } from '@/lib/weight'
  * would mean that correcting a GSTIN, renaming a piece or re-weighing it
  * silently rewrote documents clients are already holding.
  *
+ * The stored field is still called `invoice_declaration`. Renaming the column
+ * would orphan the declaration on every quotation already issued, because a
+ * seller snapshot is a copy of that row taken at the time -- the old key would
+ * simply stop being read. The label is what the client sees; the column name
+ * is not.
+ *
  * -- Weight is a main column, not a detail ----------------------------------
  * This is a gold catalogue. Weight is what a retailer reads first, and the
- * first printed proforma went out without it. A piece with no recorded weight
+ * first printed copy went out without it. A piece with no recorded weight
  * prints a blank cell rather than a zero, the same rule the product page
  * follows -- and the total adds up only what is actually known, with a note
  * when some of it is not.
@@ -62,9 +68,9 @@ function stateWithCode(name: string | null, code: string | null): string | null 
 }
 
 const TH =
-  'pb-2 text-[0.6rem] font-semibold tracking-[0.14em] text-[var(--invoice-ink)] uppercase'
+  'pb-2 text-[0.6rem] font-semibold tracking-[0.14em] text-[var(--quotation-ink)] uppercase'
 
-export function ProformaInvoice({ order }: { order: OrderWithItems }) {
+export function Quotation({ order }: { order: OrderWithItems }) {
   const seller = order.seller_snapshot
   const buyer = order.buyer_snapshot
 
@@ -72,7 +78,7 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
     return (
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-muted)] p-6">
         <p className="text-[var(--color-fg-muted)]">
-          This order has not been issued yet, so there is no invoice to show. The pieces and
+          This order has not been issued yet, so there is no quotation to show. The pieces and
           quantities are listed above.
         </p>
       </div>
@@ -96,13 +102,13 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
   const placeOfSupply = stateWithCode(buyer.place_of_supply, buyer.place_of_supply_code)
 
   return (
-    <article className="invoice-sheet mx-auto max-w-3xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-8 lg:p-10">
+    <article className="quotation-sheet mx-auto max-w-3xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-8 lg:p-10">
       {/* Title band. A document headed with a GSTIN is read as a tax invoice
           unless it plainly says otherwise, so the disclaimer sits in the
           title, not in the small print. */}
-      <div className="mb-5 border-b-2 border-[var(--invoice-accent)] pb-3 text-center">
-        <h1 className="font-display text-[1.6rem] tracking-[0.1em] text-[var(--invoice-accent)] uppercase">
-          Proforma Invoice
+      <div className="mb-5 border-b-2 border-[var(--quotation-accent)] pb-3 text-center">
+        <h1 className="font-display text-[1.6rem] tracking-[0.1em] text-[var(--quotation-accent)] uppercase">
+          Quotation
         </h1>
         <p className="mt-0.5 text-[0.65rem] tracking-[0.18em] text-[var(--color-fg-muted)] uppercase">
           Not a tax invoice
@@ -111,7 +117,7 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
 
       <header className="flex flex-wrap items-start justify-between gap-6 border-b border-[var(--color-border)] pb-4">
         <div>
-          <h2 className="font-display text-lg tracking-tight text-[var(--invoice-ink)]">
+          <h2 className="font-display text-lg tracking-tight text-[var(--quotation-ink)]">
             {seller.legal_name}
           </h2>
           {seller.address && (
@@ -129,17 +135,17 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
         </div>
 
         <div className="text-right">
-          <Line label="Invoice no" value={order.order_number} />
+          <Line label="Quotation no" value={order.order_number} />
           <Line label="Date" value={formatDate(order.issued_at)} />
           <Line label="Place of supply" value={placeOfSupply} />
         </div>
       </header>
 
-      <section className="invoice-keep-together border-b border-[var(--color-border)] py-4">
-        <p className="mb-1.5 text-[0.6rem] font-semibold tracking-[0.18em] text-[var(--invoice-accent)] uppercase">
+      <section className="quotation-keep-together border-b border-[var(--color-border)] py-4">
+        <p className="mb-1.5 text-[0.6rem] font-semibold tracking-[0.18em] text-[var(--quotation-accent)] uppercase">
           Billed to
         </p>
-        <p className="font-display text-base text-[var(--invoice-ink)]">
+        <p className="font-display text-base text-[var(--quotation-ink)]">
           {buyer.company || buyer.name}
         </p>
         {buyer.company && buyer.name && (
@@ -162,7 +168,7 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[32rem] text-left">
             <thead>
-              <tr className="border-b-2 border-[var(--invoice-accent)] bg-[var(--invoice-band)]">
+              <tr className="border-b-2 border-[var(--quotation-accent)] bg-[var(--quotation-band)]">
                 <th className={`${TH} pl-2`}>Sr</th>
                 <th className={TH}>Description of goods</th>
                 <th className={TH}>HSN</th>
@@ -176,34 +182,34 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
                   <td className="py-2 pl-2 align-top text-[0.8125rem] text-[var(--color-fg-muted)]">
                     {i + 1}
                   </td>
-                  <td className="py-2 align-top text-[0.9375rem] text-[var(--invoice-ink)]">
+                  <td className="py-2 align-top text-[0.9375rem] text-[var(--quotation-ink)]">
                     {/* Copied at issue. A piece deleted since still prints. */}
                     {item.product_name ?? 'Piece no longer listed'}
                   </td>
                   <td className="py-2 align-top text-[0.8125rem] tabular-nums text-[var(--color-fg-muted)]">
                     {item.hsn_code ?? ''}
                   </td>
-                  <td className="py-2 text-right align-top text-[0.8125rem] tabular-nums text-[var(--invoice-ink)]">
+                  <td className="py-2 text-right align-top text-[0.8125rem] tabular-nums text-[var(--quotation-ink)]">
                     {/* Blank, never zero, when the piece has not been weighed. */}
                     {formatWeight(item.weight_grams) ?? ''}
                   </td>
-                  <td className="py-2 pr-2 text-right align-top text-[0.9375rem] tabular-nums text-[var(--invoice-ink)]">
+                  <td className="py-2 pr-2 text-right align-top text-[0.9375rem] tabular-nums text-[var(--quotation-ink)]">
                     {item.quantity}
                   </td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
-              <tr className="border-t-2 border-[var(--invoice-accent)]">
+              <tr className="border-t-2 border-[var(--quotation-accent)]">
                 <td />
                 <td />
                 <td className="pt-2 text-right text-[0.6rem] tracking-[0.14em] text-[var(--color-fg-muted)] uppercase">
                   Total
                 </td>
-                <td className="pt-2 text-right font-display text-base tabular-nums text-[var(--invoice-ink)]">
+                <td className="pt-2 text-right font-display text-base tabular-nums text-[var(--quotation-ink)]">
                   {totalWeight > 0 ? formatWeight(totalWeight) : ''}
                 </td>
-                <td className="pt-2 pr-2 text-right font-display text-base tabular-nums text-[var(--invoice-ink)]">
+                <td className="pt-2 pr-2 text-right font-display text-base tabular-nums text-[var(--quotation-ink)]">
                   {totalPieces}
                 </td>
               </tr>
@@ -222,8 +228,8 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
       </section>
 
       {seller.bank_account_number && (
-        <section className="invoice-keep-together border-t border-[var(--color-border)] py-3">
-          <p className="mb-1 text-[0.6rem] font-semibold tracking-[0.18em] text-[var(--invoice-accent)] uppercase">
+        <section className="quotation-keep-together border-t border-[var(--color-border)] py-3">
+          <p className="mb-1 text-[0.6rem] font-semibold tracking-[0.18em] text-[var(--quotation-accent)] uppercase">
             Bank details
           </p>
           <Line label="Bank" value={seller.bank_name} />
@@ -234,25 +240,25 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
         </section>
       )}
 
-      <section className="invoice-keep-together border-t border-[var(--color-border)] py-3">
-        <p className="mb-1 text-[0.6rem] font-semibold tracking-[0.18em] text-[var(--invoice-accent)] uppercase">
+      <section className="quotation-keep-together border-t border-[var(--color-border)] py-3">
+        <p className="mb-1 text-[0.6rem] font-semibold tracking-[0.18em] text-[var(--quotation-accent)] uppercase">
           Declaration
         </p>
         <p className="max-w-[76ch] text-[0.75rem] leading-relaxed text-[var(--color-fg-muted)]">
           {seller.invoice_declaration ??
-            'This is a proforma invoice issued to confirm items and quantities only. It is not a tax invoice and not a demand for payment. No prices, taxes or amounts are stated or implied.'}
+            'This is a quotation of items and quantities only. It is not a tax invoice and not a demand for payment. No prices, taxes or amounts are stated or implied.'}
         </p>
       </section>
 
-      <footer className="invoice-keep-together flex flex-wrap items-end justify-between gap-6 border-t border-[var(--color-border)] pt-3">
+      <footer className="quotation-keep-together flex flex-wrap items-end justify-between gap-6 border-t border-[var(--color-border)] pt-3">
         <p className="text-[0.75rem] text-[var(--color-fg-muted)]">
           Issued {formatDate(order.issued_at)}
         </p>
         <div className="text-right">
-          <p className="text-[0.8125rem] text-[var(--invoice-ink)]">For {seller.legal_name}</p>
+          <p className="text-[0.8125rem] text-[var(--quotation-ink)]">For {seller.legal_name}</p>
           {/* Room for a real signature. The line is left unlabelled: the
               company name above it already says whose signature it is. */}
-          <div className="mt-10 w-56 border-t border-[var(--invoice-accent)]" />
+          <div className="mt-10 w-56 border-t border-[var(--quotation-accent)]" />
         </div>
       </footer>
     </article>
