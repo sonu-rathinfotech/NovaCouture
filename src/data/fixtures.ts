@@ -80,6 +80,8 @@ function product(
     // piece is photographed, so "not recorded" is the common case and the
     // screens have to look right in it.
     weight_grams: extra.weightGrams ?? null,
+    // Set per piece only when it differs from the company default (7113).
+    hsn_code: null,
     sort_order: n,
     created_at: now,
     updated_at: now,

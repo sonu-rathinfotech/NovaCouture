@@ -16,9 +16,13 @@ import {
  * One order, from the admin's side: what was asked for, and the two things
  * that can be done about it.
  *
- * Issuing is deliberately not possible while the company's GST or bank details
- * are blank — the check is enforced inside public.issue_order() (migration
- * 0012), and repeated here only so the reason appears before the click rather
+ * Most orders arrive already issued: the proforma is produced the moment the
+ * client sends the order. One lands here still 'submitted' only when the
+ * company name or GSTIN was blank at the time, so the Issue button is a
+ * recovery path rather than the normal one.
+ *
+ * The check is enforced inside public.issue_order() (migrations 0012 and
+ * 0014); it is repeated here so the reason appears before the click rather
  * than as a database error after it.
  */
 export function AdminOrderDetail() {
@@ -100,8 +104,8 @@ export function AdminOrderDetail() {
         <div className="no-print mb-6 border border-[var(--admin-border-strong)] bg-[var(--admin-bg-muted)] p-5">
           <p className="admin-label mb-2">Cannot issue yet</p>
           <p className="text-sm leading-relaxed text-[var(--admin-fg-muted)]">
-            An invoice carrying blank bank details is worse than no invoice, so issuing is blocked
-            until these are filled in: <strong>{missing.join(', ')}</strong>.{' '}
+            A proforma has to carry the company name and GSTIN to be of any use, so issuing is
+            blocked until these are filled in: <strong>{missing.join(', ')}</strong>.{' '}
             <Link to="/admin/settings" className="underline underline-offset-4">
               Company details
             </Link>

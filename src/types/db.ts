@@ -25,6 +25,8 @@ export interface Profile {
    *  the first time a client places an order. See migration 0012. */
   billing_address: string | null
   gst_number: string | null
+  billing_state: string | null
+  billing_state_code: string | null
   consent_at: string | null
   /** Forward-compatibility hatch: new registration fields land here
    *  without a migration. See scope §B. */
@@ -58,6 +60,8 @@ export interface Product {
   is_available: boolean
   /** Gross weight in grams. Null means not recorded, and shows as nothing. */
   weight_grams: number | null
+  /** Customs/GST heading for this piece. Null uses the company default. */
+  hsn_code: string | null
   sort_order: number
   created_at: string
   updated_at: string
@@ -165,6 +169,14 @@ export interface CompanySettings {
   phone: string | null
   email: string | null
   gst_number: string | null
+  /** The two digits a GSTIN starts with. 27 is Maharashtra. */
+  state: string | null
+  state_code: string | null
+  /** Characters 3 to 12 of the GSTIN. */
+  pan: string | null
+  /** Used for a piece with no HSN of its own. 7113 is precious-metal jewellery. */
+  default_hsn_code: string | null
+  invoice_declaration: string | null
   bank_name: string | null
   bank_account_name: string | null
   bank_account_number: string | null
@@ -181,6 +193,11 @@ export interface BuyerSnapshot {
   email: string | null
   billing_address: string | null
   gst_number: string | null
+  billing_state: string | null
+  billing_state_code: string | null
+  /** The buyer's state, fixed at issue rather than worked out at render time. */
+  place_of_supply: string | null
+  place_of_supply_code: string | null
 }
 
 export interface OrderItem {
@@ -191,6 +208,8 @@ export interface OrderItem {
   /** Copied from the piece at issue, so a later rename cannot rewrite an
    *  invoice a client is already holding. Null until issued. */
   product_name: string | null
+  /** Also copied at issue, falling back to the company default. */
+  hsn_code: string | null
   quantity: number
   sort_order: number
 }

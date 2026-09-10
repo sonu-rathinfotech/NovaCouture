@@ -4,6 +4,7 @@ import { mockAuth } from './mockAuth'
 import { unavailableAuth } from './unavailableAuth'
 import { supabaseAuth } from './supabaseAuth'
 import { whatsappAuth } from './whatsappAuth'
+import { dbOtpAuth } from './dbOtpAuth'
 
 /**
  * Auth adapter selection.
@@ -45,5 +46,25 @@ export const auth: AuthAdapter = ADAPTERS[authMode]
 
 /** True while accounts live in the browser and carry no real authority. */
 export const usingMockAuth = authMode === 'mock'
+
+/**
+ * WhatsApp number + code, offered ALONGSIDE the adapter above rather than
+ * instead of it.
+ *
+ * The two are not stages of a migration: some clients have an email login the
+ * administrator issued, others will only ever have their number, and both must
+ * keep working. The sign-in screen therefore shows both, and this is the
+ * adapter behind the WhatsApp side.
+ *
+ * It runs against our own codes table (migration 0013), so it needs no
+ * provider and works today — the administrator relays the code from Admin →
+ * Login Codes until WhatsApp delivery is wired up. `whatsappAuth` remains the
+ * destination for when a provider exists; see the note at the top of
+ * dbOtpAuth.ts for how to switch.
+ */
+export const otpAuth: AuthAdapter = dbOtpAuth
+
+/** WhatsApp sign-in needs the database; it cannot run on fixtures. */
+export const otpAvailable = isConfigured
 
 export type { AuthAdapter, AuthResult, OtpRequestResult, RegistrationInput } from './types'

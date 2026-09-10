@@ -94,8 +94,8 @@ export function OrderDetail() {
 
         {order.status === 'submitted' && (
           <p className="mt-6 max-w-[56ch] leading-relaxed text-[var(--color-fg-muted)]">
-            We have your order and will confirm it with a proforma invoice. Nothing is committed
-            until we come back to you.
+            We have your order. Your proforma invoice is being prepared and will appear here
+            shortly. Nothing is committed until we come back to you.
           </p>
         )}
 

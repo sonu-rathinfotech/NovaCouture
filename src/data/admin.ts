@@ -299,6 +299,7 @@ export async function createProduct(input: {
   categoryId: string | null
   visibility: Visibility
   weightGrams?: number | null
+  hsnCode?: string | null
 }): Promise<string> {
   const { data, error } = await getSupabase()
     .from('products')
@@ -309,6 +310,7 @@ export async function createProduct(input: {
       visibility: input.visibility,
       is_active: true,
       weight_grams: input.weightGrams ?? null,
+      hsn_code: input.hsnCode ?? null,
       sort_order: 100,
     })
     .select('id')
@@ -324,6 +326,7 @@ export async function updateProduct(
     categoryId: string | null
     visibility: Visibility
     weightGrams?: number | null
+    hsnCode?: string | null
   },
 ): Promise<void> {
   const { error } = await getSupabase()
@@ -335,6 +338,7 @@ export async function updateProduct(
       // Explicit null, not undefined: clearing the field has to be able to
       // erase a wrong weight, and undefined would silently leave it in place.
       weight_grams: input.weightGrams ?? null,
+      hsn_code: input.hsnCode ?? null,
     })
     .eq('id', id)
   if (error) throw error

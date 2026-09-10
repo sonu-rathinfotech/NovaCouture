@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { Button, ButtonLink, EmptyState } from '@/components/ui'
-import { Field, Textarea, FormMessage } from '@/components/ui/Field'
+import { Field, Textarea, Select, FormMessage } from '@/components/ui/Field'
 import { GalleryImage } from '@/components/catalogue/GalleryImage'
 import { artKindFor } from '@/components/catalogue/art'
 import { useSession } from '@/hooks/useSession'
@@ -11,6 +11,7 @@ import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { catalogue } from '@/data/catalogue'
 import { ordersAvailable, saveBillingDetails, submitOrder } from '@/data/orders'
+import { GST_STATES, looksLikeGstin, stateFromGstin } from '@/lib/gstStates'
 
 /**
  * The basket, and the one form that sends it.
@@ -28,6 +29,7 @@ export function OrderDraftPage() {
 
   const [address, setAddress] = useState(profile?.billing_address ?? '')
   const [gst, setGst] = useState(profile?.gst_number ?? '')
+  const [stateCode, setStateCode] = useState(profile?.billing_state_code ?? '')
   const [notes, setNotes] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [failure, setFailure] = useState<string | null>(null)
@@ -56,12 +58,30 @@ export function OrderDraftPage() {
 
     const next: Record<string, string> = {}
     if (!address.trim()) next.address = 'A billing address is needed on the invoice'
+    if (!stateCode) next.state = 'Place of supply on the invoice comes from this'
+    // A GSTIN carries its own state in the first two digits. If it disagrees
+    // with the state chosen, one of the two is wrong, and it is far cheaper to
+    // say so here than to find it on a document later.
+    if (gst.trim() && !looksLikeGstin(gst)) {
+      next.gst = 'That does not look like a 15-character GSTIN'
+    } else if (gst.trim() && stateCode && gst.trim().slice(0, 2) !== stateCode) {
+      const implied = stateFromGstin(gst)
+      next.gst = implied
+        ? `This GSTIN belongs to ${implied.name}, not the state selected`
+        : 'This GSTIN does not match the state selected'
+    }
     setErrors(next)
     if (Object.keys(next).length > 0) return
 
     setBusy(true)
     try {
-      await saveBillingDetails({ billingAddress: address, gstNumber: gst })
+      const chosen = GST_STATES.find((x) => x.code === stateCode)
+      await saveBillingDetails({
+        billingAddress: address,
+        gstNumber: gst,
+        state: chosen?.name ?? '',
+        stateCode,
+      })
       refresh()
       const order = await submitOrder(
         rows.map((r) => ({ productId: r.line.productId, quantity: r.line.quantity })),
@@ -120,8 +140,8 @@ export function OrderDraftPage() {
           {count} {count === 1 ? 'piece' : 'pieces'}
         </h1>
         <p className="mt-4 max-w-[52ch] leading-relaxed text-[var(--color-fg-muted)]">
-          Send this and we will confirm it with a proforma invoice listing the pieces and
-          quantities. No prices are shown here or on the invoice.
+          Sending this creates your proforma invoice straight away, listing the pieces and
+          quantities. It carries no prices and is not a demand for payment.
         </p>
       </header>
 
@@ -244,11 +264,35 @@ export function OrderDraftPage() {
               placeholder={'Shop name\nStreet\nCity, State, PIN'}
             />
 
+            <Select
+              label="State"
+              required
+              value={stateCode}
+              error={errors.state}
+              onChange={(e) => setStateCode(e.target.value)}
+              help="This is the place of supply shown on the invoice."
+              options={[
+                { value: '', label: 'Select a state' },
+                ...GST_STATES.map((st) => ({
+                  value: st.code,
+                  label: `${st.name} (${st.code})`,
+                })),
+              ]}
+            />
+
             <Field
               label="GST number"
               value={gst}
-              onChange={(e) => setGst(e.target.value)}
-              placeholder="22AAAAA0000A1Z5"
+              error={errors.gst}
+              onChange={(e) => {
+                const value = e.target.value.toUpperCase()
+                setGst(value)
+                // Filling the state from the GSTIN saves a step and makes the
+                // two agree by default.
+                const implied = stateFromGstin(value)
+                if (implied && !stateCode) setStateCode(implied.code)
+              }}
+              placeholder="27AAAAA0000A1Z5"
               help="Optional. Leave blank if you are not registered."
             />
 

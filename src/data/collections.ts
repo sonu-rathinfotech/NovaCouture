@@ -151,6 +151,8 @@ const supabaseRepo: CollectionsRepo = {
           is_active: true,
           is_available: row.is_available,
           weight_grams: row.weight_grams,
+          // Not returned by the RPC; a curated link shows no invoice.
+          hsn_code: null,
           sort_order: row.sort_order,
           // Not returned by the RPC and not shown anywhere in a collection.
           created_at: '',

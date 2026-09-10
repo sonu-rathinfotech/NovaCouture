@@ -34,7 +34,7 @@ const ORDER_SELECT = `
   id, profile_id, order_number, status, notes,
   buyer_snapshot, seller_snapshot, issued_at, cancel_reason,
   created_at, updated_at,
-  items:order_items (id, order_id, product_id, product_name, quantity, sort_order)
+  items:order_items (id, order_id, product_id, product_name, hsn_code, quantity, sort_order)
 `
 
 /** Newest first — a client checking back is looking for what they just sent. */
@@ -67,7 +67,7 @@ function sortItems(orders: OrderWithItems[]): OrderWithItems[] {
 }
 
 /**
- * Creates the order, then its lines.
+ * Creates the order, its lines, then its proforma.
  *
  * Two round trips rather than one, because the line policy checks entitlement
  * against the order row — which has to exist first. If the lines fail, the
@@ -110,6 +110,22 @@ export async function submitOrder(lines: DraftLine[], notes: string): Promise<Or
     throw itemsError
   }
 
+  /*
+   * The proforma is produced as soon as the order exists, so the client leaves
+   * with a document rather than a promise of one.
+   *
+   * Best effort on purpose. If the company legal name or GSTIN is still blank,
+   * issue_order() refuses and the order simply stays 'submitted' for the admin
+   * to issue later. Failing the whole submission there would throw away an
+   * order the client has already placed, over a setting they have no part in
+   * and cannot fix.
+   */
+  try {
+    await issueOrder(order.id)
+  } catch {
+    // Left submitted. The admin sees it under "To action".
+  }
+
   return order
 }
 
@@ -120,6 +136,9 @@ export async function submitOrder(lines: DraftLine[], notes: string): Promise<Or
 export async function saveBillingDetails(input: {
   billingAddress: string
   gstNumber: string
+  /** Place of supply on the invoice is this state. */
+  state: string
+  stateCode: string
 }): Promise<Profile | null> {
   const supabase = getSupabase()
   const { data: user } = await supabase.auth.getUser()
@@ -130,6 +149,8 @@ export async function saveBillingDetails(input: {
     .update({
       billing_address: input.billingAddress.trim() || null,
       gst_number: input.gstNumber.trim().toUpperCase() || null,
+      billing_state: input.state.trim() || null,
+      billing_state_code: input.stateCode.trim() || null,
     })
     .eq('id', user.user.id)
     .select('*')
@@ -164,7 +185,7 @@ export async function issueOrder(orderId: string): Promise<void> {
   if (error) {
     if (error.message.includes('company_details_incomplete')) {
       throw new Error(
-        'Fill in the company legal name, GST number and bank details before issuing an invoice.',
+        'Fill in the company legal name and GST number before issuing an invoice.',
       )
     }
     if (error.message.includes('order_not_submitted')) {
@@ -206,14 +227,21 @@ export async function updateCompanySettings(
   if (error) throw error
 }
 
-/** What issue_order() insists on before it will produce a document. */
+/**
+ * What issue_order() insists on before it will produce a document.
+ *
+ * Bank details were on this list, on the grounds that an invoice a retailer
+ * may pay against must not carry a blank account number. The document states
+ * no amounts at all, so there is nothing to pay against, and the requirement
+ * was blocking every order over details nobody had been asked for. They print
+ * when present and are omitted when not. Mirrors migration 0014 -- change both
+ * together or the button and the database will disagree.
+ */
 export function missingCompanyDetails(settings: CompanySettings | null): string[] {
   if (!settings) return ['Company details have not been set up.']
   const required: [keyof CompanySettings, string][] = [
     ['legal_name', 'Registered business name'],
     ['gst_number', 'GST number'],
-    ['bank_account_number', 'Bank account number'],
-    ['bank_ifsc', 'IFSC code'],
   ]
   return required.filter(([key]) => !settings[key]).map(([, label]) => label)
 }

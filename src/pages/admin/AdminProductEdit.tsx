@@ -35,6 +35,7 @@ export function AdminProductEdit() {
   const [visibility, setVisibility] = useState<Visibility>('premium_only')
   /** Held as the raw string so a half-typed "12." is not fought with. */
   const [weight, setWeight] = useState('')
+  const [hsn, setHsn] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [reload, setReload] = useState(0)
@@ -55,6 +56,7 @@ export function AdminProductEdit() {
     setCategoryId(product.category_id ?? '')
     setVisibility(product.visibility)
     setWeight(product.weight_grams === null ? '' : String(product.weight_grams))
+    setHsn(product.hsn_code ?? '')
   }, [product])
 
   async function run(action: () => Promise<void>) {
@@ -102,6 +104,7 @@ export function AdminProductEdit() {
         categoryId: categoryId || null,
         visibility,
         weightGrams: parsed.value,
+        hsnCode: hsn.trim() || null,
       }
       if (isNew) {
         const id = await createProduct(input)
@@ -228,6 +231,24 @@ export function AdminProductEdit() {
             <span className="mt-2 block text-sm text-[var(--admin-fg-muted)]">
               Optional. Leave blank if it has not been weighed — the piece then shows no weight at
               all, rather than a zero.
+            </span>
+          </label>
+
+          <label className="mb-4 block">
+            <span className="admin-label mb-2 block">HSN code</span>
+            <input
+              value={hsn}
+              onChange={(e) => setHsn(e.target.value)}
+              inputMode="numeric"
+              placeholder="7113"
+              className="admin-input"
+            />
+            {/* Only worth setting where the piece is not ordinary precious-metal
+                jewellery. Blank keeps it on the company default, so a change of
+                default reaches every piece that never needed its own. */}
+            <span className="mt-2 block text-sm text-[var(--admin-fg-muted)]">
+              Optional. Leave blank to use the company default from Company Details. Set it only
+              for a piece that belongs under a different heading.
             </span>
           </label>
 

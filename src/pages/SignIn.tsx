@@ -1,25 +1,73 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { AuthLayout } from '@/components/layout/AuthLayout'
 import { Field, FormMessage } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { normaliseMobile, formatMobile } from '@/lib/mobile'
-import { auth, authMode } from '@/auth'
+import { auth, authMode, otpAuth, otpAvailable } from '@/auth'
+import type { AuthAdapter } from '@/auth'
 import { useSession } from '@/hooks/useSession'
 import { usePageTitle } from '@/hooks/usePageTitle'
 
 /**
- * Sign-in.
- * 
- * The destination is WhatsApp number + one-time code (scope §B). Until the
- * Business API is available the adapter asks for a temporary credential
- * instead, so the screen renders whichever form the active adapter supports.
- * Neither branch knows anything about how the credentials are checked.
+ * Sign-in, by WhatsApp code or by email.
+ *
+ * ── Why both, rather than one replacing the other ───────────────────────────
+ * Scope §B puts login on a WhatsApp number and a code, and that is the default
+ * here. But clients already exist whose accounts the administrator issued with
+ * an email and password, and those have to keep working — a client who signed
+ * in yesterday must not find the door moved. So the two sit side by side and
+ * the visitor chooses.
+ *
+ * The WhatsApp side runs against the codes table (migration 0013), so it works
+ * today without the Business API: the code is generated and checked for real,
+ * and only the delivery is by hand until the API is connected.
  */
+type Method = 'whatsapp' | 'email'
+
 export function SignIn() {
   usePageTitle('Sign in')
-  return auth.method === 'credentials' ? <CredentialSignIn /> : <OtpSignIn />
+
+  // WhatsApp is the destination, so it leads — but not on fixtures, where
+  // there is no database to hold a code.
+  const [method, setMethod] = useState<Method>(otpAvailable ? 'whatsapp' : 'email')
+
+  const tabs = otpAvailable ? <MethodTabs method={method} onChange={setMethod} /> : null
+
+  if (method === 'whatsapp' && otpAvailable) return <OtpSignIn adapter={otpAuth} tabs={tabs} />
+  return <CredentialSignIn tabs={tabs} />
+}
+
+function MethodTabs({ method, onChange }: { method: Method; onChange: (m: Method) => void }) {
+  const base =
+    'flex-1 cursor-pointer border-b-2 pb-3 text-sm tracking-[0.08em] uppercase transition-colors'
+  return (
+    <div className="mb-8 flex gap-6" role="tablist" aria-label="How to sign in">
+      {(
+        [
+          ['whatsapp', 'WhatsApp code'],
+          ['email', 'Email & password'],
+        ] as const
+      ).map(([value, label]) => (
+        <button
+          key={value}
+          type="button"
+          role="tab"
+          aria-selected={method === value}
+          onClick={() => onChange(value)}
+          className={[
+            base,
+            method === value
+              ? 'border-[var(--color-accent)] text-[var(--color-fg)]'
+              : 'border-transparent text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]',
+          ].join(' ')}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
 }
 
 function RegisterFooter() {
@@ -40,7 +88,7 @@ function RegisterFooter() {
 // Interim: temporary credential
 // ---------------------------------------------------------------------------
 
-function CredentialSignIn() {
+function CredentialSignIn({ tabs }: { tabs?: ReactNode }) {
   const navigate = useNavigate()
   const { refresh } = useSession()
 
@@ -75,6 +123,7 @@ function CredentialSignIn() {
       intro="Access your private jewellery catalogue."
       footer={<RegisterFooter />}
     >
+      {tabs}
       {unavailable && (
         <FormMessage tone="error">
           Sign-in is not connected yet. The account system is being set up.
@@ -121,7 +170,7 @@ function CredentialSignIn() {
 // Destination: WhatsApp number + one-time code
 // ---------------------------------------------------------------------------
 
-function OtpSignIn() {
+function OtpSignIn({ adapter, tabs }: { adapter: AuthAdapter; tabs?: ReactNode }) {
   const navigate = useNavigate()
   const { refresh } = useSession()
 
@@ -147,7 +196,7 @@ function OtpSignIn() {
     setBusy(true)
     setError(null)
 
-    const result = await auth.requestOtp(target)
+    const result = await adapter.requestOtp(target)
     setBusy(false)
 
     if (!result.ok) {
@@ -179,7 +228,7 @@ function OtpSignIn() {
     setBusy(true)
     setError(null)
 
-    const result = await auth.verifyOtp(e164, code)
+    const result = await adapter.verifyOtp(e164, code)
     setBusy(false)
 
     if (!result.ok) {
@@ -202,6 +251,7 @@ function OtpSignIn() {
       }
       footer={step === 'mobile' ? <RegisterFooter /> : undefined}
     >
+      {step === 'mobile' && tabs}
       {error && <FormMessage tone="error">{error}</FormMessage>}
 
       {step === 'mobile' ? (
