@@ -180,6 +180,7 @@ export async function importCatalogue(
         // Never null: a gallery of empty alt attributes is unusable with a
         // screen reader, and a bulk import is exactly where that happens.
         alt: `${product.name} — view ${position}`,
+        watermarked_at: watermark.enabled ? new Date().toISOString() : null,
       })
       if (rowError) throw new Error(`Recording ${file.name}: ${rowError.message}`)
 

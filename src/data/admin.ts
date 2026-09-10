@@ -12,7 +12,7 @@
  */
 import { getSupabase } from '@/lib/supabase'
 import { makeBlurPreview } from '@/lib/blurPreview'
-import { loadWatermarkSettings, watermarkImage } from '@/lib/watermark'
+import { watermarkImage, type WatermarkSettings } from '@/lib/watermark'
 import type { CollectionAudience, Category, Profile, Product, Visibility } from '@/types/db'
 
 export interface AdminProduct extends Product {
@@ -359,6 +359,13 @@ export async function uploadProductImage(
   file: File,
   position: number,
   extension: string,
+  /**
+   * Passed in rather than fetched here. Selecting twenty photographs calls
+   * this twenty times, and reading one setting twenty times is twenty network
+   * round trips for an answer that cannot change mid-batch. The caller reads
+   * it once with loadWatermarkSettings().
+   */
+  watermark: WatermarkSettings,
 ): Promise<void> {
   const supabase = getSupabase()
 
@@ -369,18 +376,17 @@ export async function uploadProductImage(
    * because a silently unmarked image looks identical to a marked one in the
    * admin and the client would never find it.
    */
-  const settings = await loadWatermarkSettings()
-  const marked = await watermarkImage(file, settings)
+  const marked = await watermarkImage(file, watermark)
 
   // Marking re-encodes as JPEG, so the stored extension has to follow.
-  const storedExtension = settings.enabled ? '.jpg' : extension
+  const storedExtension = watermark.enabled ? '.jpg' : extension
   const path = `products/${productId}/${position}${storedExtension}`
 
   const { error: uploadError } = await supabase.storage
     .from('product-images')
     .upload(path, marked, {
       upsert: true,
-      contentType: settings.enabled ? 'image/jpeg' : file.type,
+      contentType: watermark.enabled ? 'image/jpeg' : file.type,
     })
   if (uploadError) throw uploadError
 
@@ -391,6 +397,9 @@ export async function uploadProductImage(
     storage_path: path,
     sort_order: position,
     alt: `${productName} — view ${position}`,
+    // Recorded so the backfill tool knows to skip this one. Marking twice
+    // burns the logo in twice, and there is no unmarked original to undo it.
+    watermarked_at: watermark.enabled ? new Date().toISOString() : null,
   })
   if (error) throw error
 

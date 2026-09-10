@@ -16,6 +16,7 @@ import {
   type AdminProductImage,
 } from '@/data/admin'
 import { checkImageFile, extensionFor, ACCEPTED_TYPES } from '@/lib/imageFile'
+import { loadWatermarkSettings } from '@/lib/watermark'
 import { resolveImageUrl } from '@/lib/images'
 import { VISIBILITY, type Visibility } from '@/types/db'
 
@@ -140,10 +141,19 @@ export function AdminProductEdit() {
     }
 
     try {
+      // Once for the whole selection, not once per photograph.
+      const watermark = await loadWatermarkSettings()
       let position = (images ?? []).reduce((max, i) => Math.max(max, i.sort_order), 0)
       for (const file of files) {
         position += 1
-        await uploadProductImage(productId, name || 'Product', file, position, extensionFor(file))
+        await uploadProductImage(
+          productId,
+          name || 'Product',
+          file,
+          position,
+          extensionFor(file),
+          watermark,
+        )
       }
       setReload((n) => n + 1)
     } catch (e) {
