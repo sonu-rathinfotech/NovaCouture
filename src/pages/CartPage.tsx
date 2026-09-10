@@ -14,15 +14,15 @@ import { ordersAvailable, saveBillingDetails, submitOrder } from '@/data/orders'
 import { GST_STATES, looksLikeGstin, stateFromGstin } from '@/lib/gstStates'
 
 /**
- * The basket, and the one form that sends it.
+ * The cart, and the one form that sends it.
  *
  * Billing address and GST are asked for here rather than at registration,
- * because they are only needed by an invoice and demanding them from every
+ * because they are only needed by the quotation and demanding them from every
  * visitor who wants to browse would cost sign-ups for a document most of them
  * will never request. Once saved they are reused, so this asks once.
  */
-export function OrderDraftPage() {
-  usePageTitle('Your order')
+export function CartPage() {
+  usePageTitle('Cart')
   const navigate = useNavigate()
   const { tier, profile, refresh } = useSession()
   const { lines, count, setQuantity, remove, clear } = useOrderDraft()
@@ -57,8 +57,8 @@ export function OrderDraftPage() {
     setFailure(null)
 
     const next: Record<string, string> = {}
-    if (!address.trim()) next.address = 'A billing address is needed on the invoice'
-    if (!stateCode) next.state = 'Place of supply on the invoice comes from this'
+    if (!address.trim()) next.address = 'A billing address is needed on the quotation'
+    if (!stateCode) next.state = 'Place of supply on the quotation comes from this'
     // A GSTIN carries its own state in the first two digits. If it disagrees
     // with the state chosen, one of the two is wrong, and it is far cheaper to
     // say so here than to find it on a document later.
@@ -100,7 +100,7 @@ export function OrderDraftPage() {
     return (
       <section className="container py-16 lg:py-24">
         <EmptyState
-          title="Sign in to place an order"
+          title="Sign in to use the cart"
           message="Orders are placed by registered clients. Sign in and the pieces you choose will be kept here."
           action={{ label: 'Sign in', href: '/sign-in', variant: 'primary' }}
         />
@@ -124,8 +124,8 @@ export function OrderDraftPage() {
     return (
       <section className="container py-16 lg:py-24">
         <EmptyState
-          title="No pieces chosen yet"
-          message="Open a piece and choose Add to order. You can set quantities here before sending."
+          title="Your cart is empty"
+          message="Open a piece, set a quantity and choose Add to cart. You can change quantities here before sending."
           action={{ label: 'Browse the collections', href: '/collections', variant: 'primary' }}
         />
       </section>
@@ -135,7 +135,7 @@ export function OrderDraftPage() {
   return (
     <section className="container py-12 lg:py-16">
       <header className="mb-10">
-        <p className="eyebrow text-[var(--color-accent)]">Your order</p>
+        <p className="eyebrow text-[var(--color-accent)]">Cart</p>
         <h1 className="mt-3 font-display text-[length:var(--text-h1)] tracking-tight text-[var(--color-fg)]">
           {count} {count === 1 ? 'piece' : 'pieces'}
         </h1>
@@ -270,7 +270,7 @@ export function OrderDraftPage() {
               value={stateCode}
               error={errors.state}
               onChange={(e) => setStateCode(e.target.value)}
-              help="This is the place of supply shown on the invoice."
+              help="This is the place of supply shown on the quotation."
               options={[
                 { value: '', label: 'Select a state' },
                 ...GST_STATES.map((st) => ({

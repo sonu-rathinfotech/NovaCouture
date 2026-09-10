@@ -259,6 +259,36 @@ export function Header() {
                 </>
               ) : (
                 <>
+                  {/*
+                   * Cart, with a live count.
+                   *
+                   * It sits in the header rather than only inside the account
+                   * menu because a basket the visitor cannot see is a basket
+                   * they forget: they add a piece, carry on browsing, and
+                   * nothing on screen says the order is waiting for them.
+                   */}
+                  <Link
+                    to="/cart"
+                    aria-label={
+                      orderCount > 0
+                        ? `Cart, ${orderCount} ${orderCount === 1 ? 'piece' : 'pieces'}`
+                        : 'Cart, empty'
+                    }
+                    className="relative rounded-lg p-2 text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-bg-muted)] hover:text-[var(--color-fg)]"
+                  >
+                    <ShoppingBag className="h-5 w-5" />
+                    {orderCount > 0 && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[0.625rem] font-medium text-white tabular-nums"
+                      >
+                        {/* Past 99 the badge stops being a number and starts
+                            being a shape, so it is capped. */}
+                        {orderCount > 99 ? '99+' : orderCount}
+                      </span>
+                    )}
+                  </Link>
+
                   {/* Premium badge - Mejuri trust signal style */}
                   {tier === 'premium' && (
                     <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[var(--trust-gold)] to-[var(--accent-600)] text-white text-xs font-medium tracking-[0.1em] uppercase rounded-full">
@@ -289,12 +319,12 @@ export function Header() {
                         <p className="px-4 py-1 text-xs text-[var(--color-fg-muted)] capitalize">{tier} access</p>
                         <hr className="my-2 border-[var(--color-border)]" />
                         <Link
-                          to="/order"
+                          to="/cart"
                           onClick={() => setMobileOpen(false)}
                           className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-[var(--color-fg)] hover:bg-[var(--color-bg-muted)]"
                         >
                           <ShoppingBag className="h-4 w-4" />
-                          Your order{orderCount > 0 ? ` (${orderCount})` : ''}
+                          Cart{orderCount > 0 ? ` (${orderCount})` : ''}
                         </Link>
                         <Link
                           to="/orders"

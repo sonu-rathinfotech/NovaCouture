@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { SiteLayout } from './components/layout/SiteLayout'
 import { Home } from './pages/Home'
 import { CategoryPage } from './pages/CategoryPage'
@@ -52,9 +52,7 @@ const AdminLinkDetail = lazy(() =>
 
 // Ordering: reached only by a signed-in client who has chosen pieces, so it
 // has no business in the first paint.
-const OrderDraftPage = lazy(() =>
-  import('./pages/OrderDraftPage').then((m) => ({ default: m.OrderDraftPage })),
-)
+const CartPage = lazy(() => import('./pages/CartPage').then((m) => ({ default: m.CartPage })))
 const MyOrders = lazy(() => import('./pages/MyOrders').then((m) => ({ default: m.MyOrders })))
 const OrderDetail = lazy(() =>
   import('./pages/OrderDetail').then((m) => ({ default: m.OrderDetail })),
@@ -92,7 +90,10 @@ export default function App() {
           <Route path="c/:categorySlug" element={<CategoryPage />} />
           <Route path="p/:productSlug" element={<ProductPage />} />
           <Route path="collection/:token" element={<CollectionPage />} />
-          <Route path="order" element={<OrderDraftPage />} />
+          <Route path="cart" element={<CartPage />} />
+          {/* The cart lived at /order first. Kept as a redirect rather than
+              removed: a client may have the old link open in a tab. */}
+          <Route path="order" element={<Navigate to="/cart" replace />} />
           <Route path="orders" element={<MyOrders />} />
           <Route path="orders/:orderId" element={<OrderDetail />} />
           <Route path="about" element={<StaticPage slug="about" />} />

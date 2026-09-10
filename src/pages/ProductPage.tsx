@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowRight, Share2, MessageCircle, Plus } from 'lucide-react'
+import { ArrowRight, Share2, MessageCircle, Plus, Minus, ShoppingBag } from 'lucide-react'
 import { Gallery } from '@/components/catalogue/Gallery'
 import { artKindFor, artOffsetFor } from '@/components/catalogue/art'
 import { EnquiryForm } from '@/components/catalogue/EnquiryForm'
@@ -33,7 +33,8 @@ import { ordersAvailable } from '@/data/orders'
 export function ProductPage() {
   const [copied, setCopied] = useState(false)
   const { productSlug = '' } = useParams()
-  const { add, remove, has } = useOrderDraft()
+  const { add, remove, lines } = useOrderDraft()
+  const [qty, setQty] = useState(1)
   const { tier } = useSession()
 
   const { data: product, loading, error } = useAsync(
@@ -83,7 +84,9 @@ export function ProductPage() {
 
   const shareUrl = typeof window === 'undefined' ? '' : window.location.href
   const weight = formatWeight(product.weight_grams)
-  const inOrder = has(product.id)
+  const cartLine = lines.find((l) => l.productId === product.id)
+  const inCart = Boolean(cartLine)
+  const cartQuantity = cartLine?.quantity ?? 0
 
   async function onCopyLink() {
     try {
@@ -194,13 +197,18 @@ export function ProductPage() {
                 asks a question about one piece; an order says how many of
                 several are wanted. A retailer placing a Diwali order and a
                 client asking whether a haram can be made lighter are doing
-                different things, and neither replaces the other. */}
+                different things, and neither replaces the other.
+
+                The quantity is chosen HERE rather than only in the cart. A
+                retailer ordering twelve of a band knows that while looking at
+                it; making them add one, navigate to the cart and correct it
+                there is three steps for something they had already decided. */}
             {tier !== 'guest' && ordersAvailable && (
-              <div className="flex flex-wrap items-center gap-3">
-                {inOrder ? (
-                  <>
-                    <ButtonLink to="/order" variant="primary" size="lg">
-                      In your order — review
+              <div className="space-y-3">
+                {inCart ? (
+                  <div className="flex flex-wrap items-center gap-3">
+                    <ButtonLink to="/cart" variant="primary" size="lg">
+                      In your cart ({cartQuantity}) — review
                     </ButtonLink>
                     <button
                       type="button"
@@ -209,15 +217,53 @@ export function ProductPage() {
                     >
                       Remove
                     </button>
-                  </>
+                  </div>
                 ) : (
-                  <Button variant="primary" size="lg" onClick={() => add(product.id)}>
-                    <Plus size={16} strokeWidth={2} className="mr-2" />
-                    Add to order
-                  </Button>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center rounded-lg border border-[var(--color-border)]">
+                      <button
+                        type="button"
+                        onClick={() => setQty((q) => Math.max(1, q - 1))}
+                        disabled={qty <= 1}
+                        className="cursor-pointer p-3 text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] disabled:cursor-not-allowed disabled:opacity-40"
+                        aria-label="One fewer"
+                      >
+                        <Minus size={14} />
+                      </button>
+                      <label htmlFor="product-qty" className="sr-only">
+                        Quantity
+                      </label>
+                      <input
+                        id="product-qty"
+                        value={qty}
+                        inputMode="numeric"
+                        onChange={(e) => {
+                          // Keep it a positive whole number without fighting a
+                          // half-typed value: an empty box becomes 1 on blur.
+                          const digits = e.target.value.replace(/\D/g, '')
+                          setQty(digits === '' ? 1 : Math.min(Number(digits), 9999))
+                        }}
+                        className="w-14 border-x border-[var(--color-border)] bg-transparent py-3 text-center tabular-nums text-[var(--color-fg)]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setQty((q) => Math.min(9999, q + 1))}
+                        className="cursor-pointer p-3 text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
+                        aria-label="One more"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+
+                    <Button variant="primary" size="lg" onClick={() => add(product.id, qty)}>
+                      <ShoppingBag size={16} strokeWidth={2} className="mr-2" />
+                      Add to cart
+                    </Button>
+                  </div>
                 )}
+
                 {!product.is_available && (
-                  <p className="w-full text-sm text-[var(--color-fg-muted)]">
+                  <p className="text-sm text-[var(--color-fg-muted)]">
                     This piece is currently unavailable. You can still add it — we will confirm
                     whether it can be made.
                   </p>
