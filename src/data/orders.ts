@@ -34,7 +34,7 @@ const ORDER_SELECT = `
   id, profile_id, order_number, status, notes,
   buyer_snapshot, seller_snapshot, issued_at, cancel_reason,
   created_at, updated_at,
-  items:order_items (id, order_id, product_id, product_name, hsn_code, quantity, sort_order)
+  items:order_items (id, order_id, product_id, product_name, hsn_code, weight_grams, quantity, sort_order)
 `
 
 /** Newest first — a client checking back is looking for what they just sent. */

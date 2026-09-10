@@ -485,48 +485,89 @@
 /* ==========================================================================
    PRINT
    ========================================================================== */
+/* ==========================================================================
+   INVOICE COLOUR
+   ==========================================================================
+   The proforma is the one printed thing this platform produces, and the first
+   one printed came back flat black. These three tokens carry the house gold
+   onto paper. They are defined here, outside the print block, so the screen
+   and the printout are the same document.
+
+   `print-color-adjust: exact` is what stops a browser helpfully dropping the
+   colour when it prints -- without it the gold rules and the title silently
+   go grey. */
+:root {
+  --invoice-accent: #a8823f;
+  --invoice-ink: #1c1917;
+  --invoice-band: #faf6ee;
+}
+
+/* The sheet is always a light document, whatever theme the viewer is in.
+   An invoice rendered white-on-charcoal is unreadable once printed and
+   unrecognisable as a business document on screen. */
+.invoice-sheet {
+  --color-bg-elevated: #ffffff;
+  --color-fg: var(--invoice-ink);
+  --color-fg-muted: #57534e;
+  --color-border: #e0d9cc;
+  background: #ffffff;
+  color: var(--invoice-ink);
+}
+
+.invoice-sheet,
+.invoice-sheet * {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ==========================================================================
+   PRINT
+   ========================================================================== */
 @media print {
   .no-print { display: none !important; }
   .print-only { display: block !important; }
 
-  /* A proforma invoice is printed, or saved as PDF through the browser's own
-     print dialog — that is the whole delivery mechanism, so these rules are
-     the document's layout rather than a nicety.
+  /*
+   * Everything that is not the sheet.
+   *
+   * The first printed proforma carried the admin sidebar wordmark, the "All
+   * orders" link, the Print button and the page's own heading onto the paper,
+   * because only a couple of elements were marked no-print. Rather than chase
+   * each one, the whole document is hidden and the sheet alone is put back --
+   * so a screen added later cannot leak its chrome into a client's invoice.
+   */
+  body * { visibility: hidden !important; }
 
-     Black on white, unconditionally. The site's dark themes are set with
-     custom properties and a `data-theme` attribute, and a viewer who happens
-     to be in dark mode must not print an invoice in white-on-charcoal that
-     empties a toner cartridge and photocopies badly. */
   .invoice-sheet,
-  .invoice-sheet * {
-    background: #fff !important;
-    color: #000 !important;
-    box-shadow: none !important;
-  }
+  .invoice-sheet * { visibility: visible !important; }
 
   .invoice-sheet {
+    position: absolute !important;
+    inset: 0 auto auto 0;
+    width: 100% !important;
+    max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    max-width: none !important;
-    font-size: 11pt;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 10.5pt;
   }
 
   .invoice-sheet table { border-collapse: collapse !important; }
 
   .invoice-sheet th,
   .invoice-sheet td {
-    border-color: #999 !important;
     /* A line split across a page break turns one order into two half-lines. */
     break-inside: avoid;
   }
 
   .invoice-sheet thead { display: table-header-group; }
 
-  /* Bank details and the buyer's address must not be orphaned onto a second
-     page away from the pieces they belong to. */
+  /* Bank details, the declaration and the signature must not be orphaned onto
+     a second page away from the pieces they belong to. */
   .invoice-keep-together { break-inside: avoid; }
 
   @page {
-    margin: 16mm;
+    margin: 14mm;
   }
 }

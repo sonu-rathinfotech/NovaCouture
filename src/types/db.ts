@@ -210,6 +210,8 @@ export interface OrderItem {
   product_name: string | null
   /** Also copied at issue, falling back to the company default. */
   hsn_code: string | null
+  /** Copied at issue too. Null prints a blank cell, never a zero. */
+  weight_grams: number | null
   quantity: number
   sort_order: number
 }
