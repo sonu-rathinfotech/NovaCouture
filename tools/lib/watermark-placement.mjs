@@ -21,11 +21,20 @@ export const WATERMARK_POSITIONS = [
   'tiled',
 ]
 
+/*
+ * Centred and spanning the frame, which is the treatment the client asked for
+ * after seeing a corner mark. Chosen by rendering 18/30/45% strength over both
+ * a pale lifestyle shot and a light plinth shot and looking at the result: 18
+ * was too faint to deter anyone on a busy photograph, 45 buried the piece.
+ *
+ * Over 100% on purpose. The mark runs past the edges, so a crop cannot simply
+ * remove it the way it can with a mark that stops short of the frame.
+ */
 export const WATERMARK_DEFAULTS = {
   enabled: true,
-  position: 'bottom-right',
-  sizePercent: 22,
-  opacity: 0.45,
+  position: 'center',
+  sizePercent: 105,
+  opacity: 0.3,
 }
 
 /** Breathing room from the edge, as a fraction of the image's short side. */

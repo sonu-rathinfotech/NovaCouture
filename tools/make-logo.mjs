@@ -54,6 +54,15 @@ const RAMPS = {
   onLight: { dark: [0x6d, 0x51, 0x1f], light: [0xc0, 0x99, 0x4a] },
   // For the near-black footer. The client's own gold, essentially untouched.
   onDark: { dark: [0x8a, 0x6c, 0x33], light: [0xf0, 0xdc, 0xa8] },
+  /*
+   * For the watermark burned across a photograph.
+   *
+   * Near-neutral rather than gold. A large centred mark sits over whatever the
+   * photograph happens to be -- pale skin, white cloth, a dark plinth -- and
+   * gold at the low opacity a centred mark needs simply disappears into a
+   * light background. A light neutral reads as a deliberate overlay on both.
+   */
+  watermark: { dark: [0xa8, 0xa2, 0x98], light: [0xff, 0xff, 0xff] },
 }
 
 const mix = (a, b, t) => Math.round(a + (b - a) * t)
@@ -118,4 +127,6 @@ console.log('\n  from public/logo.jpeg:\n')
 await build('logo-on-light.png', { height: 160, ramp: RAMPS.onLight })
 await build('logo-on-dark.png', { height: 160, ramp: RAMPS.onDark })
 await build('logo-mark-on-light.png', { height: 128, ramp: RAMPS.onLight, markOnly: true })
+// Larger, because a centred watermark is drawn at most of the image width.
+await build('logo-watermark.png', { height: 320, ramp: RAMPS.watermark })
 console.log('')

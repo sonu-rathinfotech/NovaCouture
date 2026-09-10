@@ -42,8 +42,16 @@ export interface WatermarkSettings {
   opacity: number
 }
 
-/** The mark itself: the client's logo, keyed out by tools/make-logo.mjs. */
-const LOGO_SRC = '/logo-on-light.png'
+/**
+ * The mark itself.
+ *
+ * A separate, near-neutral rendering of the logo rather than the gold one the
+ * header uses. A large centred watermark sits over whatever the photograph
+ * happens to be -- pale skin, white cloth, a dark plinth -- and gold at the low
+ * opacity a centred mark needs disappears into a light background. Generated
+ * by tools/make-logo.mjs alongside the others.
+ */
+const LOGO_SRC = '/logo-watermark.png'
 
 let logoPromise: Promise<HTMLImageElement> | null = null
 
