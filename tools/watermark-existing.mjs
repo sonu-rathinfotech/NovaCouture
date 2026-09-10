@@ -21,16 +21,24 @@
  * this is not a nicety: a second run without the guard would visibly damage
  * the whole catalogue.
  *
- * -- Uses the same placement as the browser ---------------------------------
- * sharp composites differently from a canvas, but the arithmetic deciding
- * where the mark lands is the shared module, so a photograph marked here lands
- * up looking like one marked at upload.
+ * -- Grouped by FILE, not by row --------------------------------------------
+ * Several product_images rows can point at one object in storage. The first
+ * version of this iterated rows, so a file referenced twice was downloaded,
+ * marked and re-uploaded twice -- and the second pass marked the already
+ * marked copy. That double-stamped 64 photographs before it was caught.
+ * Rows are now grouped by storage_path: each file is marked once, and every
+ * row that references it is stamped.
+ *
+ * -- Uses the same marking code as the importer -----------------------------
+ * tools/lib/watermark-node.mjs, which in turn shares its placement arithmetic
+ * with the browser. A photograph marked here ends up looking like one marked
+ * at upload.
  */
-import sharp from 'sharp'
 import { readFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { watermarkPlacements, normaliseWatermarkSettings } from './lib/watermark-placement.mjs'
+import { normaliseWatermarkSettings } from './lib/watermark-placement.mjs'
+import { watermarkBuffer } from './lib/watermark-node.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const LOGO = join(ROOT, 'public', 'logo-watermark.png')
@@ -101,66 +109,6 @@ async function upload(path, buffer) {
   if (!res.ok) throw new Error(`uploading ${path}: ${res.status} ${await res.text()}`)
 }
 
-/** Draws the mark at the settings the client chose, using shared placement. */
-async function mark(imageBuffer, settings) {
-  const image = sharp(imageBuffer)
-  const meta = await image.metadata()
-  const logoMeta = await sharp(LOGO).metadata()
-
-  const places = watermarkPlacements(
-    meta.width,
-    meta.height,
-    logoMeta.width,
-    logoMeta.height,
-    settings,
-  )
-
-  const overlays = []
-  for (const at of places) {
-    const w = Math.max(1, Math.round(at.width))
-    const h = Math.max(1, Math.round(at.height))
-
-    // sharp cannot composite an overlay that starts off-canvas, so a mark
-    // hanging past an edge is pre-cropped to the visible part and its
-    // position moved to the edge. The visible result is identical to the
-    // canvas version, which simply clips.
-    const left = Math.round(at.x)
-    const top = Math.round(at.y)
-    const cropLeft = Math.max(0, -left)
-    const cropTop = Math.max(0, -top)
-    const visibleW = Math.min(w - cropLeft, meta.width - Math.max(0, left))
-    const visibleH = Math.min(h - cropTop, meta.height - Math.max(0, top))
-    if (visibleW <= 0 || visibleH <= 0) continue
-
-    let overlay = sharp(LOGO).resize(w, h, { fit: 'fill' })
-    if (cropLeft || cropTop || visibleW !== w || visibleH !== h) {
-      overlay = sharp(await overlay.png().toBuffer()).extract({
-        left: cropLeft,
-        top: cropTop,
-        width: visibleW,
-        height: visibleH,
-      })
-    }
-
-    // Scale the logo's own alpha by the chosen strength.
-    const buf = await overlay
-      .composite([
-        {
-          input: Buffer.from([255, 255, 255, Math.round(settings.opacity * 255)]),
-          raw: { width: 1, height: 1, channels: 4 },
-          tile: true,
-          blend: 'dest-in',
-        },
-      ])
-      .png()
-      .toBuffer()
-
-    overlays.push({ input: buf, left: Math.max(0, left), top: Math.max(0, top) })
-  }
-
-  return image.composite(overlays).jpeg({ quality: 94 }).toBuffer()
-}
-
 async function run() {
   const settings = normaliseWatermarkSettings(
     (await rest('company_settings?select=watermark_enabled,watermark_position,watermark_size_percent,watermark_opacity'))
@@ -172,14 +120,24 @@ async function run() {
       }))[0],
   )
 
-  const pending = await rest(
+  const rows = await rest(
     'product_images?select=id,storage_path&watermarked_at=is.null&order=storage_path',
   )
   const total = await rest('product_images?select=id')
 
+  // One entry per FILE, carrying every row that points at it.
+  const byFile = new Map()
+  for (const row of rows) {
+    const ids = byFile.get(row.storage_path) ?? []
+    ids.push(row.id)
+    byFile.set(row.storage_path, ids)
+  }
+  const pending = [...byFile.entries()].map(([storage_path, ids]) => ({ storage_path, ids }))
+
   console.log('')
   console.log(`  settings   : ${settings.position}, ${settings.sizePercent}% width, ${Math.round(settings.opacity * 100)}% strength`)
-  console.log(`  photographs: ${total.length} in the catalogue, ${pending.length} unmarked`)
+  console.log(`  photographs: ${total.length} rows over ${new Set(rows.map((r) => r.storage_path)).size + (total.length - rows.length)} files`)
+  console.log(`  unmarked   : ${pending.length} files (${rows.length} rows)`)
 
   if (!settings.enabled) {
     console.log('\n  Watermarking is switched off in the admin. Nothing to do.\n')
@@ -196,25 +154,36 @@ async function run() {
   }
 
   const todo = pending.slice(0, limit)
-  console.log(`\n  Marking ${todo.length}. This replaces the stored file.\n`)
+  console.log(`\n  Marking ${todo.length} files. This replaces the stored file.\n`)
 
   let done = 0
-  for (const row of todo) {
-    const marked = await mark(await download(row.storage_path), settings)
-    await upload(row.storage_path, marked)
-    // Set only after the upload succeeds, so a crash mid-run leaves the row
-    // unmarked and the next run picks it up rather than skipping it.
-    await rest(`product_images?id=eq.${row.id}`, {
+  for (const file of todo) {
+    const marked = await watermarkBuffer(await download(file.storage_path), LOGO, settings)
+    await upload(file.storage_path, marked)
+    /*
+     * Stamped only after the upload succeeds, so a crash mid-run leaves the
+     * rows unmarked and the next run picks the file up rather than skipping
+     * it.
+     *
+     * EVERY row pointing at this file is stamped, not just one. Several rows
+     * can reference one object, and stamping a single row would leave the
+     * others null -- so the next run would download the already marked file
+     * and mark it a second time. That is exactly what happened before this
+     * was grouped by file.
+     */
+    await rest(`product_images?id=in.(${file.ids.join(',')})`, {
       method: 'PATCH',
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify({ watermarked_at: new Date().toISOString() }),
     })
     done++
-    process.stdout.write(`\r  ${done}/${todo.length} …`)
+    process.stdout.write(`
+  ${done}/${todo.length} …`)
   }
-  console.log(`\r  ${done} photographs marked.        \n`)
+  console.log(`
+  ${done} files marked.        
+`)
 }
-
 run().catch((error) => {
   console.error(`\n  ${error.message}\n`)
   process.exit(1)

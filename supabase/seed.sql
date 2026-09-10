@@ -93,7 +93,12 @@ cross join lateral generate_series(
   1,
   case when p.visibility = 'premium_only' then 6 else 4 end
 ) as g(n)
-on conflict do nothing;
+-- Named target, not a bare "on conflict do nothing". A bare clause here only
+-- catches a primary-key collision, and the key is gen_random_uuid() -- always
+-- fresh, never colliding -- so it looked idempotent while quietly inserting the
+-- whole gallery again on a second run. That is exactly what happened: 64
+-- duplicate rows. The unique constraint this names arrived in migration 0022.
+on conflict (product_id, sort_order) do nothing;
 
 -- A curated collection for testing the Phase 5 link flow.
 insert into public.collections (id, title, token, welcome_message) values

@@ -14,7 +14,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-const source = readFileSync(join(ROOT, 'web', 'src', 'content', 'staticPages.ts'), 'utf8')
+const source = readFileSync(join(ROOT, 'src', 'content', 'staticPages.ts'), 'utf8')
 
 // Only the copy object. Reading to the end of the file would also scrape the
 // [[ ]] patterns out of splitPlaceholders() below it and report them as facts.

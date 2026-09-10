@@ -27,8 +27,11 @@ import {
   parseImageName,
   IMAGE_EXTENSIONS,
 } from './lib/import-validate.mjs'
+import { fetchWatermarkSettings, watermarkBuffer } from './lib/watermark-node.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+/** The mark burned into every photograph. See tools/make-logo.mjs. */
+const LOGO_PATH = join(ROOT, 'public', 'logo-watermark.png')
 
 function env() {
   const values = {}
@@ -79,6 +82,8 @@ function slugify(value) {
 // -----------------------------------------------------------------------------
 
 async function run() {
+  // Read once for the whole import rather than per photograph.
+  const watermark = await fetchWatermarkSettings(URL_BASE, SERVICE_KEY)
   const [csvPath, imageDir] = process.argv.slice(2)
   const commit = process.argv.includes('--commit')
 
@@ -208,15 +213,27 @@ async function run() {
     const gallery = (images.bySku.get(product.sku) ?? []).sort((a, b) => a.position - b.position)
 
     for (const image of gallery) {
-      const objectPath = `products/${row.id}/${image.position}${extname(image.file).toLowerCase()}`
-      const bytes = readFileSync(join(imageDir, image.file))
+      /*
+       * Marked before it is uploaded, exactly as the admin screens do it.
+       *
+       * This path is how a real catalogue actually arrives -- the client sends
+       * a sheet and a folder, and this is the command that imports them. It
+       * went in unmarked until this was added, which would have put the
+       * client's entire photography into storage with no watermark on it.
+       */
+      const raw = readFileSync(join(imageDir, image.file))
+      const bytes = await watermarkBuffer(raw, LOGO_PATH, watermark)
+
+      // Marking re-encodes as JPEG, so the stored name has to follow.
+      const extension = watermark.enabled ? '.jpg' : extname(image.file).toLowerCase()
+      const objectPath = `products/${row.id}/${image.position}${extension}`
 
       const upload = await fetch(`${URL_BASE}/storage/v1/object/product-images/${objectPath}`, {
         method: 'POST',
         headers: {
           apikey: SERVICE_KEY,
           Authorization: `Bearer ${SERVICE_KEY}`,
-          'Content-Type': mimeFor(image.file),
+          'Content-Type': watermark.enabled ? 'image/jpeg' : mimeFor(image.file),
           'x-upsert': 'true',
         },
         body: bytes,
@@ -232,6 +249,9 @@ async function run() {
           // Never null: alt text is what a screen reader announces, and a bulk
           // import must not be able to produce a gallery of empty ones.
           alt: `${product.name} — view ${image.position}`,
+          // Recorded so tools/watermark-existing.mjs knows to skip this file.
+          // Marking twice burns the logo in twice, with no original to undo.
+          watermarked_at: watermark.enabled ? new Date().toISOString() : null,
         }),
       })
       imagesUploaded++

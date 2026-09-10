@@ -24,7 +24,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-const SAMPLES = join(ROOT, 'web', 'public', 'samples')
+const SAMPLES = join(ROOT, 'public', 'samples')
 
 function env() {
   const values = {}
