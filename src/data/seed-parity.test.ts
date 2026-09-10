@@ -16,7 +16,7 @@ import { categories, products, productImages } from './fixtures'
  */
 
 const SEED = readFileSync(
-  fileURLToPath(new URL('../../../supabase/seed.sql', import.meta.url)),
+  fileURLToPath(new URL('../../supabase/seed.sql', import.meta.url)),
   'utf8',
 )
 

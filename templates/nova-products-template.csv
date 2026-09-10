@@ -1,0 +1,7 @@
+sku,name,category,sub_category,visibility,sort_order,weight_grams,available
+NC-NK-0001,Meera Temple Haram,Necklaces,Temple,Public,1,84.32,Yes
+NC-NK-0002,Anjali Layered Chain,Necklaces,,Registered,2,,Yes
+NC-NK-0003,Padma Bridal Set,Necklaces,Bridal,Premium,3,152.5,Yes
+NC-BG-0001,Kanchi Broad Kada,Bangles,Kada,Public,4,46.5,No
+NC-RG-0001,Solitaire Six-Prong,Rings,Solitaire,Registered,5,3.9,Yes
+NC-BR-0001,Riviere Tennis Line,Bracelets,,Public,6,,Yes

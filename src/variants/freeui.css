@@ -486,9 +486,9 @@
    PRINT
    ========================================================================== */
 /* ==========================================================================
-   QUOTATION COLOUR
+   INVOICE COLOUR
    ==========================================================================
-   The quotation is the one printed thing this platform produces, and the
+   The proforma is the one printed thing this platform produces, and the
    first one printed came back flat black. These three tokens carry the house gold
    onto paper. They are defined here, outside the print block, so the screen
    and the printout are the same document.
@@ -497,25 +497,25 @@
    colour when it prints -- without it the gold rules and the title silently
    go grey. */
 :root {
-  --quotation-accent: #a8823f;
-  --quotation-ink: #1c1917;
-  --quotation-band: #faf6ee;
+  --invoice-accent: #a8823f;
+  --invoice-ink: #1c1917;
+  --invoice-band: #faf6ee;
 }
 
 /* The sheet is always a light document, whatever theme the viewer is in.
-   A quotation rendered white-on-charcoal is unreadable once printed and
+   An invoice rendered white-on-charcoal is unreadable once printed and
    unrecognisable as a business document on screen. */
-.quotation-sheet {
+.invoice-sheet {
   --color-bg-elevated: #ffffff;
-  --color-fg: var(--quotation-ink);
+  --color-fg: var(--invoice-ink);
   --color-fg-muted: #57534e;
   --color-border: #e0d9cc;
   background: #ffffff;
-  color: var(--quotation-ink);
+  color: var(--invoice-ink);
 }
 
-.quotation-sheet,
-.quotation-sheet * {
+.invoice-sheet,
+.invoice-sheet * {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
@@ -534,14 +534,14 @@
    * orders" link, the Print button and the page's own heading onto the paper,
    * because only a couple of elements were marked no-print. Rather than chase
    * each one, the whole document is hidden and the sheet alone is put back --
-   * so a screen added later cannot leak its chrome into a client's quotation.
+   * so a screen added later cannot leak its chrome into a client's invoice.
    */
   body * { visibility: hidden !important; }
 
-  .quotation-sheet,
-  .quotation-sheet * { visibility: visible !important; }
+  .invoice-sheet,
+  .invoice-sheet * { visibility: visible !important; }
 
-  .quotation-sheet {
+  .invoice-sheet {
     position: absolute !important;
     inset: 0 auto auto 0;
     width: 100% !important;
@@ -558,19 +558,19 @@
     font-size: 10.5pt;
   }
 
-  .quotation-sheet table { border-collapse: collapse !important; }
+  .invoice-sheet table { border-collapse: collapse !important; }
 
-  .quotation-sheet th,
-  .quotation-sheet td {
+  .invoice-sheet th,
+  .invoice-sheet td {
     /* A line split across a page break turns one order into two half-lines. */
     break-inside: avoid;
   }
 
-  .quotation-sheet thead { display: table-header-group; }
+  .invoice-sheet thead { display: table-header-group; }
 
   /* Bank details, the declaration and the signature must not be orphaned onto
      a second page away from the pieces they belong to. */
-  .quotation-keep-together { break-inside: avoid; }
+  .invoice-keep-together { break-inside: avoid; }
 
   /*
    * Zero, deliberately.

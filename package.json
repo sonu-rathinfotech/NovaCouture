@@ -11,7 +11,18 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -b --force",
-    "verify": "npm run typecheck && npm run lint && npm run test && vite build"
+    "verify": "npm run typecheck && npm run lint && npm run test && vite build",
+    "db:push": "node tools/db.mjs push",
+    "db:seed": "node tools/db.mjs seed",
+    "db:status": "node tools/db.mjs status",
+    "db:verify": "node tools/verify-rls.mjs",
+    "db:verify-collections": "node tools/verify-collections.mjs",
+    "db:upload-samples": "node tools/upload-samples.mjs",
+    "db:blur-previews": "node tools/generate-blur-previews.mjs",
+    "validate:import": "node tools/validate-import.mjs",
+    "admin:grant": "node tools/grant-admin.mjs",
+    "admin:list": "node tools/grant-admin.mjs --list",
+    "content:todo": "node tools/content-todo.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -35,10 +46,11 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
     "oxlint": "^1.75.0",
-    "pg": "^8.23.0",
+    "pg": "^8.16.3",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.2.0",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "sharp": "^0.35.3"
   }
 }

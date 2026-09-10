@@ -17,7 +17,7 @@ import { GST_STATES, looksLikeGstin, stateFromGstin } from '@/lib/gstStates'
  * The cart, and the one form that sends it.
  *
  * Billing address and GST are asked for here rather than at registration,
- * because they are only needed by the quotation and demanding them from every
+ * because they are only needed by an invoice and demanding them from every
  * visitor who wants to browse would cost sign-ups for a document most of them
  * will never request. Once saved they are reused, so this asks once.
  */
@@ -57,8 +57,8 @@ export function CartPage() {
     setFailure(null)
 
     const next: Record<string, string> = {}
-    if (!address.trim()) next.address = 'A billing address is needed on the quotation'
-    if (!stateCode) next.state = 'Place of supply on the quotation comes from this'
+    if (!address.trim()) next.address = 'A billing address is needed on the proforma invoice'
+    if (!stateCode) next.state = 'Place of supply on the proforma invoice comes from this'
     // A GSTIN carries its own state in the first two digits. If it disagrees
     // with the state chosen, one of the two is wrong, and it is far cheaper to
     // say so here than to find it on a document later.
@@ -140,7 +140,7 @@ export function CartPage() {
           {count} {count === 1 ? 'piece' : 'pieces'}
         </h1>
         <p className="mt-4 max-w-[52ch] leading-relaxed text-[var(--color-fg-muted)]">
-          Sending this creates your quotation straight away, listing the pieces, weights and
+          Sending this creates your proforma invoice straight away, listing the pieces, weights and
           quantities. It carries no prices and is not a demand for payment.
         </p>
       </header>
@@ -251,7 +251,7 @@ export function CartPage() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-6">
             <h2 className="mb-1 font-display text-xl text-[var(--color-fg)]">Billing details</h2>
             <p className="mb-5 text-sm leading-relaxed text-[var(--color-fg-muted)]">
-              These print on the quotation. We keep them for your next order.
+              These print on the proforma invoice. We keep them for your next order.
             </p>
 
             <Textarea
@@ -270,7 +270,7 @@ export function CartPage() {
               value={stateCode}
               error={errors.state}
               onChange={(e) => setStateCode(e.target.value)}
-              help="This is the place of supply shown on the quotation."
+              help="This is the place of supply shown on the proforma invoice."
               options={[
                 { value: '', label: 'Select a state' },
                 ...GST_STATES.map((st) => ({
