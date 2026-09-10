@@ -12,6 +12,7 @@
  */
 import { getSupabase } from '@/lib/supabase'
 import { makeBlurPreview } from '@/lib/blurPreview'
+import { loadWatermarkSettings, watermarkImage } from '@/lib/watermark'
 import type { CollectionAudience, Category, Profile, Product, Visibility } from '@/types/db'
 
 export interface AdminProduct extends Product {
@@ -360,11 +361,27 @@ export async function uploadProductImage(
   extension: string,
 ): Promise<void> {
   const supabase = getSupabase()
-  const path = `products/${productId}/${position}${extension}`
+
+  /*
+   * Marked BEFORE it is uploaded, so the bytes in storage carry it. There is
+   * no unmarked original kept anywhere -- that is the point. If the mark
+   * cannot be drawn this throws rather than uploading a bare photograph,
+   * because a silently unmarked image looks identical to a marked one in the
+   * admin and the client would never find it.
+   */
+  const settings = await loadWatermarkSettings()
+  const marked = await watermarkImage(file, settings)
+
+  // Marking re-encodes as JPEG, so the stored extension has to follow.
+  const storedExtension = settings.enabled ? '.jpg' : extension
+  const path = `products/${productId}/${position}${storedExtension}`
 
   const { error: uploadError } = await supabase.storage
     .from('product-images')
-    .upload(path, file, { upsert: true, contentType: file.type })
+    .upload(path, marked, {
+      upsert: true,
+      contentType: settings.enabled ? 'image/jpeg' : file.type,
+    })
   if (uploadError) throw uploadError
 
   // alt is NOT NULL: a gallery of empty alt attributes is unusable with a
@@ -382,7 +399,7 @@ export async function uploadProductImage(
   // the tile falls back to decorative artwork, which is not worth failing an
   // otherwise good upload over. tools/generate-blur-previews.mjs fills gaps.
   if (position === 1) {
-    const preview = await makeBlurPreview(file)
+    const preview = await makeBlurPreview(marked)
     if (preview) {
       await supabase.from('products').update({ blur_preview: preview }).eq('id', productId)
     }

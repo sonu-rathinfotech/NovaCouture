@@ -331,7 +331,7 @@ export function AdminProductEdit() {
               Nova Couture supplies the logo there is nothing to burn in, and saying so is
               better than implying the images are protected. */}
           <p className="admin-label mb-4 border border-[var(--admin-border)] bg-[var(--admin-accent-wash)] px-4 py-2.5 text-[var(--admin-accent)]">
-            Nova Couture watermark — pending logo file
+            Watermarked on upload
           </p>
 
           {isNew ? (

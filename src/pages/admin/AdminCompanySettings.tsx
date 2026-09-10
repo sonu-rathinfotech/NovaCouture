@@ -17,7 +17,18 @@ import type { CompanySettings } from '@/types/db'
  * than a thing a developer deploys.
  */
 
-type Key = Exclude<keyof CompanySettings, 'updated_at'>
+/**
+ * The text fields this screen owns.
+ *
+ * The watermark settings live on company_settings too, but they are booleans
+ * and numbers with a preview attached, so they have their own screen. Excluded
+ * here rather than coerced, so this form cannot quietly write a string into a
+ * numeric column.
+ */
+type Key = Exclude<
+  keyof CompanySettings,
+  'updated_at' | 'watermark_enabled' | 'watermark_position' | 'watermark_size_percent' | 'watermark_opacity'
+>
 
 const FIELDS: { key: Key; label: string; help?: string; area?: boolean }[] = [
   { key: 'legal_name', label: 'Registered business name', help: 'Exactly as on the GST certificate. This heads the invoice.' },

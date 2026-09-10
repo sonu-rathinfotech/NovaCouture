@@ -1,5 +1,6 @@
 import { getSupabase } from '@/lib/supabase'
 import type { ImportProduct } from '@shared/import-validate.mjs'
+import { loadWatermarkSettings, watermarkImage } from '@/lib/watermark'
 
 /**
  * Browser-side bulk import (scope §H).
@@ -49,6 +50,10 @@ export async function importCatalogue(
   onProgress?: (p: ImportProgress) => void,
 ): Promise<ImportProgress> {
   const supabase = getSupabase()
+
+  // Read once for the whole batch rather than per photograph: it is a single
+  // setting and a bulk import is hundreds of files.
+  const watermark = await loadWatermarkSettings()
 
   const progress: ImportProgress = {
     productsDone: 0,
@@ -146,13 +151,16 @@ export async function importCatalogue(
     for (let i = 0; i < gallery.length; i++) {
       const file = gallery[i]
       const position = i + 1
-      const path = `products/${productId}/${position}${extensionFor(file.name)}`
+      // Marked before upload, exactly as the single-image path does it.
+      const marked = await watermarkImage(file, watermark)
+      const extension = watermark.enabled ? '.jpg' : extensionFor(file.name)
+      const path = `products/${productId}/${position}${extension}`
 
       const { error: uploadError } = await supabase.storage
         .from('product-images')
-        .upload(path, file, {
+        .upload(path, marked, {
           upsert: true,
-          contentType: mimeFor(file.name),
+          contentType: watermark.enabled ? 'image/jpeg' : mimeFor(file.name),
           // Asks Storage to let browsers hold the bytes for a day.
           //
           // Measured on this project, a signed-URL response comes back with an

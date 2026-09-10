@@ -69,6 +69,9 @@ const AdminCompanySettings = lazy(() =>
 const AdminLoginCodes = lazy(() =>
   import('./pages/admin/AdminLoginCodes').then((m) => ({ default: m.AdminLoginCodes })),
 )
+const AdminWatermark = lazy(() =>
+  import('./pages/admin/AdminWatermark').then((m) => ({ default: m.AdminWatermark })),
+)
 
 /** Shown for the brief moment a lazily-loaded route is being fetched. */
 function RouteFallback() {
@@ -126,6 +129,7 @@ export default function App() {
           <Route path="orders/:orderId" element={<AdminOrderDetail />} />
           <Route path="settings" element={<AdminCompanySettings />} />
           <Route path="login-codes" element={<AdminLoginCodes />} />
+          <Route path="watermark" element={<AdminWatermark />} />
         </Route>
       </Routes>
     </Suspense>

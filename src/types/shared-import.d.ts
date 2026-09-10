@@ -56,3 +56,35 @@ declare module '@shared/import-validate.mjs' {
   ): { format: string; width: number; height: number } | null
   export function validateImageFile(filename: string, bytes: Uint8Array): string[]
 }
+
+/**
+ * Types for tools/lib/watermark-placement.mjs — plain JavaScript shared with
+ * the Node-side image tooling, for the same reason as the importer above.
+ */
+declare module '@shared/watermark-placement.mjs' {
+  export interface WatermarkPlacement {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+
+  export interface WatermarkSettingsShape {
+    enabled: boolean
+    position: string
+    sizePercent: number
+    opacity: number
+  }
+
+  export const WATERMARK_POSITIONS: string[]
+  export const WATERMARK_DEFAULTS: WatermarkSettingsShape
+
+  export function normaliseWatermarkSettings(raw: unknown): WatermarkSettingsShape
+  export function watermarkPlacements(
+    imageWidth: number,
+    imageHeight: number,
+    logoWidth: number,
+    logoHeight: number,
+    settings: unknown,
+  ): WatermarkPlacement[]
+}

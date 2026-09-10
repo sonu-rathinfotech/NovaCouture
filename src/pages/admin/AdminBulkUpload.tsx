@@ -281,7 +281,7 @@ export function AdminBulkUpload() {
 
       {stage === 'done' && (
         <p className="mt-6 text-sm leading-relaxed text-[var(--admin-fg)]">
-          Import complete. Photographs carry the Nova Couture watermark once the logo is supplied —
+          Import complete. Photographs carry the Nova Couture watermark, burned in as they were uploaded —
           until then they are stored exactly as uploaded.
         </p>
       )}

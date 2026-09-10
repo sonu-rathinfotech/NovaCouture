@@ -179,6 +179,16 @@ export interface CompanySettings {
   /** Used for a piece with no HSN of its own. 7113 is precious-metal jewellery. */
   default_hsn_code: string | null
   invoice_declaration: string | null
+  /**
+   * Applies to uploads from now on. Turning it off does not strip the mark
+   * from images already stored -- it is burned into those files, which is the
+   * point of burning it in. See migration 0019.
+   */
+  watermark_enabled: boolean
+  watermark_position: string
+  /** Percent of the photograph's width. */
+  watermark_size_percent: number
+  watermark_opacity: number
   bank_name: string | null
   bank_account_name: string | null
   bank_account_number: string | null
