@@ -154,7 +154,20 @@ export function AdminOrderDetail() {
       </div>
 
       {order.status === 'issued' ? (
-        <ProformaInvoice order={order} />
+        <>
+          {/* The client's note is correspondence, not part of the document, so
+              it was taken off the sheet. It still has to reach you, so it sits
+              beside the invoice and does not print. */}
+          {order.notes && (
+            <div className="no-print mb-6 border border-[var(--admin-border)] p-5">
+              <p className="admin-label mb-2">Client's notes</p>
+              <p className="text-sm leading-relaxed whitespace-pre-line text-[var(--admin-fg)]">
+                {order.notes}
+              </p>
+            </div>
+          )}
+          <ProformaInvoice order={order} />
+        </>
       ) : (
         <>
           <AdminTable columns={['#', 'Piece', 'Quantity']}>

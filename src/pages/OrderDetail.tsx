@@ -130,8 +130,8 @@ export function OrderDetail() {
         </ul>
       )}
 
-      {order.notes && !issued && (
-        <div className="mt-8">
+      {order.notes && (
+        <div className="no-print mt-8">
           <p className="eyebrow mb-2 text-[var(--color-accent)]">Your notes</p>
           <p className="leading-relaxed whitespace-pre-line text-[var(--color-fg-muted)]">
             {order.notes}

@@ -21,6 +21,12 @@ import { formatWeight } from '@/lib/weight'
  * follows -- and the total adds up only what is actually known, with a note
  * when some of it is not.
  *
+ * -- What is deliberately NOT on the sheet ----------------------------------
+ * The client's covering note, the line count and a signatory caption were all
+ * removed after the first printed copy was reviewed. The note in particular is
+ * correspondence, not part of the document -- it is still shown to the admin
+ * beside the invoice, it simply does not print.
+ *
  * -- No money, anywhere -----------------------------------------------------
  * No rate, no taxable value, no CGST/SGST/IGST, no amount. The catalogue has
  * never carried prices, so every one of those figures would have to be
@@ -190,9 +196,7 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
             <tfoot>
               <tr className="border-t-2 border-[var(--invoice-accent)]">
                 <td />
-                <td className="pt-2 text-[0.8125rem] text-[var(--color-fg-muted)]">
-                  {order.items.length} {order.items.length === 1 ? 'line' : 'lines'}
-                </td>
+                <td />
                 <td className="pt-2 text-right text-[0.6rem] tracking-[0.14em] text-[var(--color-fg-muted)] uppercase">
                   Total
                 </td>
@@ -216,17 +220,6 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
           </p>
         )}
       </section>
-
-      {order.notes && (
-        <section className="invoice-keep-together border-t border-[var(--color-border)] py-3">
-          <p className="mb-1 text-[0.6rem] font-semibold tracking-[0.18em] text-[var(--invoice-accent)] uppercase">
-            Notes
-          </p>
-          <p className="text-[0.8125rem] leading-relaxed whitespace-pre-line text-[var(--invoice-ink)]">
-            {order.notes}
-          </p>
-        </section>
-      )}
 
       {seller.bank_account_number && (
         <section className="invoice-keep-together border-t border-[var(--color-border)] py-3">
@@ -257,12 +250,9 @@ export function ProformaInvoice({ order }: { order: OrderWithItems }) {
         </p>
         <div className="text-right">
           <p className="text-[0.8125rem] text-[var(--invoice-ink)]">For {seller.legal_name}</p>
-          {/* Room for a real signature on the printed sheet. */}
-          <div className="mt-8 border-t border-[var(--invoice-accent)] pt-1">
-            <p className="text-[0.6rem] tracking-[0.14em] text-[var(--color-fg-muted)] uppercase">
-              Authorised signatory
-            </p>
-          </div>
+          {/* Room for a real signature. The line is left unlabelled: the
+              company name above it already says whose signature it is. */}
+          <div className="mt-10 w-56 border-t border-[var(--invoice-accent)]" />
         </div>
       </footer>
     </article>

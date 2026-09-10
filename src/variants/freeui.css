@@ -547,7 +547,12 @@
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
-    padding: 0 !important;
+    /*
+     * The page margin is zero (see @page below) so the browser has nowhere to
+     * put its own header and footer. The document's margins come from here
+     * instead, which is why this is padding and not margin.
+     */
+    padding: 14mm !important;
     border: none !important;
     box-shadow: none !important;
     font-size: 10.5pt;
@@ -567,7 +572,18 @@
      a second page away from the pieces they belong to. */
   .invoice-keep-together { break-inside: avoid; }
 
+  /*
+   * Zero, deliberately.
+   *
+   * Chrome prints its own header and footer -- the date, the page title, the
+   * localhost URL and "1/2" -- into the page margin. There is no CSS property
+   * that switches them off, but with no margin there is no room for them, so
+   * they do not appear. The sheet's own padding above restores the white space.
+   *
+   * The dialog's "Headers and footers" checkbox does the same thing and is the
+   * belt-and-braces answer if a future browser ignores this.
+   */
   @page {
-    margin: 14mm;
+    margin: 0;
   }
 }
