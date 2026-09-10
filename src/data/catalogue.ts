@@ -182,8 +182,22 @@ const fixtureRepo: CatalogueRepo = {
 // Supabase implementation
 // -----------------------------------------------------------------------------
 
-const PRODUCT_SELECT = `
-  id, name, slug, category_id, visibility, is_active, sort_order, created_at, updated_at,
+/*
+ * Every column of Product, listed explicitly.
+ *
+ * It must stay complete. A column added to the table and forgotten here does
+ * not fail loudly -- it arrives as undefined, and undefined is falsy, so
+ * `is_available` going missing silently marked the ENTIRE catalogue
+ * "Currently Unavailable" and `weight_grams` going missing hid every weight.
+ * Both shipped that way and neither test suite noticed, because the fixtures
+ * build whole objects and never go through this string.
+ *
+ * catalogue.test.ts now asserts this list against the Product type. Add a
+ * column to the table, add it here.
+ */
+export const PRODUCT_SELECT = `
+  id, name, slug, category_id, visibility, is_active, is_available,
+  weight_grams, hsn_code, sort_order, created_at, updated_at,
   images:product_images (id, product_id, storage_path, sort_order, alt),
   category:categories (id, name, slug)
 `

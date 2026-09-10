@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { fixtureCatalogue, selectCatalogue, supabaseCatalogue, visibleLevels } from './catalogue'
+import {
+  PRODUCT_SELECT,
+  fixtureCatalogue,
+  selectCatalogue,
+  supabaseCatalogue,
+  visibleLevels,
+} from './catalogue'
 import { categories, products } from './fixtures'
 import type { Tier, Visibility } from '@/types/db'
 
@@ -219,6 +225,39 @@ describe('availability is not access control', () => {
     // shown in full to anyone entitled to it.
     const locked = await fixtureCatalogue.listLocked({ tier: 'premium' })
     expect(locked).toEqual([])
+  })
+})
+
+/**
+ * The Supabase repository asks for columns by name. A column added to the
+ * table and forgotten in that list does not throw -- it arrives as undefined,
+ * and undefined is falsy.
+ *
+ * This is not hypothetical. `is_available` was left out when it was added,
+ * which marked the ENTIRE live catalogue "Currently Unavailable", and
+ * `weight_grams` was left out too, which hid every weight. Both shipped, and
+ * neither suite noticed, because every other test here runs against fixtures
+ * that build whole objects and never touch the select string.
+ *
+ * So the string is checked against the fixture rows, which are typed as
+ * Product and therefore have to carry every column the type declares.
+ */
+describe('the Supabase select list is complete', () => {
+  it('asks for every column a Product carries', () => {
+    const asked = PRODUCT_SELECT
+      // Drop the embedded resources; they have their own column lists.
+      .replace(/\w+:\w+\s*\([^)]*\)/g, '')
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean)
+
+    const missing = Object.keys(products[0]).filter((column) => !asked.includes(column))
+    expect(missing).toEqual([])
+  })
+
+  it('still asks for the gallery and the category', () => {
+    expect(PRODUCT_SELECT).toContain('images:product_images')
+    expect(PRODUCT_SELECT).toContain('category:categories')
   })
 })
 
