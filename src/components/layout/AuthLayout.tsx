@@ -62,9 +62,14 @@ export function AuthLayout({
       <div className="flex items-center justify-center px-6 py-16 lg:p-20">
         <div className="w-full max-w-md animate-fade-in">
           {/* Logo */}
-          <Link to="/" className="mb-10 flex items-baseline gap-2" aria-label="Nova Couture, home">
-            <span className="font-display text-2xl font-medium text-[var(--color-fg)] tracking-tight">Nova</span>
-            <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--color-fg-muted)] uppercase">Couture</span>
+          <Link to="/" className="mb-10 inline-block" aria-label="Nova Couture, home">
+            <img
+              src="/logo-on-light.png"
+              alt="Nova Couture"
+              width={253}
+              height={90}
+              className="h-11 w-auto"
+            />
           </Link>
 
           {/* Form Header */}

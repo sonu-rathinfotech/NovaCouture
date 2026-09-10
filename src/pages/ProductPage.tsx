@@ -4,6 +4,7 @@ import { ArrowRight, Share2, MessageCircle, Plus, Minus, ShoppingBag } from 'luc
 import { Gallery } from '@/components/catalogue/Gallery'
 import { artKindFor, artOffsetFor } from '@/components/catalogue/art'
 import { EnquiryForm } from '@/components/catalogue/EnquiryForm'
+import { WhatsAppEnquiry } from '@/components/catalogue/WhatsAppEnquiry'
 import { ProductGrid } from '@/components/catalogue/ProductGrid'
 import { NotFound } from './NotFound'
 import { LoadError } from '@/components/LoadError'
@@ -270,6 +271,11 @@ export function ProductPage() {
                 )}
               </div>
             )}
+
+            {/* Opens a chat with the house, prefilled with this piece. Renders
+                nothing until the number is set in Company Details, because an
+                icon that messages nobody is worse than no icon. */}
+            <WhatsAppEnquiry product={product} />
 
             {/* Enquiry Form - Mejuri/Aurate style */}
             {enquiryVisibleTo(tier, features.enquiryForRegistered) ? (

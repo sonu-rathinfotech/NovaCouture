@@ -9,6 +9,10 @@ import {
   validateImageFile,
 } from './import-validate.mjs'
 
+/** Written this way because an escaped newline keeps getting mangled by the
+ *  tooling that edits this file. */
+const NEWLINE = String.fromCharCode(10)
+
 /**
  * The client prepares the sheet and photographs by hand, in Excel, over days.
  * Every case here is a mistake that is easy to make and hard to spot once the
@@ -226,6 +230,39 @@ describe('validateSheet — weight and availability', () => {
     )
     expect(errors).toEqual([])
     expect(products.map((p) => p.isAvailable)).toEqual([true, false, true, false])
+  })
+})
+
+describe('validateSheet — HSN', () => {
+  const WIDE = 'sku,name,category,sub_category,visibility,sort_order,weight_grams,available,hsn_code'
+  const wide = (...rows) => [WIDE, ...rows].join(NEWLINE)
+
+  it('reads an HSN code', () => {
+    const { products, errors } = validateSheet(wide('VK-1,Ring,Rings,,Public,1,,Yes,711319'))
+    expect(errors).toEqual([])
+    expect(products[0].hsnCode).toBe('711319')
+  })
+
+  it('treats a blank as "use the company default"', () => {
+    // Null rather than a literal 7113, so changing the company default later
+    // reaches every piece that never needed its own heading.
+    const { products } = validateSheet(wide('VK-1,Ring,Rings,,Public,1,,Yes,'))
+    expect(products[0].hsnCode).toBeNull()
+  })
+
+  it('accepts a 4-digit heading and strips spacing', () => {
+    const { products, errors } = validateSheet(wide('VK-1,Ring,Rings,,Public,1,,Yes,71 13'))
+    expect(errors).toEqual([])
+    expect(products[0].hsnCode).toBe('7113')
+  })
+
+  it('rejects anything that is not a 4-8 digit code', () => {
+    // An HSN prints on a document a buyer files against their own returns, so
+    // a wrong one is worse than a missing one.
+    for (const bad of ['71', 'gold', '7113-A', '123456789']) {
+      const { errors } = validateSheet(wide(`VK-1,Ring,Rings,,Public,1,,Yes,${bad}`))
+      expect(errors.some((e) => e.includes('hsn_code'))).toBe(true)
+    }
   })
 })
 

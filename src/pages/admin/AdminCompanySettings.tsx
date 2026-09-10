@@ -24,6 +24,11 @@ const FIELDS: { key: Key; label: string; help?: string; area?: boolean }[] = [
   { key: 'address', label: 'Address', area: true },
   { key: 'phone', label: 'Phone' },
   { key: 'email', label: 'Email' },
+  {
+    key: 'whatsapp_number',
+    label: 'WhatsApp number',
+    help: 'Digits only, country code first, no plus or spaces: 919876543210. This is what the WhatsApp button on each piece opens. Leave blank and no button is shown.',
+  },
 ]
 
 /** The block an accounts department reads first. */
@@ -45,7 +50,7 @@ const BANK_FIELDS: { key: Key; label: string }[] = [
 ]
 
 const EMPTY: Record<Key, string> = {
-  legal_name: '', address: '', phone: '', email: '',
+  legal_name: '', address: '', phone: '', email: '', whatsapp_number: '',
   gst_number: '', pan: '', state: '', state_code: '',
   default_hsn_code: '', invoice_declaration: '',
   bank_name: '', bank_account_name: '', bank_account_number: '', bank_ifsc: '', bank_branch: '',

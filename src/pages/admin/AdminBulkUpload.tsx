@@ -23,16 +23,16 @@ import { formatWeight } from '@/lib/weight'
  */
 
 /*
- * weight_grams and available are optional, and the sample rows show all three
- * shapes on purpose: a weight given, a weight left blank because the piece has
- * not been weighed, and a piece marked unavailable. Blank weight stores null
- * and shows nothing on the site; a blank `available` means available.
+ * weight_grams, available and hsn_code are all optional, and the sample rows
+ * show each shape on purpose: a weight given and a weight left blank because
+ * the piece has not been weighed, a piece marked unavailable, and an HSN both
+ * left blank (use the company default) and set (a different heading).
  */
 const TEMPLATE = [
-  'sku,name,category,sub_category,visibility,sort_order,weight_grams,available',
-  'NC-NK-0001,Meera Temple Haram,Necklaces,Temple,Public,1,84.32,Yes',
-  'NC-NK-0002,Anjali Layered Chain,Necklaces,,Registered,2,,Yes',
-  'NC-BG-0001,Kanchi Broad Kada,Bangles,Kada,Premium,3,46.5,No',
+  'sku,name,category,sub_category,visibility,sort_order,weight_grams,available,hsn_code',
+  'NC-NK-0001,Meera Temple Haram,Necklaces,Temple,Public,1,84.32,Yes,',
+  'NC-NK-0002,Anjali Layered Chain,Necklaces,,Registered,2,,Yes,711319',
+  'NC-BG-0001,Kanchi Broad Kada,Bangles,Kada,Premium,3,46.5,No,',
 ].join('\r\n')
 
 type Stage = 'idle' | 'checking' | 'ready' | 'importing' | 'done'
@@ -239,7 +239,9 @@ export function AdminBulkUpload() {
               is far cheaper to catch on this screen than to find later on a
               piece a client is looking at. */}
           <AdminTable
-            columns={['SKU', 'Name', 'Category', 'Visibility', 'Weight', 'Available', 'Images']}
+            columns={[
+              'SKU', 'Name', 'Category', 'Visibility', 'Weight', 'HSN', 'Available', 'Images',
+            ]}
           >
             {products.map((p) => (
               <tr key={p.sku}>
@@ -257,6 +259,9 @@ export function AdminBulkUpload() {
                 </td>
                 <td className="admin-num text-sm text-[var(--admin-fg-muted)]">
                   {formatWeight(p.weightGrams) ?? 'Not recorded'}
+                </td>
+                <td className="admin-num text-sm text-[var(--admin-fg-muted)]">
+                  {p.hsnCode ?? 'Default'}
                 </td>
                 <td>
                   {p.isAvailable ? (

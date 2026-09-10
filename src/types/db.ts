@@ -168,6 +168,8 @@ export interface CompanySettings {
   address: string | null
   phone: string | null
   email: string | null
+  /** Digits only, no plus. Null hides the per-product WhatsApp button. */
+  whatsapp_number: string | null
   gst_number: string | null
   /** The two digits a GSTIN starts with. 27 is Maharashtra. */
   state: string | null

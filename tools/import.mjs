@@ -197,6 +197,7 @@ async function run() {
         is_active: true,
         is_available: product.isAvailable,
         weight_grams: product.weightGrams,
+        hsn_code: product.hsnCode,
       }),
     })
 

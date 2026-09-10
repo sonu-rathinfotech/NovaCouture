@@ -130,13 +130,17 @@ export function Header() {
         <div className="container">
           <div className="flex h-18 items-center justify-between gap-4">
             {/* Logo / Wordmark - Tiffany-inspired editorial style */}
-            <Link to="/" className="flex items-baseline gap-2 shrink-0" aria-label="Nova Couture, home">
-              <span className="font-display text-xl font-medium text-[var(--color-fg)] tracking-tight transition-colors duration-500">
-                Nova
-              </span>
-              <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--color-fg-muted)] uppercase transition-colors duration-500">
-                Couture
-              </span>
+            <Link to="/" className="shrink-0" aria-label="Nova Couture, home">
+              {/* The supplied artwork is gold on black, so a keyed-out copy is
+                  generated per surface -- see tools/make-logo.mjs. This is the
+                  light-background variant; the footer uses the other. */}
+              <img
+                src="/logo-on-light.png"
+                alt="Nova Couture"
+                width={253}
+                height={90}
+                className="h-9 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}

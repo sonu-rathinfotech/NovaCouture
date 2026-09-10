@@ -17,6 +17,7 @@ const COMPLETE: CompanySettings = {
   address: '12 Example Road, Bengaluru',
   phone: '+91 80 0000 0000',
   email: 'orders@example.com',
+  whatsapp_number: '919876543210',
   gst_number: '29AAAAA0000A1Z5',
   pan: 'AAAAA0000A',
   state: 'Karnataka',

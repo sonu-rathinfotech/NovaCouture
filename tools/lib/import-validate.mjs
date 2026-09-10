@@ -13,7 +13,9 @@
  */
 
 export const REQUIRED_COLUMNS = ['sku', 'name', 'category', 'visibility']
-export const OPTIONAL_COLUMNS = ['sub_category', 'sort_order', 'weight_grams', 'available']
+export const OPTIONAL_COLUMNS = [
+  'sub_category', 'sort_order', 'weight_grams', 'available', 'hsn_code',
+]
 
 /**
  * `available` accepts what a person actually types in a spreadsheet.
@@ -186,6 +188,7 @@ export function validateSheet(text) {
     const sortOrder = cell('sort_order')
     const rawWeight = cell('weight_grams')
     const rawAvailable = cell('available')
+    const rawHsn = cell('hsn_code')
 
     if (!sku) {
       errors.push(`Row ${line}: sku is empty.`)
@@ -283,6 +286,20 @@ export function validateSheet(text) {
       }
     }
 
+    // Blank is the normal case: a piece uses the company default HSN unless it
+    // genuinely belongs under a different heading.
+    let hsnCode = null
+    if (rawHsn) {
+      const cleaned = rawHsn.replace(/\s/g, '')
+      if (!/^\d{4,8}$/.test(cleaned)) {
+        errors.push(
+          `Row ${line}: hsn_code "${rawHsn}" is not valid. Use 4 to 8 digits, e.g. 7113.`,
+        )
+      } else {
+        hsnCode = cleaned
+      }
+    }
+
     products.push({
       line,
       sku,
@@ -293,6 +310,7 @@ export function validateSheet(text) {
       sortOrder: sortOrder ? Number(sortOrder) : null,
       weightGrams,
       isAvailable,
+      hsnCode,
     })
   }
 

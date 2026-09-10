@@ -123,6 +123,7 @@ export async function importCatalogue(
           is_active: true,
           is_available: product.isAvailable,
           weight_grams: product.weightGrams,
+          hsn_code: product.hsnCode,
         },
         { onConflict: 'slug' },
       )

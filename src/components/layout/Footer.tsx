@@ -90,9 +90,15 @@ export function Footer() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
             {/* Brand Column */}
             <div className="lg:col-span-1 max-w-xs">
-              <Link to="/" className="flex items-baseline gap-2 mb-6" aria-label="Nova Couture, home">
-                <span className="font-display text-2xl font-medium text-white tracking-tight">Nova</span>
-                <span className="font-ui text-[0.6rem] tracking-[0.3em] text-[var(--base-400)] uppercase">Couture</span>
+              <Link to="/" className="mb-6 inline-block" aria-label="Nova Couture, home">
+                {/* The bright variant: this sits on the near-black footer. */}
+                <img
+                  src="/logo-on-dark.png"
+                  alt="Nova Couture"
+                  width={253}
+                  height={90}
+                  className="h-11 w-auto"
+                />
               </Link>
               <p className="text-[var(--base-400)] text-sm leading-relaxed mb-6 max-w-[38ch]">
                 A private catalogue of fine gold and stone work, shown to registered clients.

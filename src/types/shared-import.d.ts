@@ -16,6 +16,8 @@ declare module '@shared/import-validate.mjs' {
     weightGrams: number | null
     /** Defaults to true when the column is absent or blank. */
     isAvailable: boolean
+    /** 4-8 digits, or null to use the company default. */
+    hsnCode: string | null
   }
 
   export interface SheetResult {
