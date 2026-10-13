@@ -15,7 +15,7 @@ export function StaticPage({ slug }: { slug: StaticPageSlug }) {
   usePageTitle(page.title)
 
   return (
-    <article className="container max-w-[760px] py-16 lg:py-24">
+    <article className="container max-w-[760px] py-12 lg:py-16">
       <header className="mb-12 text-center">
         <span className="eyebrow text-[var(--color-accent)]">{isLegal ? 'Legal' : 'Information'}</span>
         <h1 className="mt-4 font-display text-[length:var(--text-h1)] text-[var(--color-fg)]">{page.title}</h1>

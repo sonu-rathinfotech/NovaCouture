@@ -333,7 +333,7 @@ export function ProductPage() {
 
       {/* Related Products */}
       {alsoIn.length > 0 && (
-        <section className="border-t border-[var(--color-border)] bg-[var(--color-bg)] py-16 lg:py-24">
+        <section className="border-t border-[var(--color-border)] bg-[var(--color-bg)] py-12 lg:py-16">
           <div className="container">
             <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>

@@ -17,7 +17,7 @@ export function CategoriesPage() {
   const cats = categories ?? []
 
   return (
-    <section className="container py-20 lg:py-28">
+    <section className="container py-14 lg:py-20">
       <PageHeader
         eyebrow="The Catalogue"
         title="Jewellery Collections"

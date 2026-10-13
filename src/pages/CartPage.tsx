@@ -98,7 +98,7 @@ export function CartPage() {
 
   if (tier === 'guest') {
     return (
-      <section className="container py-16 lg:py-24">
+      <section className="container py-12 lg:py-16">
         <EmptyState
           title="Sign in to use the cart"
           message="Orders are placed by registered clients. Sign in and the pieces you choose will be kept here."
@@ -110,7 +110,7 @@ export function CartPage() {
 
   if (!ordersAvailable) {
     return (
-      <section className="container py-16 lg:py-24">
+      <section className="container py-12 lg:py-16">
         <EmptyState
           title="Ordering needs the live catalogue"
           message="This preview runs on sample data. Ordering is available once the site is connected to its database."
@@ -122,7 +122,7 @@ export function CartPage() {
 
   if (lines.length === 0) {
     return (
-      <section className="container py-16 lg:py-24">
+      <section className="container py-12 lg:py-16">
         <EmptyState
           title="Your cart is empty"
           message="Open a piece, set a quantity and choose Add to cart. You can change quantities here before sending."

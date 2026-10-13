@@ -91,12 +91,12 @@ export function Footer() {
           Restore it only in Nova Couture's own words, claim by claim. */}
 
       {/* Main Footer Grid */}
-      <div className="py-16 lg:py-24">
+      <div className="py-12 lg:py-14">
         <div className="container">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
             {/* Brand Column */}
             <div className="lg:col-span-1 max-w-xs">
-              <Link to="/" className="mb-6 inline-block" aria-label="Nova Couture, home">
+              <Link to="/" className="mb-4 inline-block" aria-label="Nova Couture, home">
                 {/* The bright variant: this sits on the near-black footer. */}
                 <img
                   src="/logo-on-dark.png"
@@ -106,7 +106,7 @@ export function Footer() {
                   className="h-11 w-auto"
                 />
               </Link>
-              <p className="text-[var(--base-400)] text-sm leading-relaxed mb-6 max-w-[38ch]">
+              <p className="text-[var(--base-400)] text-sm leading-relaxed mb-4 max-w-[38ch]">
                 A private catalogue of fine gold and stone work, shown to registered clients.
                 Nothing is sold through this site — pieces are available by private enquiry only.
               </p>
@@ -131,10 +131,10 @@ export function Footer() {
             {/* Navigation Columns */}
             {footerColumns.map((col) => (
               <div key={col.heading}>
-                <h2 className="font-medium text-sm tracking-[0.15em] uppercase text-white mb-5">
+                <h2 className="font-medium text-sm tracking-[0.15em] uppercase text-white mb-4">
                   {col.heading}
                 </h2>
-                <ul className="space-y-3" role="list">
+                <ul className="space-y-2.5" role="list">
                   {col.links.map((link) => (
                     <li key={link.to}>
                       <Link
@@ -153,7 +153,7 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-[var(--base-800)] py-6">
+      <div className="border-t border-[var(--base-800)] py-5">
         <div className="container">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="text-[var(--base-500)] text-sm">

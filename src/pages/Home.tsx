@@ -4,7 +4,7 @@ import { ProductGrid, ProductGridSkeleton } from '@/components/catalogue/Product
 import { LoadError } from '@/components/LoadError'
 import { HeroMedia } from '@/components/HeroMedia'
 import { CategoryCard } from '@/components/catalogue/CategoryCard'
-import { samplePhoto, USING_SAMPLE_PHOTOS } from '@/components/catalogue/samplePhotos'
+import { samplePhoto } from '@/components/catalogue/samplePhotos'
 import { useSession } from '@/hooks/useSession'
 import { useAsync } from '@/hooks/useAsync'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -77,14 +77,6 @@ export function Home() {
         </div>
       </section>
 
-      {/* Sample photos notice */}
-      {USING_SAMPLE_PHOTOS && (
-        <div className="border-b border-[var(--color-border)] bg-[var(--color-bg-muted)]/50 px-6 py-3">
-          <p className="container text-center text-sm tracking-[0.1em] uppercase text-[var(--color-fg-muted)]">
-            Photography shown is for design purposes only — not Nova Couture pieces
-          </p>
-        </div>
-      )}
 
       {/* A row of trust badges stood here — BIS Hallmarked, Lifetime
           Warranty, Insured Shipping, 30-day returns, Personal Concierge.
@@ -93,9 +85,9 @@ export function Home() {
           Restore it only in Nova Couture's own words, claim by claim. */}
 
       {/* Collections - Tanishq/Kalyan style with editorial numbering */}
-      <section className="py-20 lg:py-32 bg-[var(--color-bg)]">
+      <section className="py-14 lg:py-20 bg-[var(--color-bg)]">
         <div className="container">
-          <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <p className="eyebrow mb-3 text-[var(--color-accent)]">№ 02 — Collections</p>
               <h2 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight">Curated by category</h2>
@@ -114,7 +106,7 @@ export function Home() {
           </div>
 
           {/* Featured Categories (3) */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-12">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
             {featured.map((c, i) => (
               <CategoryCard key={c.id} category={c} large={i === 0} index={i} />
             ))}
@@ -132,7 +124,7 @@ export function Home() {
       </section>
 
       {/* Editorial Story - Tiffany/Kalyan heritage storytelling */}
-      <section className="py-20 lg:py-32 bg-[var(--color-bg-muted)]" data-theme="warm">
+      <section className="py-14 lg:py-20 bg-[var(--color-bg-muted)]" data-theme="warm">
         <div className="container">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div className="aspect-[4/5] overflow-hidden rounded-2xl">
@@ -171,9 +163,9 @@ export function Home() {
       </section>
 
       {/* Selected Pieces */}
-      <section className="py-20 lg:py-32 bg-[var(--color-bg)]">
+      <section className="py-14 lg:py-20 bg-[var(--color-bg)]">
         <div className="container">
-          <div className="mb-16 text-center max-w-2xl mx-auto">
+          <div className="mb-10 text-center max-w-2xl mx-auto">
             <p className="eyebrow mb-3 text-[var(--color-accent)]">№ 04 — Selected</p>
             <h2 className="font-display text-[length:var(--text-h1)] text-[var(--color-fg)] tracking-tight">
               From the collection
@@ -203,7 +195,7 @@ export function Home() {
         // paint them. Without bg-[var(--color-bg)] it was transparent, so the
         // white heading sat on the light page background and could not be read.
         <section
-          className="relative overflow-hidden bg-[var(--color-bg)] py-20 lg:py-32"
+          className="relative overflow-hidden bg-[var(--color-bg)] py-14 lg:py-20"
           data-theme="dark-premium"
         >
           <img

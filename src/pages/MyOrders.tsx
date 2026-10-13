@@ -26,7 +26,7 @@ export function MyOrders() {
 
   if (tier === 'guest') {
     return (
-      <section className="container py-16 lg:py-24">
+      <section className="container py-12 lg:py-16">
         <EmptyState
           title="Sign in to see your orders"
           message="Orders are kept against your account."

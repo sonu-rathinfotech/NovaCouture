@@ -14,7 +14,7 @@ export function AccessBand({ tier }: { tier: Tier }) {
   const isGuest = tier === 'guest'
 
   return (
-    <aside className="mt-24 border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-6 py-16 text-center">
+    <aside className="mt-16 border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-6 py-12 text-center">
       <Crown size={26} strokeWidth={1} className="mx-auto mb-6 text-[var(--color-accent)]" />
       <p className="eyebrow mb-4 text-[var(--color-accent)]">
         {isGuest ? 'Registered access' : 'Premium access'}

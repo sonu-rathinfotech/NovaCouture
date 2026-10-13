@@ -57,7 +57,7 @@ export function SearchPage() {
       ) : loading ? (
         <ProductGridSkeleton count={3} />
       ) : results.length === 0 ? (
-        <div className="max-w-[560px] mx-auto py-16 lg:py-24 text-center">
+        <div className="max-w-[560px] mx-auto py-12 lg:py-16 text-center">
           {/* Decorative gold line */}
           <div className="mb-8 w-24 h-px bg-gradient-to-r from-transparent via-[var(--trust-gold)] to-transparent mx-auto" aria-hidden="true" />
 
