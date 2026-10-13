@@ -288,7 +288,11 @@ export function ProductPage() {
                     <Link to="/sign-in" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-accent-hover)] font-medium">
                       Sign in
                     </Link>{' '}
-                    to enquire.
+                    to enquire, or{' '}
+                    <Link to="/register" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-accent-hover)] font-medium">
+                      register
+                    </Link>{' '}
+                    if you do not have an account yet.
                   </p>
                 </div>
               )

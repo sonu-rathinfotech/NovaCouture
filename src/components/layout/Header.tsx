@@ -128,7 +128,7 @@ export function Header() {
       {/* Main Header */}
       <header className="sticky top-0 z-[var(--z-fixed)] border-b border-[var(--color-border)] bg-[var(--color-bg-elevated)]/95 backdrop-blur-md">
         <div className="container">
-          <div className="flex h-18 items-center justify-between gap-4">
+          <div className="flex h-18 items-center justify-between gap-2 sm:gap-4">
             {/* Logo / Wordmark - Tiffany-inspired editorial style */}
             <Link to="/" className="shrink-0" aria-label="Nova Couture, home">
               {/* The supplied artwork is gold on black, so a keyed-out copy is
@@ -139,7 +139,7 @@ export function Header() {
                 alt="Nova Couture"
                 width={253}
                 height={90}
-                className="h-9 w-auto"
+                className="h-7 w-auto min-[360px]:h-9"
               />
             </Link>
 
@@ -238,13 +238,13 @@ export function Header() {
             </nav>
 
             {/* Right side actions */}
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 sm:gap-3">
               {/* Search button - Blue Nile style */}
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className="p-2 rounded-lg text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] hover:bg-[var(--color-bg-muted)] transition-colors lg:hidden"
+                className="p-3 rounded-lg text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] hover:bg-[var(--color-bg-muted)] transition-colors lg:hidden"
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -254,7 +254,11 @@ export function Header() {
               {/* Account / Sign in */}
               {tier === 'guest' ? (
                 <>
-                  <ButtonLink to="/sign-in" variant="ghost" size="sm" className="hidden sm:inline-flex">
+                  {/* max-sm:hidden, not "hidden sm:inline-flex": the button's own
+                      inline-flex beat a plain `hidden`, so this showed on phones
+                      and pushed the menu button off a 375px screen. Sign in is
+                      still in the mobile menu. */}
+                  <ButtonLink to="/sign-in" variant="ghost" size="sm" className="max-sm:hidden">
                     Sign in
                   </ButtonLink>
                   <ButtonLink to="/register" variant="primary" size="sm">
@@ -360,7 +364,7 @@ export function Header() {
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={mobileOpen}
-                className="p-2 rounded-lg text-[var(--color-fg)] hover:bg-[var(--color-bg-muted)] transition-colors lg:hidden"
+                className="p-2.5 rounded-lg text-[var(--color-fg)] hover:bg-[var(--color-bg-muted)] transition-colors lg:hidden"
               >
                 <Menu className="h-6 w-6" strokeWidth={1.5} />
               </button>

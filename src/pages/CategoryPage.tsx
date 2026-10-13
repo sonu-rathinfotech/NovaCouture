@@ -147,8 +147,8 @@ export function CategoryPage() {
           </div>
         ) : (
           <p className="mb-10 max-w-xl leading-relaxed text-[var(--color-fg-muted)]">
-            Every piece in {category?.name.toLowerCase()} currently shown to you. Photographs are
-            of the piece itself; ask us for weight, stones or making details.
+            Pieces currently shown in {category?.name.toLowerCase()}. Photographs are of the piece
+            itself; ask us for weight, stones or making details.
           </p>
         )}
 
@@ -169,14 +169,22 @@ export function CategoryPage() {
         )}
 
         <div className="mb-8 flex flex-col gap-4 border-t border-[var(--color-border)] pt-8 md:flex-row md:items-center md:justify-between">
+          {/* "0 pieces" while loading reads as an empty category, so the
+              count and the sort wait until there is something to count. */}
           <p className="eyebrow text-[var(--color-accent)]">
-            {count} {count === 1 ? 'piece' : 'pieces'}
-            {locked.length > 0 && (
-              <span className="text-[var(--color-fg-muted)]"> · {locked.length} reserved</span>
+            {loading ? (
+              'Loading pieces…'
+            ) : productsError ? null : (
+              <>
+                {count} {count === 1 ? 'piece' : 'pieces'}
+                {locked.length > 0 && (
+                  <span className="text-[var(--color-fg-muted)]"> · {locked.length} reserved</span>
+                )}
+              </>
             )}
           </p>
 
-          <div className="relative">
+          <div className={loading || productsError ? 'hidden' : 'relative'}>
             <label htmlFor="sort" className="sr-only">
               Sort pieces
             </label>

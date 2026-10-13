@@ -280,7 +280,9 @@ function OtpSignIn({ adapter, tabs }: { adapter: AuthAdapter; tabs?: ReactNode }
             autoComplete="tel"
             autoFocus
             placeholder="98765 43210"
-            help="We will send a verification code to this number."
+            // Codes are relayed by hand until the WhatsApp Business API is
+            // live, so set the expectation that it is not instant.
+            help="We will send a sign-in code to this number on WhatsApp. It can take a few minutes to arrive."
             value={mobile}
             error={fieldError ?? undefined}
             onChange={(e) => {
@@ -297,6 +299,7 @@ function OtpSignIn({ adapter, tabs }: { adapter: AuthAdapter; tabs?: ReactNode }
         <form onSubmit={onSubmitCode} noValidate>
           <Field
             label="One-time code"
+            help="Not received yet? Please wait a few minutes, or contact us."
             type="text"
             inputMode="numeric"
             autoComplete="one-time-code"

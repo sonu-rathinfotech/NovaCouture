@@ -4,6 +4,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react'
 import { Button, ButtonLink, EmptyState } from '@/components/ui'
 import { Field, Textarea, Select, FormMessage } from '@/components/ui/Field'
 import { GalleryImage } from '@/components/catalogue/GalleryImage'
+import { LoadError } from '@/components/LoadError'
 import { artKindFor } from '@/components/catalogue/art'
 import { useSession } from '@/hooks/useSession'
 import { useOrderDraft } from '@/hooks/useOrderDraft'
@@ -38,7 +39,7 @@ export function CartPage() {
   // Only pieces this viewer may see are fetched, so a draft carrying a piece
   // they have since lost access to simply drops out of the list rather than
   // confirming it exists.
-  const { data: products, loading } = useAsync(
+  const { data: products, loading, error: productsError } = useAsync(
     () =>
       lines.length
         ? catalogue.listProducts({ tier })
@@ -50,7 +51,10 @@ export function CartPage() {
     .map((line) => ({ line, product: (products ?? []).find((p) => p.id === line.productId) }))
     .filter((r) => r.product)
 
-  const missing = lines.length - rows.length
+  // Only meaningful once the list has arrived. Counted while loading, or after
+  // a failed fetch, every line looked "missing" and the cart told the client
+  // their pieces were no longer available.
+  const missing = loading || productsError ? 0 : lines.length - rows.length
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
@@ -154,7 +158,9 @@ export function CartPage() {
 
       <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div>
-          {loading ? (
+          {productsError ? (
+            <LoadError what="the pieces in your cart" />
+          ) : loading ? (
             <p className="text-[var(--color-fg-muted)]">Loading your pieces…</p>
           ) : (
             <ul className="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
@@ -198,7 +204,7 @@ export function CartPage() {
                         <button
                           type="button"
                           onClick={() => setQuantity(line.productId, line.quantity - 1)}
-                          className="cursor-pointer p-2 text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+                          className="grid h-11 w-11 cursor-pointer place-items-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
                           aria-label={`One fewer ${product!.name}`}
                         >
                           <Minus size={14} />
@@ -213,12 +219,12 @@ export function CartPage() {
                           onChange={(e) =>
                             setQuantity(line.productId, Number(e.target.value.replace(/\D/g, '')))
                           }
-                          className="w-12 border-x border-[var(--color-border)] bg-transparent py-2 text-center tabular-nums text-[var(--color-fg)]"
+                          className="h-11 w-12 border-x border-[var(--color-border)] bg-transparent text-center tabular-nums text-[var(--color-fg)]"
                         />
                         <button
                           type="button"
                           onClick={() => setQuantity(line.productId, line.quantity + 1)}
-                          className="cursor-pointer p-2 text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+                          className="grid h-11 w-11 cursor-pointer place-items-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
                           aria-label={`One more ${product!.name}`}
                         >
                           <Plus size={14} />
@@ -228,7 +234,7 @@ export function CartPage() {
                       <button
                         type="button"
                         onClick={() => remove(line.productId)}
-                        className="flex cursor-pointer items-center gap-1.5 text-sm text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-danger)]"
+                        className="flex min-h-11 cursor-pointer items-center gap-1.5 px-2 text-sm text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-danger)]"
                       >
                         <Trash2 size={14} />
                         Remove

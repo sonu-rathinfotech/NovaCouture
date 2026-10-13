@@ -38,8 +38,10 @@ const baseStyles =
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--color-accent)] text-white ' +
-    'hover:bg-[var(--color-accent-hover)] ' +
+    // accent-700 rather than --color-accent (accent-600): white on accent-600
+    // is 2.94:1, below WCAG AA. accent-700 is 4.92:1 and still reads as gold.
+    'bg-[var(--accent-700)] text-white ' +
+    'hover:bg-[var(--accent-800)] ' +
     'focus-visible:ring-[var(--color-accent)] ' +
     'shadow-sm hover:shadow-md',
   secondary:

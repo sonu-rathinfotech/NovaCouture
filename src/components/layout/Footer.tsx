@@ -159,12 +159,13 @@ export function Footer() {
             <p className="text-[var(--base-500)] text-sm">
               © {new Date().getFullYear()} Nova Couture. All rights reserved.
             </p>
-            <div className="flex items-center gap-6 text-[var(--base-500)] text-sm">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[var(--base-500)] text-sm">
               <span>Display only — no online sale</span>
               <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
               <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
-              <Link to="/cookies" className="hover:text-white transition-colors">Cookies</Link>
-              <Link to="/accessibility" className="hover:text-white transition-colors">Accessibility</Link>
+              {/* Cookies and Accessibility linked here to pages that do not
+                  exist. Cookies are covered in the Privacy Policy; restore an
+                  Accessibility link once that page is written. */}
             </div>
           </div>
         </div>

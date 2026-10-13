@@ -93,14 +93,15 @@ export function Gallery({
           <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 60%27%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Playfair Display, serif%27 font-size=%2718%27 font-weight=%27500%27 fill=%27white%27 fill-opacity=%270.06%27%3ENOVA COUTURE%3C/text%3E%3C/svg%27')] bg-repeat bg-[200px_60px]" />
         </div>
 
-        {/* Prev/Next arrows on hover - Blue Nile style */}
+        {/* Prev/Next arrows. Always shown on touch screens, which have no hover;
+            on desktop they appear on hover or keyboard focus. 44px targets. */}
         {images.length > 1 && (
           <>
             <button
               type="button"
               onClick={prev}
               aria-label="Previous image"
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white shadow-lg"
+              className="absolute left-4 top-1/2 -translate-y-1/2 p-2.5 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-white shadow-lg"
             >
               <ChevronLeft className="h-6 w-6" strokeWidth={2} />
             </button>
@@ -108,7 +109,7 @@ export function Gallery({
               type="button"
               onClick={next}
               aria-label="Next image"
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white shadow-lg"
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-white shadow-lg"
             >
               <ChevronRight className="h-6 w-6" strokeWidth={2} />
             </button>
@@ -128,7 +129,7 @@ export function Gallery({
             type="button"
             onClick={() => setIsFullscreen(true)}
             aria-label="View fullscreen"
-            className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full hover:bg-white shadow-lg transition-all"
+            className="absolute top-4 right-4 p-3 bg-white/80 backdrop-blur-sm text-[var(--color-fg)] rounded-full hover:bg-white shadow-lg transition-all"
           >
             <Expand className="h-5 w-5" strokeWidth={2} />
           </button>
