@@ -120,8 +120,8 @@ export function OrderDetail() {
                 {/* Live name before issue; the snapshot only exists after. A
                     piece withdrawn from the client's tier since they ordered
                     is named neutrally rather than confirmed to still exist. */}
-                {(products ?? []).find((p) => p.id === item.product_id)?.name ??
-                  item.product_name ??
+                {item.product_name ??
+                  (products ?? []).find((p) => p.id === item.product_id)?.name ??
                   'Piece no longer listed'}
               </span>
               <span className="tabular-nums text-[var(--color-fg)]">×{item.quantity}</span>

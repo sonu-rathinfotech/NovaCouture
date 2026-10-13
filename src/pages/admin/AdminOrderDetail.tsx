@@ -19,7 +19,8 @@ import {
  * Most orders arrive already issued: the proforma is produced the moment the
  * client sends the order. One lands here still 'submitted' only when the
  * company name or GSTIN was blank at the time, so the Issue button is a
- * recovery path rather than the normal one.
+ * recovery path rather than the normal one. Cancel is offered on submitted
+ * AND issued orders, since auto-issue leaves no other moment to refuse one.
  *
  * The check is enforced inside public.issue_order() (migrations 0012 and
  * 0014); it is repeated here so the reason appears before the click rather
@@ -93,7 +94,15 @@ export function AdminOrderDetail() {
               </>
             )}
             {order.status === 'issued' && (
-              <AdminButton onClick={() => window.print()}>Print / Save as PDF</AdminButton>
+              <>
+                <AdminButton onClick={() => window.print()}>Print / Save as PDF</AdminButton>
+                {/* Issuing is automatic, so this is the only point at which the
+                    admin can turn an order down. The proforma stops showing on
+                    both sides; the snapshot stays on the row as a record. */}
+                <AdminButton tone="danger" disabled={busy} onClick={() => setCancelling(true)}>
+                  Cancel order
+                </AdminButton>
+              </>
             )}
           </>
         }
@@ -175,8 +184,10 @@ export function AdminOrderDetail() {
               <tr key={item.id}>
                 <td className="admin-num text-sm">{i + 1}</td>
                 <td className="admin-title text-lg">
-                  {(products ?? []).find((p) => p.id === item.product_id)?.name ??
-                    item.product_name ??
+                  {/* Snapshot first: an order cancelled after issue keeps the
+                      names it was issued with. Before issue there is none. */}
+                  {item.product_name ??
+                    (products ?? []).find((p) => p.id === item.product_id)?.name ??
                     'Piece no longer listed'}
                 </td>
                 <td className="admin-num text-sm">{item.quantity}</td>

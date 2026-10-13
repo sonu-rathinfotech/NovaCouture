@@ -5,6 +5,7 @@ import { AuthLayout } from '@/components/layout/AuthLayout'
 import { Field, FormMessage } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { normaliseMobile, formatMobile } from '@/lib/mobile'
+import { getSupabase } from '@/lib/supabase'
 import { auth, authMode, otpAuth, otpAvailable } from '@/auth'
 import type { AuthAdapter } from '@/auth'
 import { useSession } from '@/hooks/useSession'
@@ -105,13 +106,29 @@ function CredentialSignIn({ tabs }: { tabs?: ReactNode }) {
     setError(null)
 
     const result = await auth.signInWithPassword(identifier, password)
-    setBusy(false)
 
     if (!result.ok) {
+      setBusy(false)
       setError(result.error ?? 'Could not sign in')
       return
     }
 
+    // The administrator has no client profile, so on this side they would land
+    // as a half-working "registered" client whose orders cannot be placed.
+    // Mirrors AdminSignIn, which refuses client accounts the same way. Calls the
+    // RPC directly rather than checkIsAdmin() to keep the admin module out of
+    // the first-paint bundle.
+    if (authMode === 'supabase') {
+      const { data: isAdmin } = await getSupabase().rpc('is_admin')
+      if (isAdmin === true) {
+        await getSupabase().auth.signOut()
+        setBusy(false)
+        setError('This is an administrator account. Please sign in at /admin.')
+        return
+      }
+    }
+
+    setBusy(false)
     refresh()
     navigate('/', { replace: true })
   }
