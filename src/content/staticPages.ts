@@ -13,8 +13,9 @@
  *
  * Anything in [[double brackets]] is a fact nobody has supplied yet. It renders
  * highlighted so it cannot be missed, and docs/CONTENT-TODO.md lists them all.
- * Nothing here is invented: there is no address, no phone number and no company
- * history in this file, because none was provided.
+ * Nothing here is invented. The address and GSTIN come from the company's GST
+ * registration certificate; there is no phone number and no company history in
+ * this file, because none was provided.
  * ────────────────────────────────────────────────────────────────────────────
  */
 
@@ -63,9 +64,13 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
     intro: 'Enquiries about any piece in the catalogue are welcome.',
     sections: [
       {
+        // Address and company details from the GST registration certificate
+        // (Form GST REG-06, issued 27/06/2026), the same source as the invoice.
         heading: 'The showroom',
         paragraphs: [
-          '[[Nova Couture to supply: full postal address.]]',
+          'Nova Couture Private Limited',
+          'Floor 2, 202 A Wing, Mahalaxmi Apt Rajkamal, Mahatma Gandhi Marg, Parel, Mumbai, Maharashtra 400012',
+          'GSTIN: 27AALCN6631N1ZU',
           '[[Nova Couture to supply: opening hours.]]',
         ],
       },
@@ -92,7 +97,8 @@ export const STATIC_PAGES: Record<'about' | 'contact' | 'privacy' | 'terms', Sta
       {
         heading: 'Who is responsible',
         paragraphs: [
-          '[[Nova Couture to supply: registered business name, address, and the name or role of the person handling privacy questions.]]',
+          'Nova Couture Private Limited, Floor 2, 202 A Wing, Mahalaxmi Apt Rajkamal, Mahatma Gandhi Marg, Parel, Mumbai, Maharashtra 400012.',
+          '[[Nova Couture to supply: the name or role of the person handling privacy questions.]]',
         ],
       },
       {

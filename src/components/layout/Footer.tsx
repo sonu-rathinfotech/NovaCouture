@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useAsync } from '@/hooks/useAsync'
 import { catalogue } from '@/data/catalogue'
+import { useSession } from '@/hooks/useSession'
 import type { SVGProps } from 'react'
 
 /* lucide dropped brand icons in v1, so the social marks are inline SVGs. */
@@ -29,6 +30,7 @@ function InstagramIcon(props: SVGProps<SVGSVGElement>) {
 
 export function Footer() {
   const { data: categories } = useAsync(() => catalogue.listCategories(), [])
+  const { tier } = useSession()
 
   const footerColumns = [
     {
@@ -47,7 +49,11 @@ export function Footer() {
         // link that promises a section and delivers the page it is already on.
         // Give them their own headings on the about page, then link again.
         { label: 'Contact Us', to: '/contact' },
-        { label: 'Client Portal', to: '/sign-in' },
+        // A signed-in client is already in the portal, so the sign-in link
+        // becomes the one place they would go next: their orders.
+        tier === 'guest'
+          ? { label: 'Client Portal', to: '/sign-in' }
+          : { label: 'My Orders', to: '/orders' },
       ],
     },
     {

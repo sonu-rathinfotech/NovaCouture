@@ -199,7 +199,13 @@ export function Home() {
 
       {/* Premium Invitation - Aurate/Ana Luisa color-rich style */}
       {tier !== 'premium' && (
-        <section className="relative overflow-hidden py-20 lg:py-32" data-theme="dark-premium">
+        // data-theme only re-points the colour tokens; the section still has to
+        // paint them. Without bg-[var(--color-bg)] it was transparent, so the
+        // white heading sat on the light page background and could not be read.
+        <section
+          className="relative overflow-hidden bg-[var(--color-bg)] py-20 lg:py-32"
+          data-theme="dark-premium"
+        >
           <img
             src={samplePhoto('ring', 2)}
             alt=""
