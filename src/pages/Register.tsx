@@ -1,16 +1,30 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { AuthLayout } from '@/components/layout/AuthLayout'
 import { Field, Checkbox, FormMessage } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { REGISTRATION_FIELDS } from '@/data/registrationFields'
-import { normaliseMobile } from '@/lib/mobile'
-import { auth, authMode } from '@/auth'
+import { formatMobile, normaliseMobile } from '@/lib/mobile'
+import { auth, authMode, otpAuth, otpAvailable } from '@/auth'
 import { useSession } from '@/hooks/useSession'
 import { usePageTitle } from '@/hooks/usePageTitle'
 
 type Values = Record<string, string>
+
+/*
+ * With the database connected, registration runs on the WhatsApp-code adapter
+ * (dbOtpAuth): the form asks for a code, and the account is created only once
+ * the code proves the number belongs to the person registering. Until the
+ * WhatsApp Business API is live, the administrator reads the code in
+ * Admin -> Login Codes and passes it on.
+ *
+ * `auth` here was supabaseAuth, which refuses every registration -- so nobody
+ * could create an account at all. On fixtures, mockAuth still registers
+ * directly with no code step.
+ */
+const adapter = otpAvailable ? otpAuth : auth
+const needsCode = otpAvailable
 
 export function Register() {
   usePageTitle('Request membership')
@@ -22,6 +36,17 @@ export function Register() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+
+  const [step, setStep] = useState<'details' | 'code'>('details')
+  const [e164, setE164] = useState('')
+  const [code, setCode] = useState('')
+  const [cooldown, setCooldown] = useState(0)
+
+  useEffect(() => {
+    if (cooldown <= 0) return
+    const timer = setTimeout(() => setCooldown((c) => c - 1), 1000)
+    return () => clearTimeout(timer)
+  }, [cooldown])
 
   function set(name: string, value: string) {
     setValues((v) => ({ ...v, [name]: value }))
@@ -64,7 +89,7 @@ export function Register() {
       if (field.store === 'extra' && values[field.name]) extra[field.name] = values[field.name]
     }
 
-    const result = await auth.register({
+    const result = await adapter.register({
       mobile,
       name: values.name?.trim() ?? '',
       company: values.company,
@@ -80,8 +105,98 @@ export function Register() {
       return
     }
 
+    if (needsCode) {
+      setE164(mobile)
+      setCooldown(60)
+      setStep('code')
+      return
+    }
+
     refresh()
     navigate('/', { replace: true })
+  }
+
+  async function onSubmitCode(e: FormEvent) {
+    e.preventDefault()
+    setSubmitting(true)
+    setFormError(null)
+
+    const result = await adapter.verifyOtp(e164, code)
+    setSubmitting(false)
+
+    if (!result.ok) {
+      setFormError(result.error ?? 'Could not verify the code')
+      return
+    }
+
+    refresh()
+    navigate('/', { replace: true })
+  }
+
+  async function resend() {
+    setSubmitting(true)
+    setFormError(null)
+    const result = await adapter.requestOtp(e164)
+    setSubmitting(false)
+    if (!result.ok) {
+      setFormError(result.error ?? 'Could not send the code')
+      return
+    }
+    setCooldown(result.retryAfter ?? 60)
+  }
+
+  if (step === 'code') {
+    return (
+      <AuthLayout
+        eyebrow="Request membership"
+        title="Enter your code"
+        intro={`We are sending a one-time code to ${formatMobile(e164)} on WhatsApp.`}
+      >
+        <form onSubmit={onSubmitCode} noValidate>
+          {formError && <FormMessage tone="error">{formError}</FormMessage>}
+
+          <Field
+            label="One-time code"
+            help="It can take a few minutes to arrive. Not received yet? Please wait, or contact us."
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            required
+            autoFocus
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+
+          <Button type="submit" size="lg" disabled={submitting || code.length < 6} className="w-full">
+            {submitting ? 'Verifying…' : 'Verify and create account'}
+          </Button>
+
+          <div className="mt-6 flex items-center justify-between text-sm font-light text-[var(--color-fg-muted)]">
+            <button
+              type="button"
+              onClick={() => {
+                setStep('details')
+                setCode('')
+                setFormError(null)
+              }}
+              className="cursor-pointer underline underline-offset-4 transition-colors hover:text-[var(--color-accent)]"
+            >
+              Change details
+            </button>
+
+            <button
+              type="button"
+              disabled={cooldown > 0 || submitting}
+              onClick={() => void resend()}
+              className="cursor-pointer underline underline-offset-4 transition-colors hover:text-[var(--color-accent)] disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
+            >
+              {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
+            </button>
+          </div>
+        </form>
+      </AuthLayout>
+    )
   }
 
   return (
@@ -148,7 +263,13 @@ export function Register() {
           disabled={submitting || authMode === 'unavailable'}
           className="w-full"
         >
-          {submitting ? 'Creating account…' : 'Create account'}
+          {submitting
+            ? needsCode
+              ? 'Sending code…'
+              : 'Creating account…'
+            : needsCode
+              ? 'Continue'
+              : 'Create account'}
           {!submitting && <ArrowRight size={16} strokeWidth={1.5} className="ml-2" />}
         </Button>
       </form>
