@@ -41,6 +41,7 @@ export function Header() {
   const [collectionsPinned, setCollectionsPinned] = useState(false)
   const collectionsOpen = collectionsHovered || collectionsPinned
   const closeTimer = useRef<number | undefined>(undefined)
+  const collectionsRef = useRef<HTMLDivElement>(null)
 
   function openCollections() {
     window.clearTimeout(closeTimer.current)
@@ -78,14 +79,22 @@ export function Header() {
   }, [location.pathname])
 
   // Escape closes the Collections panel. Without it a pinned panel can only be
-  // dismissed with a mouse, which strands anyone navigating by keyboard.
+  // dismissed with a mouse, which strands anyone navigating by keyboard. A
+  // click anywhere outside the trigger and panel closes it too.
   useEffect(() => {
     if (!collectionsOpen) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') dismissCollections()
     }
+    const onPointerDown = (e: PointerEvent) => {
+      if (!collectionsRef.current?.contains(e.target as Node)) dismissCollections()
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('pointerdown', onPointerDown)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('pointerdown', onPointerDown)
+    }
     // oxlint-disable-next-line react-hooks/exhaustive-deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionsOpen])
@@ -147,13 +156,19 @@ export function Header() {
             <nav aria-label="Main navigation" className="hidden items-center gap-8 lg:flex flex-1 justify-center">
               {/* Collections Dropdown - Tanishq/CaratLane style */}
               <div
+                ref={collectionsRef}
                 className="relative"
                 onMouseEnter={openCollections}
                 onMouseLeave={closeCollections}
               >
                 <button
                   type="button"
-                  onClick={() => setCollectionsPinned((pinned) => !pinned)}
+                  // First click pins the panel (a click straight after hover
+                  // must not close what hover just opened); the next click
+                  // closes it outright. Toggling only the pinned flag left it
+                  // open while the pointer was still over the button, so the
+                  // second click did nothing visible.
+                  onClick={() => (collectionsPinned ? dismissCollections() : setCollectionsPinned(true))}
                   aria-expanded={collectionsOpen}
                   aria-haspopup="true"
                   className={`flex cursor-pointer items-center gap-1.5 text-sm font-medium tracking-[0.15em] uppercase transition-colors duration-200 ${linkTone}`}
